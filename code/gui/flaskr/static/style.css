@@ -1,0 +1,531 @@
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+table.advert {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #FFDAB9;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 14px;
+    width: 100%;
+}
+
+img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    resize: vertical;
+    }
+
+form div#text_input {
+    width: 100%;
+    height: 400px;
+    /* padding: 12px 20px; */
+    padding: 1em 1em;
+    line-height: 2; /* Space between lines, to avoid overlapping of highlighted results */
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    resize: vertical;
+    overflow: auto;
+    white-space: pre-wrap; /* This causes whitespace and newlines within the matching elements to be treated in the same way as inside a <textarea>: consecutive whitespace is not collapsed, and lines are broken at explicit newlines */
+    }
+
+/* Textarea placeholder */
+[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block; /* For Firefox */
+  color: #787878;
+}
+
+/* Loader */
+form div.loader {
+  border: 10px solid #e0e8e1; /* verde claro: #b0e0e6; gris claro: #f3f3f3; azul medio: #3498db*/
+  border-radius: 50%; 
+  border-top: 10px solid #008080; /* #3498db; */
+  display: none;
+  /*display: block;*/
+  position: fixed;
+  width: 25px;
+  height: 25px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;  
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Highlight colors of results */
+/* Inner entities are shorter and less transparent */
+
+form div#text_input span.ANAT[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.ANAT {
+  /*background: rgba(255,228,181, 0.5);*/ /* Opacity only in background, not text */
+  background: rgba(255,228,181);
+  padding: 0.4em 0.4em; /* top and bottom: 0.45em ; right and left; 0.6em */ /*0.2em 0.2em;*/
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.CHEM[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.CHEM {
+  /*background: rgba(110, 100, 205, 0.5);*/
+  background: rgba(176, 171, 229);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.DEVI[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.DEVI {
+  background: rgba(166, 226, 45, 0.7);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.DISO[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.DISO {
+  /*background: rgba(128, 0, 0, 0.3);*/
+  background: rgba(213, 172, 172);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.LIVB[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.LIVB {
+  /* background: rgba(252, 237, 204, 0.6); Pale yellow */
+  background: rgba(234, 248, 201, 0.6);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.PHYS[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.PHYS {
+  background: rgba(253,151,32, 0.5);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.PROC[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.PROC {
+  /*background: rgba(0, 128, 128, 0.3);*/
+  background: rgba(172, 221, 221);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Age[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Age {
+  background: rgba(216, 235, 255, 0.7); /*very pale blue*/
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Date[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Date {
+  background: rgba(173,216,230, 0.5); /*light blue*/
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Duration[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Duration {
+  /*background: rgba(70,130,180, 0.3); /*steel blue*/
+  background: rgba(181,205,225);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Frequency[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Frequency {
+  background: rgba(0,191,255, 0.3); /*deep sky blue*/
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Time[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Time {
+  background: rgba(100,149,237, 0.3); /*cornflower blue*/
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Contraindicated[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Contraindicated {
+  background: rgba(190, 203, 204); /*Iron*/
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Dose[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Dose {
+  background: rgba(238,213,210, 0.5); /*plum1*/
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Form[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Form {
+  background: rgba(201,186,218, 0.5); /*c9bada*/
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Route[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Route { /* azure3 */
+  background: rgba(193,205,205, 0.5);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Neg_cue[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Neg_cue {
+  /* background: rgba(153,153,153); gray60*/
+  background: rgba(202, 202, 202); /* Very light grey */
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Negated[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Negated {
+  /* background: rgba(153,153,153); gray60*/
+  background: rgba(211, 211, 211); /* Very light grey */
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Spec_cue[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Spec_cue {
+  background: rgba(174,182,191); /*gray60*/
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Speculated[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Speculated {
+  background: rgba(228,228,228); /*gray60*/
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style of title when hovering over a word */
+span[title]:hover:after {
+  opacity: 1;
+  visibility: visible;
+}
+
+span[title]:after {
+  content: attr(title);
+  color: #333;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  position: absolute;
+  padding: 4px 8px;
+  bottom: -1.6em;
+  left: 100%;
+  white-space: nowrap;
+  opacity: 0;
+  z-index: 99999;
+  visibility: hidden;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 0px 0px 4px #222;
+  -webkit-box-shadow: 0px 0px 4px #222;
+  box-shadow: 0px 0px 4px #222;
+  background-image: -moz-linear-gradient(top, #eeeeee, #e0e8e1);
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #eeeeee),color-stop(1, #e0e8e1));
+  background-image: -webkit-linear-gradient(top, #eeeeee, #e0e8e1);
+  background-image: -moz-linear-gradient(top, #eeeeee, #e0e8e1);
+  background-image: -ms-linear-gradient(top, #eeeeee, #e0e8e1);
+  background-image: -o-linear-gradient(top, #eeeeee, #e0e8e1);
+}
+
+span[title] {
+  position: relative;
+}
+
+
+/* Buttons */
+.css-button {
+  font-size: 12px;
+  border-radius: 5px;
+  border: solid 1px #0a837d; /* azul #3866A3; */
+  color: #FFFFFF;
+  /* background: linear-gradient(180deg, #63B8EE 5%, #468CCF 100%); azul */
+  background: linear-gradient(180deg, #20b2ab 5%, #0a837d 100%); 
+  text-shadow: 1px 1px 0px #528ecc;
+  /* box-shadow: inset 1px 1px 2px 0px #bbdaf7; */
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  display: block;
+  padding: 4px 10px;
+  border-right: 1px solid rgba(255, 255, 255, 0.16);
+  /* box-shadow: rgba(0, 0, 0, 0.14) -1px 0px 0px inset; */
+}
+
+.css-button:hover {
+  background: linear-gradient(180deg, #468CCF 5%, #63B8EE 100%);
+}
+
+.css-button:active {
+  position: relative;
+  top: 1px;
+}
+
+.css-button-2 {
+  font-size: 12px;
+  border-radius: 5px;
+  border: solid 1px #ccc; /* azul #3866A3; */
+  color: #000000;
+  background: linear-gradient(180deg, #f8f8f8 5%, #eeeeee 100%); 
+  text-shadow: 1px 1px 0px #eeeeee;
+  /* box-shadow: inset 1px 1px 2px 0px #bbdaf7; */
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  display: block;
+  padding: 4px 1px;
+}
+
+#clear.css-button-2 {
+  width: 5em;
+}
+
+.css-button-2:hover {
+  background: linear-gradient(180deg, #e0e8e1 5%, #eeeeee 100%); /*#eef6f3 15%, #eff7fd 100%);*/
+}
+
+/* Download button (show only after results can be downloaded) */
+div#show-after-results.show {
+  display: block;
+  position: absolute;
+  text-align: center;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div#show-after-results.hide {
+  display: none;
+}
+
+/* Checkbox */
+ /* Customize the label (the container) */
+.container {
+  border-width: thick;
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  padding-top: 3px;
+  margin-bottom: 7px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  bottom:0;
+  left:0;
+  right: 0;
+  vertical-align: middle;
+  height: 15px;
+  width: 15px;
+  background-color: #f8f8f8; /* light grey #eee */
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}
+
+/* On mouse-over, add a background color */
+.container:hover input ~ .checkmark {
+  background-color: #e0e8e1; /* grey #ccc */
+}
+
+/* When the checkbox is checked, add a color background */
+.container input:checked ~ .checkmark {
+  background-color: #20b2ab; /* #2196F3 blue */
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 5px;
+  top: 1px;
+  width: 3px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+} 

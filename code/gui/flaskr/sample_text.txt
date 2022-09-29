@@ -1,0 +1,41 @@
+La COVID-19 afecta de distintas maneras en función de cada persona. La mayoría de las personas que se contagian presentan síntomas de intensidad leve o moderada, y se recuperan sin necesidad de hospitalización.
+Los síntomas más habituales son los siguientes: fiebre, tos seca y cansancio.
+Otros síntomas menos comunes son los siguientes: Molestias y dolores, dolor de garganta, diarrea, conjuntivitis, dolor de cabeza, pérdida del sentido del olfato, erupciones cutáneas en los dedos de las manos o de los pies.
+(www.who.int)
+_____________________________________________________________________________________
+
+La hipertensión y la enfermedad cardiovascular son más frecuentes en quienes evolucionan peor por COVID-19. Los pacientes mayores de 60 años, así como aquellos con enfermedad cardiovascular, deberían evitar especialmente la exposición al coronavirus, no automedicarse y consultar rápidamente ante la aparición de síntomas. El mecanismo de entrada del coronavirus a las células ha puesto en tela de juicio el uso de IECA.
+(Salazar et al. 2020, PMID: 32591283)
+_____________________________________________________________________________________
+
+Título público: Tocilizumab más terapia de base versus placebo más terapia de base en pacientes con neumonía grave por COVID-19
+Indicación pública: NEUMONÍA GRAVE POR EL COVID-19
+Criterios de inclusión:
+- Edad >=18 años
+- Hospitalizado con neumonía de la COVID-19 confirmada (incluida una RCP positiva de sangre, orina, heces, otro líquido corporal) y mediante radiografía de tórax o TAC
+(EudraCT nº 2020-001154-22)
+_____________________________________________________________________________________
+
+Cefazolina vs. Ciprofloxacino en la profilaxis de infecciones en pacientes cirróticos con sangrado digestivo
+OBJETIVO: Determinar si el uso de Cefazolina como profilaxis antibiótica produce una disminución significativa de las infecciones en pacientes cirróticos con sangrado digestivo, comparado con Ciprofloxacino.
+MATERIAL Y MÉTODOS: Ensayo Clínico aleatorizado. Se incluyeron a pacientes cirróticos mayores de 18 años, con sangrado digestivo, que ingresaron entre Julio del 2008 a julio del 2010 a la Unidad de hemorragia Digestiva del HNERM, sin evidencia clínica ni de laboratorio de infección al momento del ingreso y que no hubieran recibido tratamiento antibiótico las últimas 2 semanas. A un grupo se le administró Ciprofloxacino 200 mg bid EV y al otro Cefazolina 1 g tid EV. x 7 días. 
+RESULTADOS: Fueron incluidos 98 pacientes, 53 pacientes en el grupo de Cefazolina y 45 en el grupo de Ciprofloxacino. El promedio de edad fue 66 años, 61 % varones; 59,2 % tuvieron ascitis, la frecuencia de infecciones en la población total fue de 14,3% (14/98). El resangrado fue 8,1% y la mortalidad general 4,1%. No hubo diferencias significativas entre los grupos en relación a edad, sexo, estadio Child, ascitis, encefalopatía, ni en promedio de Bilirrubina, TP, Creatinina y niveles de Albúmina. El grupo que usó Cefazolina tuvo 11,3 % de infecciones, comparado con el 17,8% de infecciones en el grupo que recibió Ciprofloxacino (p= 0,398) IC 95%. Cuando se excluyó del análisis los pacientes cirróticos Child A y aquellos sin ascitis, se encontró: 22,2 % de infecciones en el grupo de cefazolina y 26,9 % en el grupo de Ciprofloxacino (p=0,757 IC 95%). 
+CONCLUSIÓN: no hubo diferencias significativas entre cefazolina y ciprofloxacino como profilaxis antibiótica en pacientes cirróticos sangrado digestivo.
+(Díaz Ferrer et al. 2011, PMID: 22476119)
+_____________________________________________________________________________________
+
+Esclerosis lateral amiotrófica
+
+Definición de la enfermedad							
+
+Es una enfermedad neurodegenerativa caracterizada por parálisis de los músculos progresiva a consecuencia de una degeneración de las neuronas motoras en la corteza motora primaria, tracto corticoespinal, tronco encefálico y médula espinal.
+
+Descripción clínica							
+
+Aproximadamente dos terceras partes de los pacientes con ELA típica presentan la forma espinal de la enfermedad (inicio con afectación de las extremidades). Esta forma se caracteriza por debilidad del músculo focal, de inicio distal o proximal en las extremidades superiores e inferiores. Progresivamente, puede desarrollarse una espasticidad en las extremidades atrofiadas y debilitadas, afectando a la destreza manual y a la marcha. Los pacientes en los que la enfermedad debuta con signos bulbares presentan generalmente disartria y disfagia para sólidos o líquidos. Los síntomas en las extremidades pueden desarrollarse casi simultáneamente a los síntomas bulbares o, como sucede en la gran mayoría de casos, pueden ocurrir 1 o 2 años después. La parálisis es progresiva y provoca la muerte debida al fallo respiratorio a los 2-3 años (forma bulbar) o a los 3-5 años (forma espinal).
+
+Manejo y tratamiento							
+
+El manejo de la ELA es sintomático, paliativo y multidisciplinar. La ventilación no invasiva prolonga la supervivencia y mejora la calidad de vida. El riluzol es el único medicamento que se ha  demostrado que prolonga la vida de los pacientes.
+
+(Texto extraído de OrphaNet)

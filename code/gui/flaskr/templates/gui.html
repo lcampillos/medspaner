@@ -1,0 +1,108 @@
+<!doctype html>
+<link rel="stylesheet" href="static/style.css">
+<head>
+  <title>MedIAnno</title>
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<nav>
+  <table border="0" align="center">
+    <tr>
+      <td><img src="static/logo.jpg" style="max-width:250px; height:auto" alt="Logo"/></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <!--<td><h1 class="center">Medical Information Annotation tool</h1></td>-->
+      <td><h1 class="center">Herramienta de anotación de información médica</h1></td>
+    </tr>
+  </table>
+</nav>
+<body>
+  <table border="0" align="center">
+    <tr>
+      <td>
+        <div id="show-after-results" class="hide">
+           <input type="submit" class="css-button-2" onclick="download()" readonly value="    Descargar    ">
+           <textarea id="annotations" name="annotations" style="display:none">{{ ann_data }}</textarea>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><br /><br /></td>
+    </tr>
+  </table>      
+  <form method="POST" action="" onsubmit="return getContent()" name='input_form'> <!-- -->
+    <table border="0" align="center">
+    <tr>
+      <td>
+        <input class="css-button-2" onclick="load_sample()" style="width:120px" readonly value="Texto de muestra" >
+      </td>
+      <td>&#160;</td>
+      <td>
+        <input class="css-button-2" id="clear" onclick="document.getElementById('text_input').innerText = '';document.getElementById('show-after-results').className = 'hide';" readonly value="Borrar">  
+      </td>
+      <td>&#160;</td>
+      <td>
+        <label class="container">Posología
+        <input type="checkbox" name="drg">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>&#160;</td>
+      <td>
+        <label class="container">Expresiones temporales
+        <input type="checkbox" name="temp">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>&#160;</td>
+      <td>
+        <label class="container">Negación
+        <input type="checkbox" name="neg">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>&#160;</td>
+      <td>
+        <label class="container">Entidades anidadas
+        <input type="checkbox" name="nest">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>&#160;</td>
+      <td>
+        <label class="container">Diccionario
+        <input type="checkbox" name="lex">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>&#160;</td>
+      <td>
+        <label class="container">Normalizar
+        <input type="checkbox" name="norm">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>&#160;</td>
+      <td>
+        <input type="submit" class="css-button" onclick="nav();" readonly value="Analizar" >
+      </td>
+    </tr>
+    <tr>
+      <td><br /></td>
+    </tr>
+    </table>
+    <div id="text_input" name="text_input" placeholder="Copia o escribe aquí un texto..." contenteditable="true">{{ results }}</div>  
+    <textarea id="my-textarea" name="text" style="display:none"></textarea>
+    <div class="loader" id="loader" title="Cargando..."></div>
+    <br />
+  </form>
+  <table class="advert">
+  <tr>
+      <td><p>&nbsp;&nbsp;<b>Descargo de responsabilidad</b>: Esta herramienta se encuentra en desarrollo y no debe ser empleada para la toma de decisiones médicas.&nbsp;&nbsp;<br /></p>
+  </tr>
+  </table>
+  <script src="static/code.js"></script>
+</body>  
+
+  
