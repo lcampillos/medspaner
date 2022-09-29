@@ -1,0 +1,9 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore notes
+cambiar_paths_gui
+notas_github
+
+# Ignore cache files
+code/__pycache__/

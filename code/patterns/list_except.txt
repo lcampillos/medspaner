@@ -1,0 +1,302 @@
+# EXCEPTION RULES
+# Formalize as: 
+# 1) LEMMA/SEMANTIC-ENTITY|FINAL LABEL
+# To remove all entities belonging to a semantic group:
+# 2) ANY-LEMMA/SEMANTIC-ENTITY|O
+
+# 2-grams
+de/O base/CHEM|O
+en/O base/CHEM|O
+base/CHEM a/O|O
+frente/ANAT a/O|O
+frente/ANAT al/O|O
+en/O frente/ANAT|O
+doble/O ciego/ANAT|O
+doble/O ciego/DISO|O
+doble/O ciego/LIVB|O
+no/O ciego/DISO|O
+no/O ciego/ANAT|O
+no/O ciego/LIVB|O
+solución/O oral/ANAT|O
+solución/CHEM potencial/O|O
+solución/Form potencial/O|O
+a/O pesar/DISO|O
+a/O pesar/PHYS|O
+efecto/O adrenérgico/CHEM|O
+efecto/O analgésico/CHEM|O
+efecto/O anestésico/CHEM|O
+efecto/O anestésico/PROC|O
+efecto/O anoréxico/DISO|O
+efecto/O antibacteriano/CHEM|O
+efecto/O antioxidante/CHEM|O
+efecto/O esteroideo/CHEM|O
+efecto/O genotóxico/CHEM|O
+efecto/O hipotensor/CHEM|O
+efecto/O inmunoestimulador/CHEM|O
+efecto/O laxante/CHEM|O
+efecto/O protector/CHEM|O
+efecto/O protector/DEVI|O
+efecto/O quelante/CHEM|O
+efecto/O terapéutico/PROC|O
+efecto/O vasodilatador/CHEM|O
+en/O marcha/DISO|O
+categoría/O iv/Route|O
+clase/O iv/Route|O
+estadio/O iv/Route|O
+funcional/O iv/Route|O
+grado/O iv/Route|O
+grupo/O iv/Route|O
+y/O iv/Route|O
+o/O iv/Route|O
+se/O llama/LIVB|O
+factor/O protector/DEVI|O
+en/O términos/PHYS|O
+en/O término/PHYS|O
+
+# 1-grams
+acumulación/PHYS|O
+afectar/PHYS|O
+afecto/PHYS|O
+alto/DISO|O
+ampolla/DEVI|FORM
+anidar/PHYS|O
+antagonista/PHYS|O
+apoyo/PROC|O
+aplicación/PROC|O
+articulación/PHYS|ANAT
+articular/PHYS|O
+# área de superficie corporal
+asc/PHYS|O
+asociación/PHYS|O
+atención/PHYS|O
+ausencia/DISO|O
+barrera/DEVI|O
+biomarcador/PHYS|O
+bmi/PHYS|O
+# brazo/GENE|ANAT
+brazo/GENE|O
+calcemia/PHYS|O
+captación/PHYS|O
+capacidad/PHYS|O
+carácter/PHYS|O
+carga/PHYS|O
+ce/CHEM|O
+ci/PHYS|O
+ciclo/PHYS|O
+científico/LIVB|O
+cinético/PHYS|O
+circulación/DEVI|O
+clínico/DISO|O
+clínica/LIVB|O
+clínico/LIVB|O
+cólera/PHYS|O
+coma/PHYS|O
+concentración/PHYS|O
+confirmado/DISO|O
+confirmar/DISO|O
+consecuencia/DISO|O
+crítico/LIVB|O
+crítica/LIVB|O
+criterio/PHYS|O
+criterios/PHYS|O
+curable/PHYS|O
+cura/LIVB|O
+cv/PHYS|O
+desarrollar/PHYS|O
+desencadenante/PHYS|O
+deseo/PHYS|O
+diferenciado/PHYS|O
+digestivo/CHEM|O
+digestiva/CHEM|O
+# Do not remove the following rule, it causes errors
+# dolor/PHYS|DISO
+dolor/PHYS|O
+ec/DISO|O
+edad/PHYS|O
+#edad gestacional/PHYS|O
+eliminación/PHYS|O
+embarazada/PHYS|O
+embarazar/PHYS|O
+enfermo/LIVB|O
+enfermos/LIVB|O
+epidural/DEVI|O
+equivalencia/PHYS|O
+escribir/PHYS|O
+estadístico/LIVB|O
+estadística/LIVB|O
+estructura/GENE|O
+experiencia/PHYS|O
+expresar/PHYS|O
+extendido/DEVI|O
+evolución/PHYS|O
+evolución/DISO|O
+facultad/LIVB|O
+facultades/LIVB|O
+facultativo/LIVB|O
+fallecer/PHYS|O
+farmacocinético/PHYS|O
+femenino/PHYS|O
+fiabilidad/PHYS|O
+fibra/LIVB|O
+figura/LIVB|O
+filtración/PHYS|O
+filtrado/PHYS|O
+filtrar/PHYS|O
+frío/PHYS|O
+función/PHYS|O
+gestante/PHYS|O
+# gr: 'glóbulo rojo' (ambiguous with 'gramo')
+gr/ANAT|O
+graduado/LIVB|O
+graduada/LIVB|O
+grupo/CHEM|O
+guía/LIVB|DEVI
+hereditario/PHYS|O
+hembra/PHYS|O
+hombre/PHYS|O
+imc/PHYS|O
+implantar/PHYS|O
+implantación/PHYS|O
+inclusión/ANAT|O
+inclusión/PROC|O
+incluir/PROC|O
+indicación/PHYS|O
+inducido/PHYS|O
+inducir/PHYS|O
+inferior/ANAT|O
+inflamación/PHYS|O
+inducción/PHYS|O
+inducido/PHYS|O
+inducida/PHYS|O
+inducir/PHYS|O
+inmunomodulador/PHYS|O
+intolerancia/PHYS|O
+intelectual/PHYS|O
+irresecable/PHYS|O
+juicio/PHYS|O
+latencia/PHYS|O
+macroglobulinemia/PHYS|O
+marcador/PHYS|O
+marcha/DISO|O
+masculino/PHYS|O
+mayor/LIVB|O
+médico/LIVB|O
+mejorar/PHYS|O
+menor/LIVB|O
+metilo/PHYS|O
+miembro/LIVB|O
+modelo/LIVB|O
+monitor/LIVB|O
+mujer/PHYS|O
+mujeres/PHYS|O
+muerte/PHYS|O
+muerto/PHYS|O
+morir/PHYS|O
+mutación/PHYS|O
+mutaciones/PHYS|O
+negativo/PHYS|O
+negativo/DISO|O
+neuroprotector/PHYS|O
+neuroprotectores/PHYS|O
+neutrófilo/PHYS|ANAT
+ojo/DEVI|O
+oclusión/PHYS|O
+oportunista/LIVB|O
+oportunistas/LIVB|O
+orgánico/LIVB|O
+orgánica/LIVB|O
+orina/PHYS|O
+oxidación/PHYS|O
+oxidativo/PHYS|O
+parturienta/PHYS|O
+# pe: potencial evocado
+pe/PHYS|O
+pensamiento/LIVB|O
+pensamientos/LIVB|O
+péptica/PHYS|O
+pépticas/PHYS|O
+péptico/PHYS|O
+pépticos/PHYS|O
+pérdida/PHYS|O
+período/PHYS|O
+personalidad/PHYS|O
+peso/PHYS|O
+placentaria/LIVB|O
+placentario/LIVB|O
+práctica/PHYS|O
+presentación/PHYS|O
+protector/DEVI|O
+protectora/DEVI|O
+proteica/LIVB|O
+proteico/LIVB|O
+positivo/DISO|O
+postura/PHYS|O
+probando/PHYS|O
+propósito/PHYS|O
+protección/DISO|O
+protésico/LIVB|O
+protésicos/LIVB|O
+protésica/LIVB|O
+protésicas/LIVB|O
+prueba/CHEM|O
+químico/LIVB|O
+química/LIVB|O
+razón/PHYS|O
+rama/LIVB|O
+reacción/PHYS|O
+rechazo/PHYS|O
+rechazar/PHYS|O
+recombinante/LIVB|O
+remitente/LIVB|O
+resolver/DISO|O
+respuesta/DISO|O
+respuesta/PHYS|O
+restricción/PHYS|O
+restauración/PHYS|O
+secuencia/GENE|O
+sexo/PHYS|O
+situación/DISO|O
+supresión/PHYS|O
+sustitución/PHYS|O
+te/LIVB|O
+técnico/LIVB|O
+técnicos/LIVB|O
+técnica/LIVB|O
+técnicas/LIVB|O
+to/PHYS|O
+# tra = temperatura corporal
+tra/PHYS|O
+trabajo/PHYS|O
+transformación/PHYS|O
+tronco/LIVB|O
+# DISO ('uveítis infecciosa') => UI ('unidad internacional', Drug concentration) [CHANGE IF NEEDED]
+ui/DISO|Dose
+vacuno/LIVB|O
+vacuna/LIVB|O
+valencia/PHYS|O
+válido/PHYS|O
+valor/PHYS|O
+valorar/PHYS|O
+varón/PHYS|O
+varones/PHYS|O
+vc/PHYS|O
+# vd: vasodilatación
+vd/PHYS|O
+vía/DEVI|O
+voluntario/LIVB|O
+voluntaria/LIVB|O
+
+# vs: 'vena subclavia', 'vena safena' y 'versus'
+vs/ANAT|O
+# dl: 'dislipidemia' y 'decilitro'
+dl/DISO|O
+# sem: 'síndrome de mialgia eosinófila' y 'semana'
+sem/DISO|O
+
+# ANY-LEMMA/ANAT|O
+# ANY-LEMMA/CHEM|O
+# ANY-LEMMA/DEVI|O
+# ANY-LEMMA/DISO|O
+# ANY-LEMMA/LIVB|O
+# ANY-LEMMA/PROC|O
+# ANY-LEMMA/PHYS|O
