@@ -15,17 +15,11 @@ from add_bio_label import *
 import argparse
 
 import spacy
-import spacy_tokenizer_text
-from spacy_tokenizer_text import *
+import spacy_tokenizer
+from spacy_tokenizer import *
 
-import annot_from_lexicon
-from annot_from_lexicon import *
-
-import postproc_rules
-from postproc_rules import *
-from annot_temp import *
-from annot_drug_features import *
-from annot_neg_spec import *
+import lexicon_tools
+from lexicon_tools import *
 
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
@@ -574,7 +568,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
 app = Flask(__name__)
 
 
-@app.route('/gui_tf_en', methods=['GET', 'POST'])
+@app.route('/gui_en', methods=['GET', 'POST'])
 def gui_tf():
     if request.method == 'POST':
 
@@ -801,7 +795,7 @@ def gui_tf():
         text = ""
         annot = ""
 
-    return render_template('gui_tf_en.html', results=text, ann_data=annot)
+    return render_template('gui_en.html', results=text, ann_data=annot)
 
 
 if __name__ == '__main__':

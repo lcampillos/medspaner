@@ -21,7 +21,7 @@
     <tr>
       <td>
         <div id="show-after-results" class="hide">
-           <input type="submit" class="css-button-2" onclick="download()" readonly value="    Descargar    ">
+           <input type="submit" class="css-button-2" onclick="download()" readonly value="    Download    ">
            <textarea id="annotations" name="annotations" style="display:none">{{ ann_data }}</textarea>
         </div>
       </td>
@@ -34,7 +34,7 @@
     <table border="0" align="center">
     <tr>
       <td>
-        <input class="css-button-2" onclick="load_sample()" style="width:120px" readonly value="Texto de muestra" >
+        <input class="css-button-2" onclick="load_sample()" style="width:120px" readonly value="Sample text" >
       </td>
       <td>&#160;</td>
       <td>
@@ -91,7 +91,7 @@
       <td><br /></td>
     </tr>
     </table>
-    <div id="text_input" name="text_input" placeholder="Copia o escribe aquí un texto..." contenteditable="true">{{ results }}</div>  
+    <div id="text_input" name="text_input" placeholder="Copy or write a text here..." contenteditable="true">{{ results }}</div>  
     <textarea id="my-textarea" name="text" style="display:none"></textarea>
     <div class="loader" id="loader" title="Loading..."></div>
     <br />
