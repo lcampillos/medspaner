@@ -18,8 +18,8 @@ import spacy
 import spacy_tokenizer
 from spacy_tokenizer import *
 
-import annot_from_lexicon
-from annot_from_lexicon import *
+import lexicon_tools
+from lexicon_tools import *
 
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
@@ -568,8 +568,8 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
 app = Flask(__name__)
 
 
-@app.route('/gui_tf', methods=['GET', 'POST'])
-def gui_tf():
+@app.route('/gui', methods=['GET', 'POST'])
+def gui():
     if request.method == 'POST':
 
         # Save all flat entities
@@ -594,7 +594,7 @@ def gui_tf():
         norm = request.form.getlist("norm")
         UMLSData = {}
         if (norm):
-            DataFile = open("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP2/WP2-1/umls_data.pickle", 'rb')
+            DataFile = open("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP2/medianno/code/lexicon/umls_data.pickle", 'rb')
             UMLSData = pickle.load(DataFile)
 
         # Split text into sentences
@@ -602,7 +602,7 @@ def gui_tf():
 
         Sentences = sentences_spacy(text)
 
-        LexiconData, POSData = read_lexicon("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP1/devel-WP1/lexicon/MedLexSp.pickle")
+        LexiconData, POSData = read_lexicon("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP2/medianno/code/lexicon/MedLexSp.pickle")
 
         # Text needs to be tokenized for recognizing time expressions, negation or drug scheme
         Tokens = tokenize_spacy_text(text, POSData)
@@ -797,7 +797,7 @@ def gui_tf():
         text = ""
         annot = ""
 
-    return render_template('gui_tf.html', results=text, ann_data=annot)
+    return render_template('gui.html', results=text, ann_data=annot)
 
 
 if __name__ == '__main__':
