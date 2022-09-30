@@ -44,10 +44,10 @@ Configuration
 Edit the fields in the configuration file (config.conf) to adapt it to your purposes:
 
 * **drg** - Select ```True``` to annotate drug features such as Dosage Form, Dose or Strength, or Route; select ```False``` otherwise
-* **lex** - Use lexicon for the annotation of UMLS entities; by default, the lexicon is located at: ```lexicon/MedLexSp.pickle; indicate ```False``` if no lexicon is needed```
+* **lex** - Use lexicon for the annotation of UMLS entities; by default, the lexicon is located at: ```lexicon/MedLexSp.pickle```; indicate ```False``` if no lexicon is needed
 * **neg** - Select ```True``` to annotate entities expressing negation and uncertainty; select ```False``` otherwise
 * **neu** - Select ```True``` (default value) to annotate UMLS entities with the trained neural model; select ```False``` otherwise
-* **nest** - Select ```True``` to output inner or nested entities inside wider entities; select ```False``` to output only the entities with the wider scope (*flat entities*)
+* **nest** - Select ```True``` to output inner or nested entities inside wider entities (e.g. *pecho* in *cáncer de pecho*); select ```False``` to output only the entities with the wider scope (*flat entities*)
 * **norm** - Select ```True``` if the output needs to be normalized to UMLS CUIs (only output in BRAT ```ann``` format); select ```False``` otherwise
 * **out** - Indicate ```ann``` ([BRAT](https://brat.nlplab.org/) format) or ```json``` (standard JSON data format)
 * **temp** - Select ```True``` to annotate temporal expressions according to the HeidelTime scheme (Date, Duration, Frequency, Time) and Age; select ```False``` otherwise
