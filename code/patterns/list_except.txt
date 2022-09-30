@@ -109,8 +109,8 @@ diferenciado/PHYS|O
 digestivo/CHEM|O
 digestiva/CHEM|O
 # Do not remove the following rule, it causes errors
-# dolor/PHYS|DISO
-dolor/PHYS|O
+dolor/PHYS|DISO
+#dolor/PHYS|O
 ec/DISO|O
 edad/PHYS|O
 #edad gestacional/PHYS|O
