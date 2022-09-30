@@ -18,8 +18,8 @@ import spacy
 import spacy_tokenizer
 from spacy_tokenizer import *
 
-import medianno_lexicon_tools
-from medianno_lexicon_tools import *
+import annot_from_lexicon
+from annot_from_lexicon import *
 
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
@@ -568,7 +568,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
 app = Flask(__name__)
 
 
-@app.route('/gui', methods=['GET', 'POST'])
+@app.route('/gui_tf', methods=['GET', 'POST'])
 def gui_tf():
     if request.method == 'POST':
 
@@ -615,17 +615,19 @@ def gui_tf():
         if (lex):
             #  If annotation of nested entities
             if (nest):
-                print("Annotating nested entities with lexicon...")
+                print("Annotating UMLS entities (flat and nested) with lexicon...")
                 Entities, NestedEnts = apply_lexicon(text, LexiconData, nest)
             else:
                 # Annotate and extract entities
-                print("Annotating using lexicon...")
+                print("Annotating UMLS entities using lexicon...")
                 Entities, NestedEnts = apply_lexicon(text, LexiconData)
 
             AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
             AllNestedEnts = merge_dicts(AllNestedEnts, NestedEnts)
 
-        if not (lex):
+        # if annotation of UMLS entities with neural model
+        neu = request.form.getlist("neu")
+        if (neu):
 
             # Usage of transformers neural model
             print("Annotating using transformers neural model for UMLS entities...")
@@ -637,7 +639,7 @@ def gui_tf():
             for i, Ent in enumerate(Output):
                 Entities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
 
-            AllFlatEnts = Entities
+            AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
 
         # Annotation of temporal expressions
         temp = request.form.getlist("temp")
@@ -795,7 +797,7 @@ def gui_tf():
         text = ""
         annot = ""
 
-    return render_template('gui.html', results=text, ann_data=annot)
+    return render_template('gui_tf.html', results=text, ann_data=annot)
 
 
 if __name__ == '__main__':

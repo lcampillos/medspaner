@@ -15,11 +15,17 @@ from add_bio_label import *
 import argparse
 
 import spacy
-import spacy_tokenizer
-from spacy_tokenizer import *
+import spacy_tokenizer_text
+from spacy_tokenizer_text import *
 
-import lexicon_tools
-from lexicon_tools import *
+import annot_from_lexicon
+from annot_from_lexicon import *
+
+import postproc_rules
+from postproc_rules import *
+from annot_temp import *
+from annot_drug_features import *
+from annot_neg_spec import *
 
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
@@ -615,17 +621,19 @@ def gui_tf():
         if (lex):
             #  If annotation of nested entities
             if (nest):
-                print("Annotating nested entities with lexicon...")
+                print("Annotating UMLS entities (flat and nested) with lexicon...")
                 Entities, NestedEnts = apply_lexicon(text, LexiconData, nest)
             else:
                 # Annotate and extract entities
-                print("Annotating using lexicon...")
+                print("Annotating UMLS entities using lexicon...")
                 Entities, NestedEnts = apply_lexicon(text, LexiconData)
 
             AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
             AllNestedEnts = merge_dicts(AllNestedEnts, NestedEnts)
 
-        if not (lex):
+        # if annotation of UMLS entities with neural model
+        neu = request.form.getlist("neu")
+        if (neu):
 
             # Usage of transformers neural model
             print("Annotating using transformers neural model for UMLS entities...")
@@ -637,7 +645,7 @@ def gui_tf():
             for i, Ent in enumerate(Output):
                 Entities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
 
-            AllFlatEnts = Entities
+            AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
 
         # Annotation of temporal expressions
         temp = request.form.getlist("temp")
