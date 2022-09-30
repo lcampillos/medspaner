@@ -23,7 +23,7 @@ from add_bio_label import *
 import argparse
 import spacy_tokenizer
 from spacy_tokenizer import *
-import lexicon_tools
+import annot_from_
 from lexicon_tools import *
 import pickle
 
@@ -310,10 +310,10 @@ def main(arguments):
             
             AllFlatEnts = Entities
             AllNestedEnts = NestedEnts
-        print("arguments.lex",arguments.lex)
-        if not (arguments.lex):
-            print("AQUI!!!")
-            # Annotation of UMLS entities with transformers model
+
+        # Use transformers model to annotate UMLS entities
+        if (arguments.neu):
+
             print("Annotating using transformers neural model for UMLS entities...")
             # Load the previously trained Transformers model using full path (no relative)
             umls_model_checkpoint = "/Users/Leonardo " \
@@ -336,7 +336,7 @@ def main(arguments):
             for i, Ent in enumerate(Output):
                 Entities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
             
-            AllFlatEnts = Entities
+            AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
 
         # Annotation of temporal expressions
         if (arguments.temp):
