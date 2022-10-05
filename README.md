@@ -1,4 +1,4 @@
-MedIAnno - Medical Information Annotation tool
+Medical Information Annotation tool
 ==============================================
 
 This is a hybrid (neural-network-based, lexicon-based and rule-based) sequence labeling tool for the medical domain. It was originally developed for medical named entity recognition of clinical trial texts, but it can be applied to other medical text types.
