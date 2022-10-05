@@ -1,4 +1,4 @@
-MedIAnno - Medical Information Annotation tool
+Medical Information Annotation tool
 ==============================================
 
 ![Graphical User Interface](gui.png)
