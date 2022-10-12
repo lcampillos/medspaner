@@ -302,6 +302,74 @@ def complete_norm_data(List,UMLSDataDict):
     
     
 
+def add_label_to_token(EntitiesDict,TokensDict):
+    
+    '''
+    Appends data of BIO labels to each word-dictionary of a dictionary of tokens.
+    
+    - TokensDict: a dictionary of tokens:
+        {0: {'token': 'Métodos', 'lemma': 'Métodos', 'pos': 'NOUN', 'tag': 'NOUN__Gender=Masc|Number=Plur', 'shape': 'Xxxxx', 'start': 0, 'end': 7},
+        1: {'token': ':', 'lemma': ':', 'pos': 'PUNCT', 'tag': 'PUNCT__PunctType=Colo', 'shape': ':', 'start': 7, 'end': 8},
+        2: {'token': 'resultados', 'lemma': 'resultado', 'pos': 'NOUN', 'tag': 'NOUN__Gender=Masc|Number=Plur', 'shape': 'xxxx', 'start': 26, 'end': 36}, ...
+    
+    - EntitiesDict: a dictionary of annotated entities with offsets:
+
+       {1: {'start': 0, 'end': 7, 'ent': 'Métodos', 'label': 'CONC'}, 2: {'start': 26, 'end': 36, 'ent': 'Métodos', 'label': 'CONC'} ...}
+
+    The output is a dictionary of tokens with the label for each token:
+
+        {0: {'token': 'Métodos', 'lemma': 'Métodos', 'pos': 'NOUN', 'tag': 'NOUN__Gender=Masc|Number=Plur', 'shape': 'Xxxxx', 'start': 0, 'end': '7', 'label': 'B-CONC'},
+        1: {'token': ':', 'lemma': ':', 'pos': 'PUNCT', 'tag': 'PUNCT__PunctType=Colo', 'shape': ':', 'start': 7, 'end': '8', 'label': 'O'}, ...   
+    '''
+    
+    for i in TokensDict:
+        start = TokensDict[i]['start']
+        end = TokensDict[i]['end']
+        Data = TokensDict[i]
+        # Check if existing label; otherwise, initialize to "O"
+        if 'label' not in Data:            
+            Data.update({'label': "O"})
+        for j in EntitiesDict:
+            s_label = EntitiesDict[j]['start']
+            e_label = EntitiesDict[j]['end']
+            if (start!=None) and (end!=None) and (int(start)==int(s_label)) and (int(end) == int(e_label)):
+                label = EntitiesDict[j]['label']
+                Data.update({'label': label})
+
+            # Check and correct tokenization mismatch in words with "-":
+            # 80: {'token': 'SARS', 'lemma': 'SARS', 'pos': 'PROPN', 'tag': 'PROPN___', 'shape': 'XXXX', 'start': 459, 'end': 463},
+            # 81: {'token': '-', 'lemma': '-', 'pos': 'PUNCT', 'tag': 'PUNCT__PunctType=Dash', 'shape': '-', 'start': 463, 'end': 464},
+            # 82: {'token': 'CoV-2', 'lemma': 'CoV-2', 'pos': 'PROPN', 'tag': 'PROPN___', 'shape': 'XxX-d', 'start': 464, 'end': 469}
+            # ENT: {'start': 459, 'end': 469, 'ent': 'SARS-CoV-2', 'label': 'LIVB'}
+            elif (i>1) and (i<len(TokensDict)) and (TokensDict[i]['lemma']=='-'):
+                if (int(TokensDict[i-1]['start'])==int(s_label)) and (int(TokensDict[i+1]['end'])==int(e_label)):
+                    label = EntitiesDict[j]['label']
+                    # Previous entity
+                    TokensDict[i-1]['label']=label
+                    # Current entity
+                    Data.update({'label': label})
+                    # Next entity
+                    TokensDict[i+1]['label']=label
+                    # skip checking next entity
+                    continue
+            # Check and correct tokenization mismatch in cases such as "160mg", "80mL", "150µg", "3g" (without space; Spacy tokenizes in 2 items):
+            # FIXED ALSO: "/sem" ('por semana'); "/día" ('al día') CONFIRM THAT IT DOES NOT CAUSE NOISE
+            # 17: {'token': '/', 'lemma': '/', 'pos': 'PUNCT', 'tag': 'PUNCT___', 'shape': '/', 'start': 59, 'end': 60},
+            # 18: {'token': 'sem', 'lemma': 'sem', 'pos': 'NOUN', 'tag': 'NOUN__Gender=Masc|Number=Sing', 'shape': 'xxx', 'start': 60, 'end': 63}
+            # ENT: {'ent': '/sem', 'start': 59, 'end': 63, 'label': 'Frequency'}
+            elif (i>0) and (i<len(TokensDict)) and ((TokensDict[i]['token']=='mg') or (TokensDict[i]['token']=='g') or (TokensDict[i]['token']=='µg') or (TokensDict[i]['token']=='ml') or (TokensDict[i]['token']=='mmol') or (TokensDict[i]['token']=='sem') or (TokensDict[i]['token']=='día')):
+                if TokensDict[i-1]['start']!=None and TokensDict[i]['end']!=None and s_label!=None and e_label!=None and (int(TokensDict[i-1]['start'])==int(s_label)) and (int(TokensDict[i]['end'])==int(e_label)):
+                    label = EntitiesDict[j]['label']
+                    # Previous entity
+                    TokensDict[i-1]['label']=label
+                    # Current entity                    
+                    Data.update({'label': label})
+                    # skip checking next entity
+                    continue
+
+    return TokensDict
+
+
 def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, NestedEnts):
     
     '''
@@ -318,7 +386,7 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
        - NestedDataHash: a hash with annotated entities inside the scope of wider entities, in the following format:
             {1: {'start': 0, 'end': 8, 'ent': 'insulina', 'label': 'PROC'}, ... }
     '''
-    
+
     CleanedEntities = {}
 
     # Save entity, new labels, and offsets
@@ -327,30 +395,20 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
     # Save labels to be changed regardless of the patterns or the lemma ("ANY-LEMMA")
     LabelsToRemove = []
 
-    # Convert to BIO (CoNLL) format
-    EntsBIO = offset2bio(HashEntities)
-    EntDictBIO = add_label(TokensDict, EntsBIO)
+    # Add semantic labels to tokens
+    TokensDict = add_label_to_token(HashEntities,TokensDict)
     k = 0
-    for i in EntDictBIO:
+    for i in TokensDict:
         found = False
         # Data of current entity
-        # Keep the B- or I- tags (except in O)
-        try:
-            bio_label = re.search("((B|I)\-)", EntDictBIO[i][label_type]).group(1)
-        except:
-            bio_label = "O"
-        label = re.sub("(B|I)\-", "", EntDictBIO[i][label_type])
-        lemma = EntDictBIO[i]['lemma'].lower()
-        token = EntDictBIO[i]['token']
+        label = TokensDict[i]['label']
+        lemma = TokensDict[i]['lemma'].lower()
+        token = TokensDict[i]['token']
         # Check current and previous entity (except 1st token to avoid error)
-        if (i > 0) and (i < len(EntDictBIO)):
+        if (i > 0) and (i < len(TokensDict)):
             # Data of previous entity
-            label_prev = re.sub("(B|I)\-", "", EntDictBIO[i - 1][label_type])
-            try:
-                bio_label_prev = re.search("((B|I)\-)", EntDictBIO[i - 1][label_type]).group(1)
-            except:
-                bio_label_prev = "O"
-            lemma_prev = EntDictBIO[i - 1]['lemma'].lower()
+            label_prev = TokensDict[i - 1][label_type]
+            lemma_prev = TokensDict[i - 1]['lemma'].lower()
             for k in ExceptionsDict:
                 patternList = ExceptionsDict[k]['pattern']
                 finalLabel = ExceptionsDict[k]['finalLabel']
@@ -368,8 +426,8 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                     if (found == False) and ((lemma_pat_prev == lemma_prev) and (lemma_pat == lemma) and (
                         tag_prev == label_prev) and (tag == label)):
                         found = True
-                        CleanedEntities[i] = EntDictBIO[i]
-                        CleanedEntities[i - 1] = EntDictBIO[i - 1]
+                        CleanedEntities[i] = TokensDict[i]
+                        CleanedEntities[i - 1] = TokensDict[i - 1]
                         if finalLabel != "O":
                             if label_type == 'label':
                                 # Comprobar que no se borran entidades anidadas
@@ -383,12 +441,11 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                                                                          'end': CleanedEntities[i]['end'],
                                                                          'label': CleanedEntities[i]['label'],
                                                                          'label2': finalLabel}
-                            finalLabel = bio_label + finalLabel
                         else:
                             if label_type == 'label':
-                                NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i - 1]['token'],
-                                                                         'start': CleanedEntities[i - 1]['start'],
-                                                                         'end': CleanedEntities[i - 1]['end'],
+                                NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
+                                                                         'start': CleanedEntities[i]['start'],
+                                                                         'end': CleanedEntities[i]['end'],
                                                                          'label': 'O', 'label2': 'O'}
                             else:
                                 NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
@@ -403,24 +460,18 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                     if (found == False) and ((lemma_pat_prev == lemma) and (tag_prev == label)) or (
                         (lemma_pat_prev == "ANY-LEMMA") and (tag_prev == label)):                        
                         found = True
-                        CleanedEntities[i] = EntDictBIO[i]
+                        CleanedEntities[i] = TokensDict[i]
                         # CASE 1: There are nested entities
-                        if len(NestedEnts) > 0:
+                        if len(NestedEnts) > 0:                            
                             # If an entity in NestedEnts does not occur in the exception list, its label is used
                             for e in NestedEnts:
                                 nested_ent = NestedEnts[e]['ent']
                                 nested_ent_label = NestedEnts[e]['label']
-                                bio_nested_ent_label = re.search("(B|I)\-", nested_ent_label)
-                                if bio_nested_ent_label:
-                                    bio_nested_ent_label = bio_nested_ent_label.group(1)
-                                else:
-                                    bio_nested_ent_label = "B"
-                                nested_ent_label = re.sub("(B|I)\-", "", nested_ent_label)
                                 # nested_ent_label: label of the inner entity
                                 # tag_prev: label to be excluded, as defined in the exceptions list
                                 # label: label currently annotated, to evaluate if to be changed or not
                                 if (token == nested_ent) and (label != nested_ent_label) and (nested_ent_label != tag_prev) and (label != tag_prev):
-                                    CleanedEntities[i][label_type] = bio_nested_ent_label + "-" + nested_ent_label
+                                    CleanedEntities[i][label_type] = nested_ent_label
                                     if label_type == 'label':
                                         NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
                                                                                  'start': CleanedEntities[i]['start'],
@@ -439,18 +490,16 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                                     if finalLabel != "O":
                                         if label_type == 'label':
                                             NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
-                                                                                     'start': CleanedEntities[i][
-                                                                                         'start'],
+                                                                                     'start': CleanedEntities[i]['start'],
                                                                                      'end': CleanedEntities[i]['end'],
-                                                                                     'label': finalLabel, 'label2': 'O'}
+                                                                                     'label': finalLabel, 
+                                                                                     'label2': 'O'}
                                         else:
                                             NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
-                                                                                     'start': CleanedEntities[i][
-                                                                                         'start'],
+                                                                                     'start': CleanedEntities[i]['start'],
                                                                                      'end': CleanedEntities[i]['end'],
-                                                                                     'label': CleanedEntities[i][
-                                                                                         'label'], 'label2': finalLabel}
-                                        finalLabel = bio_label + finalLabel
+                                                                                     'label': CleanedEntities[i]['label'], 
+                                                                                     'label2': finalLabel}
                                     else:
                                         if label_type == 'label':
                                             NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
@@ -482,7 +531,6 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                                                                              'end': CleanedEntities[i]['end'],
                                                                              'label': CleanedEntities[i]['label'],
                                                                              'label2': finalLabel}
-                                finalLabel = bio_label + finalLabel
                             else:
                                 if label_type == 'label':
                                     NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
@@ -502,25 +550,22 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
             for k in ExceptionsDict:
                 patternList = ExceptionsDict[k]['pattern']
                 finalLabel = ExceptionsDict[k]['finalLabel']
-                if (len(patternList) == 1):
+                if (len(patternList) == 1):                    
                     lemma_pat = patternList[0][0]
                     tag = patternList[0][1]
                     if (found == False) and ((lemma_pat == lemma) and (tag == label)) or (
                         (lemma_pat == "ANY-LEMMA") and (label == tag)):
                         found = True
-                        CleanedEntities[i] = EntDictBIO[i]
+                        CleanedEntities[i] = TokensDict[i]
                         # CASE 1: There are nested entities
                         if len(NestedEnts) > 0:
                             # If an entity in NestedEnts does not occur in the exception list, its label is used
                             for e in NestedEnts:
                                 nested_ent = NestedEnts[e]['ent']
                                 nested_ent_label = NestedEnts[e]['label']
-                                bio_nested_ent_label = re.search("(B|I)\-", nested_ent_label)
-                                if bio_nested_ent_label:
-                                    bio_nested_ent_label = bio_nested_ent_label.group(1)
                                 if (token == nested_ent) and (label != nested_ent_label) and (
                                     nested_ent_label != tag) and (label != tag):
-                                    CleanedEntities[i][label_type] = bio_nested_ent_label + "-" + nested_ent_label
+                                    CleanedEntities[i][label_type] = nested_ent_label
                                     if label_type == 'label':
                                         NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
                                                                                  'start': CleanedEntities[i]['start'],
@@ -550,7 +595,6 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                                                                                      'end': CleanedEntities[i]['end'],
                                                                                      'label': CleanedEntities[i][
                                                                                          'label'], 'label2': finalLabel}
-                                        finalLabel = bio_label + finalLabel
                                         CleanedEntities[i][label_type] = finalLabel
                                     else:
                                         NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
@@ -572,7 +616,6 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                                                                              'end': CleanedEntities[i]['end'],
                                                                              'label': CleanedEntities[i]['label'],
                                                                              'label2': finalLabel}
-                                finalLabel = bio_label + finalLabel
                             else:
                                 if label_type == 'label':
                                     NewEntityLabels[len(NewEntityLabels)] = {'ent': CleanedEntities[i]['token'],
@@ -589,13 +632,12 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                             break
 
         if (found == False):
-            CleanedEntities[i] = EntDictBIO[i]
-
+            CleanedEntities[i] = TokensDict[i]
+    
     FinalHash = {}
 
     # Change the old labels in the original hash to return (only if offsets match, to avoid tokenization errors)
     Ents2Change = {}
-    
     AuxList = []
     for Ent in HashEntities:
         s = HashEntities[Ent]['start']
@@ -622,13 +664,21 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
         else:
             HashEntities[hashkey]['label'] = item[1]['label']
     
-        # Remove in the remaining multiword entities the labels defined in exception lists regardless of patterns ("ANY-LEMMA")
+    # Remove in the remaining multiword entities the labels defined in exception lists regardless of patterns ("ANY-LEMMA")
     # e.g. "metabolismo celular", PHYS, is not removed using any pattern, but needs to be removed using "ANY-LEMMA" 
     for k in HashEntities.copy():
         if HashEntities[k]['label'] in LabelsToRemove:
             del HashEntities[k]
- 
-    return HashEntities
+
+    # Remove duplicated values 
+    FinalHashEntities = {}
+    n = 0
+    for k in HashEntities:
+        if HashEntities[k] not in FinalHashEntities.values():
+            n+=1
+            FinalHashEntities[n] = HashEntities[k]
+    
+    return FinalHashEntities
 
 
 def main(arg1, *arg2):
