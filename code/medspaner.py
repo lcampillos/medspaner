@@ -270,6 +270,9 @@ def main(arguments):
             if (arguments.nest):
                 # Merge both dictionaries of nesting (outer) and nested entities to output in BRAT format
                 AllFinalEntities = merge_dicts(AllFlatEnts,AllNestedEnts)
+                # Remove entities with same label as wider entities (e.g. "dolor" in "dolor de muelas")
+                AllFinalEntities, AllNestedEntities = remove_overlap(AllFinalEntities)
+                AllFinalEntities = merge_dicts(AllFinalEntities, AllNestedEntities)
             else:
                 AllFinalEntities = AllFlatEnts
             
@@ -289,7 +292,10 @@ def main(arguments):
 
     elif (arguments.out == "json"):
 
-        AllFinalEntities = AllNestedEnts    # CAMBIAR ESTO
+        AllFinalEntities = merge_dicts(AllFlatEnts,AllNestedEnts)
+        # Remove entities with same label as wider entities (e.g. "dolor" in "dolor de muelas")
+        AllFinalEntities, AllNestedEntities = remove_overlap(AllFinalEntities)
+        AllFinalEntities = merge_dicts(AllFinalEntities, AllNestedEntities)
         jsonEntities = convert2json(AllFinalEntities)
         # Normalization to UMLS CUIs
         if (arguments.norm):
