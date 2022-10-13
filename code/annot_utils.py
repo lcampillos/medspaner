@@ -17,6 +17,7 @@ def remove_space(EntsList):
     ''' Function to remove space before predicted entities '''
     
     FinalList = []
+    
     for item in EntsList:
         ent = item['word']
         # default value
@@ -39,6 +40,7 @@ def remove_space(EntsList):
         # Update list of dictionaries
         if finalItem['word']!='':
             FinalList.append(finalItem)
+            
     return FinalList
 
 
@@ -47,9 +49,11 @@ def aggregate_subword_entities(DictList, string):
     ''' Postprocess and aggregate annotated entities that are subwords from BERT model
         E.g. "auto", "medic", "arse" -> "automedicarse"
     '''
-    
+
+    # Save concatenated subwords to be output as full words
     Aggregated = []
 
+    # Auxiliary hash
     AuxDict = {}
 
     # Sort list of dictionaries in reverse order according to offsets
@@ -65,8 +69,13 @@ def aggregate_subword_entities(DictList, string):
         end = Dict['end']
         
         # check if the character previous to the starting offset is a white space or a punctuation sign
-        if (string[prev_char]) not in [" ", "/", "\n", "\r", "?", "!"]:  # TODO: check if add more punctuation characters                  
-            
+        if (string[prev_char]) not in [" ", "/", "\n", "\r", "?", "!"]:  # TODO: check if add more punctuation characters
+            # Check if offsets are continuous
+            # If no continuous offsets, re-start AuxDict
+            if len(AuxDict)!=0 and (end != AuxDict['start']):
+                Aggregated.append(AuxDict)
+                AuxDict = {}
+
             # Get data from previous entity saved in AuxDict
             if len(AuxDict) > 0:
                 new_word = word + AuxDict['word']
@@ -77,14 +86,18 @@ def aggregate_subword_entities(DictList, string):
                 if ((string[prev_char]) == "-") and (prev_char != 0) and (string[prev_char - 1] == "\n"):
                     Aggregated.append(AuxDict)
                     AuxDict = {}
+                #else: #BORRAR SI NO DA ERROR
+                #    Aggregated.append(AuxDict)
             else:
-                AuxDict = {'entity_group': Dict['entity_group'], 'word': word, 'start': start, 'end': end}
+                AuxDict = Dict
                 # If it is the first entity (not to be reconstructed)
                 if ((i + 1) == len(ReverseDictList)):
                     Aggregated.append(AuxDict)
                     AuxDict = {}
+                #else: #BORRAR SI NO DA ERROR
+                #    print("AQU1 2 B!!", Dict)
+                #    Aggregated.append(AuxDict)
         else:
-            
             if len(AuxDict) > 0:
                 # Check if end offset of previous word is next to start offset of present word
                 prev_start = AuxDict['start']
