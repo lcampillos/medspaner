@@ -22,11 +22,11 @@ The neural model is [RoBERTA model trained on clinical and EHR data](https://hug
 
 To annotate a single text, run with:
 
-    python medianno.py -conf config.conf -input PATH/TO/FILE.txt
+    python medspaner.py -conf config.conf -input PATH/TO/FILE.txt
 
 To annotate a directory, run with:
 
-    python medianno_dir.py -conf config.conf -input PATH/TO/DIR
+    python medspaner_dir.py -conf config.conf -input PATH/TO/DIR
 
 
 Requirements
