@@ -1,10 +1,10 @@
 
 ![Graphical User Interface](gui.png)
 
-Medical Information Annotation tool
-==============================================
+Medical Semantic python-assisted Named Entity Recognizer
+========================================================
 
-This is a hybrid (neural-network-based, lexicon-based and rule-based) sequence labeling tool for the medical domain. It was originally developed for medical named entity recognition of clinical trial texts, but it can be applied to other medical text types.
+This is a hybrid (neural-network-based, lexicon-based and rule-based) sequence labeling tool for Spanish medical texts. It was originally developed for clinical trial texts, but it can be applied to other medical text genres.
 
 The annotation tool can perform the following tasks:
 - medical named entity recognition of 7 [Unified Medical Language System (UMLS)](https://www.nlm.nih.gov/research/umls/index.html) semantic groups (ANAT, CHEM, DEVI, DISO, LIVB, PHYS, PROC)
