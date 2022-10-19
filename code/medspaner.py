@@ -3,13 +3,13 @@
 #
 # medspaner.py
 #
-# Medical semantic python-assisted named entity recognizer using dictionary and pre-trained transformer models.
+# Medical Semantic python-assisted Named Entity Recognizer using dictionary and pre-trained transformer models.
 #
 # Usage:
 #
 #   python medspaner.py -conf <CONFIG_FILE> -input <FILE>
 # 
-# Leonardo Campillos-Llanos (UAM - CSIC)
+# Leonardo Campillos-Llanos (UAM & CSIC)
 # 2019-2022
 #
 #########################################################################
@@ -76,7 +76,7 @@ def main(arguments):
     
     # If normalization data is needed, load file
     if (arguments.norm):
-        DataFile = open("umls_data.pickle", 'rb')
+        DataFile = open("lexicon/umls_data.pickle", 'rb')
         UMLSData = pickle.load(DataFile)
 
     # If use of an exception list to remove specific entities 
@@ -108,7 +108,7 @@ def main(arguments):
     text = arguments.input
     
     # Load lexicon data
-    LexiconData, POSData = read_lexicon("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP1/devel-WP1/lexicon/MedLexSp.pickle")
+    LexiconData, POSData = read_lexicon("lexicon/MedLexSp.pickle")
 
     Tokens = tokenize_spacy(text,POSData)
 

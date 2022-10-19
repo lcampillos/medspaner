@@ -6,7 +6,7 @@ from flask import Flask, request, render_template, Markup
 # Import annotation modules
 import sys
 
-sys.path.append("..")  # Adds higher directory to python modules path.
+sys.path.append("../")  # Adds higher directory to python modules path.
 
 import re
 

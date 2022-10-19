@@ -3,13 +3,13 @@
 #
 # medspaner_dir.py
 #
-# Medical information annotation tool using dictionary and pre-trained transformer models.
+# Medical Semantic python-assisted Named Entity Recognizer using dictionary and pre-trained transformer models.
 #
 # Usage:
 #
 #   python medspaner_dir.py -conf <CONFIG_FILE> -input <FOLDER>
 # 
-# Leonardo Campillos-Llanos
+# Leonardo Campillos-Llanos (UAM & CSIC)
 # 2019-2022
 #
 #########################################################################
@@ -108,7 +108,7 @@ def main(arguments):
     text = arguments.input
     
     # Load lexicon data
-    LexiconData, POSData = read_lexicon("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP1/devel-WP1/lexicon/MedLexSp.pickle")
+    LexiconData, POSData = read_lexicon("lexicon/MedLexSp.pickle")
 
     # Load the previously trained transformers model
     if (arguments.neu):

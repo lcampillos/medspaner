@@ -71,7 +71,7 @@ def read_lexicon(dictFilename):
     LexiconData = pickle.load(LexiconDataFile)
     
     # POS data
-    POSData_pickle = "../lexicon/MedLexSpPOS.pickle"
+    POSData_pickle = re.sub("MedLexSp","MedLexSpPOS",dictFilename)
     POSDataFile = open(POSData_pickle, 'rb')
     POSData = pickle.load(POSDataFile)
     
