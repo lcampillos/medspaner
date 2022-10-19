@@ -83,27 +83,7 @@ def main(arguments):
     if (arguments.exc):
         
         # Read exceptions and save to hash
-        ExceptionsDict = {}
-    
-        # Read and process the exceptions
-        with open(arguments.exc, 'r', newline='') as f:
-            n = 0
-            Lines = f.readlines()
-            for line in Lines:
-                line = line.strip()
-                if "#" not in line and line != '':
-                    pattern_string, finalLabel = re.search("([^\|]+)\|([^\|]+)", line).group(1, 2)
-                    if pattern_string and finalLabel:
-                        PatternList = pattern_string.split()
-                        TuplesList = []
-                        for pattern in PatternList:
-                            lemma, label = re.search("(.+)/(.+)", pattern).group(1, 2)
-                            if lemma and label:
-                                n += 1
-                                Tuple = (lemma, label)
-                                TuplesList.append(Tuple)
-                                # Use a tuple, lists are not allowed as dictionary keys
-                                ExceptionsDict[n] = {'pattern': TuplesList, 'finalLabel': finalLabel}
+        ExceptionsDict = read_exceptions_list(arguments.exc)
 
     text = arguments.input
     
@@ -130,14 +110,14 @@ def main(arguments):
 
             #  If annotation of nested entities        
             if (arguments.nest):
-                print("Annotating nested entities with lexicon...")
+                print("Annotating UMLS entities (flat and nested) with lexicon...")
                 Entities,NestedEnts = apply_lexicon(text,LexiconData,arguments.nest)               
             else:
-                print("Annotating with lexicon...")
+                print("Annotating UMLS entities with lexicon...")
                 Entities,NestedEnts = apply_lexicon(text,LexiconData)
             
-            AllFlatEnts = Entities
-            AllNestedEnts = NestedEnts
+            AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
+            AllNestedEnts = merge_dicts(AllNestedEnts, NestedEnts)
 
         # Use transformers model to annotate UMLS entities
         if (arguments.neu):
@@ -165,6 +145,9 @@ def main(arguments):
                 Entities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
             
             AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
+            # In case of overlap
+            AllFlatEnts, NestedEntities = remove_overlap(AllFlatEnts)
+            AllNestedEnts = merge_dicts(AllNestedEnts, NestedEntities)
 
         # Annotation of temporal expressions
         if (arguments.temp):

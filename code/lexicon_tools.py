@@ -368,6 +368,35 @@ def add_label_to_token(EntitiesDict,TokensDict):
     return TokensDict
 
 
+def read_exceptions_list(FILENAME):
+    
+    ''' Reads file with list of exceptions to process. '''
+    
+    ExceptionsHash = {}
+    
+    # Read and process the exceptions
+    with open(FILENAME, 'r', newline='') as f:
+        n = 0
+        Lines = f.readlines()
+        for line in Lines:
+            line = line.strip()
+            if "#" not in line and line != '':
+                pattern_string, finalLabel = re.search("([^\|]+)\|([^\|]+)", line).group(1, 2)
+                if pattern_string and finalLabel:
+                    PatternList = pattern_string.split()
+                    TuplesList = []
+                    for pattern in PatternList:
+                        lemma, label = re.search("(.+)/(.+)", pattern).group(1, 2)
+                        if lemma and label:
+                            n += 1
+                            Tuple = (lemma, label)
+                            TuplesList.append(Tuple)
+                            # Use a tuple, lists are not allowed as dictionary keys
+                            ExceptionsHash[n] = {'pattern': TuplesList, 'finalLabel': finalLabel}
+
+    return ExceptionsHash
+
+
 def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, NestedEnts):
     
     '''
@@ -384,7 +413,7 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
        - NestedDataHash: a hash with annotated entities inside the scope of wider entities, in the following format:
             {1: {'start': 0, 'end': 8, 'ent': 'insulina', 'label': 'PROC'}, ... }
     '''
-
+    
     CleanedEntities = {}
 
     # Save entity, new labels, and offsets
@@ -397,6 +426,7 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
     TokensDict = add_label_to_token(HashEntities,TokensDict)
     k = 0
     for i in TokensDict:
+        
         found = False
         # Data of current entity
         label = TokensDict[i]['label']
@@ -455,12 +485,12 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                         CleanedEntities[i][label_type] = finalLabel
                 # Process 1-gram exceptions
                 if (len(patternList) == 1) and (found == False):
-                    if (found == False) and ((lemma_pat_prev == lemma) and (tag_prev == label)) or (
-                        (lemma_pat_prev == "ANY-LEMMA") and (tag_prev == label)):                        
+                    if (found == False) and ((lemma_pat_prev == lemma) and (tag_prev == label)) or ((lemma_pat_prev == "ANY-LEMMA") and (tag_prev == label)):
                         found = True
                         CleanedEntities[i] = TokensDict[i]
                         # CASE 1: There are nested entities
-                        if len(NestedEnts) > 0:                            
+                        if len(NestedEnts) > 0:
+                            
                             # If an entity in NestedEnts does not occur in the exception list, its label is used
                             for e in NestedEnts:
                                 nested_ent = NestedEnts[e]['ent']
@@ -516,6 +546,7 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
                                     break
                         # CASE 2: There are not nested entities
                         else:
+                            
                             CleanedEntities[i][label_type] = 'O'
                             if finalLabel != "O":
                                 if label_type == 'label':
@@ -646,8 +677,8 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
             new_label = NewEntityLabels[NewEnt]['label']
             new_label2 = NewEntityLabels[NewEnt]['label2']
             if (s == s_new) and (e == e_new) and (HashEntities[Ent]['ent'] == NewEntityLabels[NewEnt]['ent']):
-                Hash = {'start': s, 'end': e, 'ent': HashEntities[Ent]['ent'], 'label': new_label, 'label2': new_label2,
-                        'hashkey': Ent}
+                
+                Hash = {'start': s, 'end': e, 'ent': HashEntities[Ent]['ent'], 'label': new_label, 'label2': new_label2, 'hashkey': Ent}
                 # Avoid repeated items to remove
                 if Hash not in Ents2Change.values():
                     Ents2Change[len(Ents2Change)] = Hash
@@ -667,7 +698,7 @@ def remove_entities(HashEntities, TokensDict, ExceptionsDict, label_type, Nested
     for k in HashEntities.copy():
         if HashEntities[k]['label'] in LabelsToRemove:
             del HashEntities[k]
-
+    
     # Remove duplicated values 
     FinalHashEntities = {}
     n = 0

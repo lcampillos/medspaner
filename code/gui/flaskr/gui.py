@@ -128,30 +128,10 @@ umls_token_classifier = pipeline("token-classification", model=model_checkpoint,
 
 
 # list of exceptions and patterns to change according to task
-EXCEPTIONS_LIST = "/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP2/WP2-1/patterns/list_except.txt"
+EXCEPTIONS_LIST = "../patterns/list_except.txt"
 
 # Read exceptions and save to hash
-ExceptionsDict = {}
-
-# Read and process the exceptions
-with open(EXCEPTIONS_LIST, 'r', newline='') as f:
-    n = 0
-    Lines = f.readlines()
-    for line in Lines:
-        line = line.strip()
-        if "#" not in line and line != '':
-            pattern_string, finalLabel = re.search("([^\|]+)\|([^\|]+)", line).group(1, 2)
-            if pattern_string and finalLabel:
-                PatternList = pattern_string.split()
-                TuplesList = []
-                for pattern in PatternList:
-                    lemma, label = re.search("(.+)/(.+)", pattern).group(1, 2)
-                    if lemma and label:
-                        n += 1
-                        Tuple = (lemma, label)
-                        TuplesList.append(Tuple)
-                        # Use a tuple, lists are not allowed as dictionary keys
-                        ExceptionsDict[n] = {'pattern': TuplesList, 'finalLabel': finalLabel}
+ExceptionsDict = read_exceptions_list(EXCEPTIONS_LIST)
 
 
 def update_offsets(List,offset,text):
@@ -623,6 +603,7 @@ def gui():
             AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
             AllNestedEnts = merge_dicts(AllNestedEnts, NestedEnts)
 
+
         # if annotation of UMLS entities with neural model
         neu = request.form.getlist("neu")
         if (neu):
@@ -638,6 +619,9 @@ def gui():
                 Entities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
 
             AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
+            # In case of overlap
+            AllFlatEnts, NestedEntities = remove_overlap(AllFlatEnts)
+            AllNestedEnts = merge_dicts(AllNestedEnts, NestedEntities)
 
         # Annotation of temporal expressions
         temp = request.form.getlist("temp")
@@ -657,15 +641,14 @@ def gui():
                                              aggregation_strategy="simple", tokenizer=tokenizer)
 
             TempOutput = annotate_sentences_with_model(Sentences, text, temp_token_classifier)
-
+            
             # Save the annotated entities with the final format
             TempEntities = {}
 
             # Change format
             for i, Ent in enumerate(TempOutput):
-                TempEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'],
-                                   'label': Ent['entity_group']}
-
+                TempEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
+            
             # Merge all entities
             AllFlatEnts = merge_dicts(AllFlatEnts, TempEntities)
 
@@ -696,8 +679,7 @@ def gui():
             # Change format to:
             #   Entities = {1: {'start': 3, 'end': 11, 'ent': 'COVID-19', 'label': 'DISO'}, 2: ... }
             for i, Ent in enumerate(MedicAttrOutput):
-                MedicAttrEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'],
-                                        'label': Ent['entity_group']}
+                MedicAttrEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
 
             # Merge all entities
             AllFlatEnts = merge_dicts(AllFlatEnts, MedicAttrEntities)
@@ -728,14 +710,14 @@ def gui():
 
             # Change format
             for i, Ent in enumerate(NegSpecOutput):
-                NegSpecEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'],
-                                      'label': Ent['entity_group']}
+                NegSpecEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
 
             # Merge all entities
             AllFlatEnts = merge_dicts(AllFlatEnts, NegSpecEntities)
 
         # Remove entities defined in an exception list (it could be selected with a parameter: (exc))
         AllFlatEnts = remove_entities(AllFlatEnts, Tokens, ExceptionsDict, 'label', AllNestedEnts)
+        
         # If nested entities, remove from layer 2 the entities defined in an exception list
         #  This is needed to change CHEM to ANAT in "sangrado [digestivo]"
         NestedEntsCleaned = {}
