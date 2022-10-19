@@ -9,8 +9,6 @@ import sys
 sys.path.append("..")  # Adds higher directory to python modules path.
 
 import re
-import add_bio_label
-from add_bio_label import *
 
 import argparse
 
@@ -594,7 +592,7 @@ def gui():
         norm = request.form.getlist("norm")
         UMLSData = {}
         if (norm):
-            DataFile = open("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP2/medianno/code/lexicon/umls_data.pickle", 'rb')
+            DataFile = open("../lexicon/umls_data.pickle", 'rb')
             UMLSData = pickle.load(DataFile)
 
         # Split text into sentences
@@ -602,7 +600,7 @@ def gui():
 
         Sentences = sentences_spacy(text)
 
-        LexiconData, POSData = read_lexicon("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP2/medianno/code/lexicon/MedLexSp.pickle")
+        LexiconData, POSData = read_lexicon("../lexicon/MedLexSp.pickle")
 
         # Text needs to be tokenized for recognizing time expressions, negation or drug scheme
         Tokens = tokenize_spacy_text(text, POSData)

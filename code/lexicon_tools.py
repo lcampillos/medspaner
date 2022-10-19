@@ -13,8 +13,6 @@ import os
 import sys
 import pickle
 from spacy_tokenizer import *
-import add_bio_label
-from add_bio_label import *
 import textsearch
 from textsearch import TextSearch
 
@@ -73,7 +71,7 @@ def read_lexicon(dictFilename):
     LexiconData = pickle.load(LexiconDataFile)
     
     # POS data
-    POSData_pickle = "/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP2/medspaner/code/lexicon/MedLexSpPOS.pickle"
+    POSData_pickle = "../lexicon/MedLexSpPOS.pickle"
     POSDataFile = open(POSData_pickle, 'rb')
     POSData = pickle.load(POSDataFile)
     

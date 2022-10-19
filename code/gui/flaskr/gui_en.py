@@ -9,23 +9,15 @@ import sys
 sys.path.append("..")  # Adds higher directory to python modules path.
 
 import re
-import add_bio_label
-from add_bio_label import *
 
 import argparse
 
 import spacy
-import spacy_tokenizer_text
-from spacy_tokenizer_text import *
+import spacy_tokenizer
+from spacy_tokenizer import *
 
-import annot_from_lexicon
-from annot_from_lexicon import *
-
-import postproc_rules
-from postproc_rules import *
-from annot_temp import *
-from annot_drug_features import *
-from annot_neg_spec import *
+import lexicon_tools
+from lexicon_tools import *
 
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
@@ -600,7 +592,7 @@ def gui_tf():
         norm = request.form.getlist("norm")
         UMLSData = {}
         if (norm):
-            DataFile = open("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP2/WP2-1/umls_data.pickle", 'rb')
+            DataFile = open("../lexicon/umls_data.pickle", 'rb')
             UMLSData = pickle.load(DataFile)
 
         # Split text into sentences
@@ -608,7 +600,7 @@ def gui_tf():
 
         Sentences = sentences_spacy(text)
 
-        LexiconData, POSData = read_lexicon("/Users/Leonardo 1/Documents/Trabajo/InterTalentumUAM2018/WP1/devel-WP1/lexicon/MedLexSp.pickle")
+        LexiconData, POSData = read_lexicon("../lexicon/MedLexSp.pickle")
 
         # Text needs to be tokenized for recognizing time expressions, negation or drug scheme
         Tokens = tokenize_spacy_text(text, POSData)

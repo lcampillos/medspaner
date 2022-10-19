@@ -277,8 +277,8 @@ valencia/PHYS|O
 válido/PHYS|O
 valor/PHYS|O
 valorar/PHYS|O
-varón/PHYS|O
-varones/PHYS|O
+varón/PHYS|LIVB
+varones/PHYS|LIVB
 vc/PHYS|O
 # vd: vasodilatación
 vd/PHYS|O
