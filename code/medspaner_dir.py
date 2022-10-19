@@ -76,7 +76,7 @@ def main(arguments):
     
     # If normalization data is needed, load file
     if (arguments.norm):
-        DataFile = open("umls_data.pickle", 'rb')
+        DataFile = open("lexicon/umls_data.pickle", 'rb')
         UMLSData = pickle.load(DataFile)
 
     # If use of an exception list to remove specific entities 
