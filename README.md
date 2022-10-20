@@ -67,14 +67,13 @@ Go to the ```gui``` subfolder and run:
 Requirements: [flaskr](https://flask.palletsprojects.com/en/2.2.x/) (tested with vs. 1.1.2)
 
 
-
 Data format
 -------------------------
 
 The input data is a standard text file (```.txt```).
 
 The output data format can be a BRAT (```.ann```) file or ```json```.
-    
+
 
 List of patterns and annotation exceptions
 -------------------------------------------------
@@ -91,7 +90,7 @@ To re-label *edad* tagged as ```PHYS``` to ```O``` (no label), write:
 
     edad/PHYS|O
     
-For two-word patterns, note that the current version only supports re-labelling the second token. For example, to re-label *iv* from ```Route``` to ```O````, write:
+For two-word patterns, note that the current version only supports re-labelling the second token. For example, to re-label *iv* from ```Route``` to ```O```, write:
     
     estadio/O iv/Route|O
 
