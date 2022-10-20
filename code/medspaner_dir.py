@@ -39,7 +39,7 @@ import configparser
 parser = argparse.ArgumentParser(description='Given a text file, annotate it with semantic labels')
 parser.add_argument('-conf', required=False, help='use configuration file to parse arguments (optional)')
 parser.add_argument('-drg', required=False, default=False, action='store_true', help='annotate drug features such as dose (not annotated by default)')
-parser.add_argument('-exc', required=False, default=False, help='add to use a list of exceptions of entity types not to be annotated')
+parser.add_argument('-exc', required=False, default=False, help='use a list of exceptions of entity types not to be annotated, or word patterns to re-label')
 parser.add_argument('-input', required=True, default=False, help='specify file to annotate')
 parser.add_argument('-lex', required=False, help='specify pickle object dictionary for preannotation (neural model is used by default); indicate using: -lex "lexicon/MedLexSp.pickle"')
 parser.add_argument('-neu', required=False, default=True, action='store_true', help='specify to annotate UMLS entities with neural model (used by default)')
