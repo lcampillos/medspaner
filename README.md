@@ -1,7 +1,7 @@
 
 ![Graphical User Interface](gui.png)
 
-Medical Semantic python-assisted Named Entity Recognizer
+## Medical Semantic python-assisted Named Entity Recognizer
 ========================================================
 
 This is a hybrid (neural-network-based, lexicon-based and rule-based) sequence labeling tool for Spanish medical texts. It was originally developed for clinical trial texts, but it can be applied to other medical text genres.
@@ -20,6 +20,34 @@ The [guideline](https://github.com/lcampillos/medspaner/blob/main/annot_guidelin
 
 The neural model is [RoBERTA model trained on clinical and EHR data](https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es), trained by the Barcelona Supercomputing Center, and fine-tuned in clinical trials annotated for different tasks: medical named entity recognition, temporal annotation, annotation of medication drug attributes, and annotation of negation and uncertainty/speculation.
 
+
+Requirements
+-------------------------
+
+* python (tested with vs. 3.7)
+* [spacy](https://spacy.io/) (tested with vs. 3.3.1)
+* [textsearch](https://github.com/kootenpv/textsearch)
+* [Transformers](https://huggingface.co/docs/transformers/installation) library by HuggingFace (tested with vs. 4.17).\
+
+
+Usage
+-------------------------
+
+Download the pre-trained models from the [HuggingFace hub](https://huggingface.co/lcampillos).
+
+#### Simple annotation using the [Transformers](https://huggingface.co/docs/transformers/installation) library
+
+Import the token classification class: 
+
+    from transformers import AutoModelForTokenClassification
+
+Then load the specific model. For example, use the following instruction to load the NER model for the UMLS semantic groups: 
+
+    model = "roberta-es- 515 clinical-trials-umls-7sgs-ner"
+
+
+#### Annotation using the integrated python code (with functionality for lexicon-based annotation and normalization)
+
 To annotate a single text, run with:
 
     python medspaner.py -conf config.conf -input PATH/TO/FILE.txt
@@ -29,40 +57,55 @@ To annotate a directory, run with:
     python medspaner_dir.py -conf config.conf -input PATH/TO/DIR
 
 
-Requirements
--------------------------
+#### Demonstration tool (Graphical User Interface)
 
-* python (tested with 3.7)
-* [spacy](https://spacy.io/) (tested with 3.3.1)
-* [textsearch](https://github.com/kootenpv/textsearch)
+Go to the ```gui``` subfolder and run:
+
+    python flaskr/gui.py
+
+Requirements: flaskr (tested with vs. 1.1.2)
+
 
 
 Data format
 -------------------------
 
-The data is a standard text file (.txt)
+The input data is a standard text file (```.txt```).
+
+The output data format can be a BRAT (```.ann```) file or ```json```.
     
+
+List of patterns and annotation exceptions
+-------------------------------------------------
+
+Use 
+
+
 
 Configuration
 -------------------------
 
 Edit the fields in the configuration file (config.conf) to adapt it to your purposes:
 
+* **conf** - Use configuration file to parse arguments; select ```False``` if no file is used
 * **drg** - Select ```True``` to annotate drug features such as Dosage Form, Dose or Strength, or Route; select ```False``` otherwise
+* **exc** - Use a list of exceptions of entity types not to be annotated, or word patterns to re-label; indicate ```False``` if no patterns are applied
+* **input** - Specify path to file or folder to annotate
 * **lex** - Use lexicon for the annotation of UMLS entities; by default, the lexicon is located at: ```lexicon/MedLexSp.pickle```; indicate ```False``` if no lexicon is needed
 * **neg** - Select ```True``` to annotate entities expressing negation and uncertainty; select ```False``` otherwise
-* **neu** - Select ```True``` (default value) to annotate UMLS entities with the trained neural model; select ```False``` otherwise
 * **nest** - Select ```True``` to output inner or nested entities inside wider entities (e.g. *pecho* in *cáncer de pecho*); select ```False``` to output only the entities with the wider scope (*flat entities*)
+* **neu** - Select ```True``` (default value) to annotate UMLS entities with the trained neural model; select ```False``` otherwise
 * **norm** - Select ```True``` if the output needs to be normalized to UMLS CUIs (only output in BRAT ```ann``` format); select ```False``` otherwise
 * **out** - Indicate ```ann``` ([BRAT](https://brat.nlplab.org/) format) or ```json``` (standard JSON data format)
 * **temp** - Select ```True``` to annotate temporal expressions according to the HeidelTime scheme (Date, Duration, Frequency, Time) and Age; select ```False``` otherwise
+
 
 References
 -------------------------
 
 <!---The annotation tool is described here:
 
-**NLP tools for fast annotation of clinical trial texts**  
+**Hybrid tool for semantic annotation of clinical trial texts**  
 Leonardo Campillos-Llanos ...  
 *In Proceedings of ...*
 --->
