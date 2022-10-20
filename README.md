@@ -2,7 +2,6 @@
 ![Graphical User Interface](gui.png)
 
 ## Medical Semantic python-assisted Named Entity Recognizer
-========================================================
 
 This is a hybrid (neural-network-based, lexicon-based and rule-based) sequence labeling tool for Spanish medical texts. It was originally developed for clinical trial texts, but it can be applied to other medical text genres.
 
@@ -27,7 +26,7 @@ Requirements
 * python (tested with vs. 3.7)
 * [spacy](https://spacy.io/) (tested with vs. 3.3.1)
 * [textsearch](https://github.com/kootenpv/textsearch)
-* [Transformers](https://huggingface.co/docs/transformers/installation) library by HuggingFace (tested with vs. 4.17).\
+* [Transformers](https://huggingface.co/docs/transformers/installation) library by HuggingFace (tested with vs. 4.17)
 
 
 Usage
@@ -43,10 +42,12 @@ Import the token classification class:
 
 Then load the specific model. For example, use the following instruction to load the NER model for the UMLS semantic groups: 
 
-    model = "roberta-es- 515 clinical-trials-umls-7sgs-ner"
+    model = "roberta-es-clinical-trials-umls-7sgs-ner"
 
 
-#### Annotation using the integrated python code (with functionality for lexicon-based annotation and normalization)
+#### Annotation using the integrated python code
+
+This option provides transformer-based named entity recognition as well as functionalities for lexicon-based annotation, nested entities recognition, and normalization.
 
 To annotate a single text, run with:
 
@@ -63,7 +64,7 @@ Go to the ```gui``` subfolder and run:
 
     python flaskr/gui.py
 
-Requirements: flaskr (tested with vs. 1.1.2)
+Requirements: [flaskr](https://flask.palletsprojects.com/en/2.2.x/) (tested with vs. 1.1.2)
 
 
 
@@ -78,8 +79,21 @@ The output data format can be a BRAT (```.ann```) file or ```json```.
 List of patterns and annotation exceptions
 -------------------------------------------------
 
-Use 
+You can optionally use a list of two-word patterns or single words to be re-labeled or excluded from the annotation.
 
+This list would typically contain *noisy* entities or ambiguous words for a given task.
+
+For example, to exclude all entities from the ```DEVI``` semantic group (medical devices), include the following line:
+
+    ANY-LEMMA/DEVI|O
+
+To re-label *edad* tagged as ```PHYS``` to ```O``` (no label), write:
+
+    edad/PHYS|O
+    
+For two-word patterns, note that the current version only supports re-labelling the second token. For example, to re-label *iv* from ```Route``` to ```O````, write:
+    
+    estadio/O iv/Route|O
 
 
 Configuration
