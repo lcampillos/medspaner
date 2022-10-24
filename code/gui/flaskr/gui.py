@@ -9,7 +9,6 @@ import sys
 sys.path.append("../")  # Adds higher directory to python modules path.
 
 import re
-
 import argparse
 
 import spacy
@@ -54,6 +53,7 @@ def remove_space(EntsList):
 
 
 def aggregate_subword_entities(DictList, string):
+
     ''' Postprocess and aggregate annotated entities that are subwords from BERT model
         E.g. "auto", "medic", "arse" -> "automedicarse"
     '''
@@ -99,14 +99,24 @@ def aggregate_subword_entities(DictList, string):
                 # Check if end offset of previous word is next to start offset of present word
                 prev_start = AuxDict['start']
                 if (prev_start != end):
-                    FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'],
-                                 'end': Dict['end']}
+                    # If parenthesis character as part of an entity (check if same label)
+                    char = AuxDict['word'][0]
+                    if (char == "(") and (Dict['entity_group'] == AuxDict['entity_group']):
+                        new_word = Dict['word'] + " " + AuxDict['word']
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': Dict['start'], 'end': AuxDict['end']}
+                    else:
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end']}
+                    Aggregated.append(FinalDict)
+                    AuxDict = {}
                 else:
-                    FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'],
-                                 'start': Dict['start'], 'end': AuxDict['end']}
-                Aggregated.append(FinalDict)
-                AuxDict = {}
+                    if word == ("(") and (i < len(ReverseDictList)) and (Dict['entity_group'] == AuxDict['entity_group']):
+                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end']}
+                    else:
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end']}
+                        Aggregated.append(FinalDict)
+                        AuxDict = {}
             else:
+                # if character is an opening parenthesis, check to merge it with previous item
                 Aggregated.append(Dict)
 
     # Reverse again before returning results
@@ -603,7 +613,6 @@ def gui():
             AllFlatEnts = merge_dicts(AllFlatEnts,Entities)
             AllNestedEnts = merge_dicts(AllNestedEnts, NestedEnts)
 
-
         # if annotation of UMLS entities with neural model
         neu = request.form.getlist("neu")
         if (neu):
@@ -641,7 +650,7 @@ def gui():
                                              aggregation_strategy="simple", tokenizer=tokenizer)
 
             TempOutput = annotate_sentences_with_model(Sentences, text, temp_token_classifier)
-            
+
             # Save the annotated entities with the final format
             TempEntities = {}
 
@@ -717,7 +726,6 @@ def gui():
 
         # Remove entities defined in an exception list (it could be selected with a parameter: (exc))
         AllFlatEnts = remove_entities(AllFlatEnts, Tokens, ExceptionsDict, 'label', AllNestedEnts)
-        
         # If nested entities, remove from layer 2 the entities defined in an exception list
         #  This is needed to change CHEM to ANAT in "sangrado [digestivo]"
         NestedEntsCleaned = {}

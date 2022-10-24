@@ -99,13 +99,22 @@ def aggregate_subword_entities(DictList, string):
                 # Check if end offset of previous word is next to start offset of present word
                 prev_start = AuxDict['start']
                 if (prev_start != end):
-                    FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'],
-                                 'end': Dict['end']}
+                    # If parenthesis character as part of an entity (check if same label)
+                    char = AuxDict['word'][0]
+                    if (char == "(") and (Dict['entity_group'] == AuxDict['entity_group']):
+                        new_word = Dict['word'] + " " + AuxDict['word']
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': Dict['start'], 'end': AuxDict['end']}
+                    else:
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end']}
+                    Aggregated.append(FinalDict)
+                    AuxDict = {}
                 else:
-                    FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'],
-                                 'start': Dict['start'], 'end': AuxDict['end']}
-                Aggregated.append(FinalDict)
-                AuxDict = {}
+                    if word == ("(") and (i < len(ReverseDictList)) and (Dict['entity_group'] == AuxDict['entity_group']):
+                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end']}
+                    else:
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end']}
+                        Aggregated.append(FinalDict)
+                        AuxDict = {}
             else:
                 Aggregated.append(Dict)
 

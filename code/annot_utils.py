@@ -86,27 +86,40 @@ def aggregate_subword_entities(DictList, string):
                 if ((string[prev_char]) == "-") and (prev_char != 0) and (string[prev_char - 1] == "\n"):
                     Aggregated.append(AuxDict)
                     AuxDict = {}
-                #else: #BORRAR SI NO DA ERROR
-                #    Aggregated.append(AuxDict)
+
             else:
                 AuxDict = Dict
                 # If it is the first entity (not to be reconstructed)
                 if ((i + 1) == len(ReverseDictList)):
                     Aggregated.append(AuxDict)
                     AuxDict = {}
-                #else: #BORRAR SI NO DA ERROR
-                #    print("AQU1 2 B!!", Dict)
-                #    Aggregated.append(AuxDict)
+
         else:
             if len(AuxDict) > 0:
                 # Check if end offset of previous word is next to start offset of present word
                 prev_start = AuxDict['start']
                 if (prev_start != end):
-                    FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end']}
+                    # If parenthesis character as part of an entity (check if same label)
+                    char = AuxDict['word'][0]
+                    if (char == "(") and (Dict['entity_group'] == AuxDict['entity_group']):
+                        new_word = Dict['word'] + " " + AuxDict['word']
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': Dict['start'],
+                                     'end': AuxDict['end']}
+                    else:
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'],
+                                     'end': Dict['end']}
+                    Aggregated.append(FinalDict)
+                    AuxDict = {}
                 else:
-                    FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end']}
-                Aggregated.append(FinalDict)
-                AuxDict = {}
+                    if word == ("(") and (i < len(ReverseDictList)) and (
+                        Dict['entity_group'] == AuxDict['entity_group']):
+                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'],
+                                   'start': Dict['start'], 'end': AuxDict['end']}
+                    else:
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'],
+                                     'start': Dict['start'], 'end': AuxDict['end']}
+                        Aggregated.append(FinalDict)
+                        AuxDict = {}
             else:
                 Aggregated.append(Dict)
 
