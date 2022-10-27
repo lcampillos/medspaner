@@ -292,9 +292,12 @@ def complete_norm_data(List,UMLSDataDict):
     '''
 
     for cui in List:
+        # Default value
+        data = cui
+        # Complete full data, only if available
         if cui in UMLSDataDict.keys():
             data = cui + "; " + UMLSDataDict[cui]['term'] + "; " + UMLSDataDict[cui]['sty']
-            CUIList.append(data)
+        CUIList.append(data)
     
     return CUIList
     
