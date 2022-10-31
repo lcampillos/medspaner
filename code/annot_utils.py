@@ -25,6 +25,7 @@ def remove_space(EntsList):
         # Remove space at the beginning of the string
         if ent.startswith(" "):
             finalItem = {'entity_group': item['entity_group'], 'score': item['score'], 'word': item['word'][1:], 'start': item['start'], 'end': item['end']}
+
         # Remove spaces at the end of the string
         if ent.endswith("\s") or ent.endswith("\t") or ent.endswith("\n"):
             finalWord = re.sub("(\s+|\t+|\n+)$", "", finalItem['word'])
@@ -96,6 +97,7 @@ def aggregate_subword_entities(DictList, string):
 
         else:
             if len(AuxDict) > 0:
+
                 # Check if end offset of previous word is next to start offset of present word
                 prev_start = AuxDict['start']
                 if (prev_start != end):
@@ -110,6 +112,7 @@ def aggregate_subword_entities(DictList, string):
                                      'end': Dict['end']}
                     Aggregated.append(FinalDict)
                     AuxDict = {}
+
                 else:
                     if word == ("(") and (i < len(ReverseDictList)) and (
                         Dict['entity_group'] == AuxDict['entity_group']):
@@ -150,16 +153,31 @@ def update_offsets(List, offset, text):
         if (entity == candidate):
             NewList.append(dictionary)
         else:
+            corrected = False
             # Correct offsets
+            # 1 different offset
             new_start = new_start + 1
             new_end = new_end + 1
             dictionary['start'] = new_start
             dictionary['end'] = new_end
             candidate = text[new_start:new_end]
+
             if (entity == candidate):
                 NewList.append(dictionary)
-            else:
-                print("Error in offsets of entity: %s" % (entity))
+                corrected = True
+
+            if (corrected == False):
+                # 2 different offsets
+                new_start = new_start + 1
+                new_end = new_start + len(entity)
+                dictionary['start'] = new_start
+                dictionary['end'] = new_end
+                candidate = text[new_start:new_end]
+                if (entity == candidate):
+                    corrected = True
+                    NewList.append(dictionary)
+                else:
+                    print("Error in offsets of entity: %s" % (entity))
 
     return NewList
 
