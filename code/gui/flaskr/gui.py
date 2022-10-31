@@ -165,16 +165,31 @@ def update_offsets(List,offset,text):
         if (entity==candidate):
             NewList.append(dictionary)
         else:
+            corrected = False
             # Correct offsets
+            # 1 different offset
             new_start = new_start + 1
             new_end = new_end + 1
             dictionary['start'] = new_start
             dictionary['end'] = new_end
             candidate = text[new_start:new_end]
-            if (entity==candidate):
+
+            if (entity == candidate):
                 NewList.append(dictionary)
-            else:
-                print("Error in offsets of entity: %s" % (entity))
+                corrected = True
+
+            if (corrected == False):
+                # 2 different offsets
+                new_start = new_start + 1
+                new_end = new_start + len(entity)
+                dictionary['start'] = new_start
+                dictionary['end'] = new_end
+                candidate = text[new_start:new_end]
+                if (entity == candidate):
+                    corrected = True
+                    NewList.append(dictionary)
+                else:
+                    print("Error in offsets of entity: %s" % (entity))
     
     return NewList
 
