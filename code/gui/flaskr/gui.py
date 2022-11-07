@@ -105,7 +105,6 @@ def aggregate_subword_entities(DictList, string):
                         new_start = start
                         new_end = AuxDict['end']
                         AuxDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': new_start, 'end': new_end}
-                        Aggregated.append(AuxDict)
                     else:
                         Aggregated.append(AuxDict)
                     AuxDict = Dict
