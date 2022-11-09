@@ -11,6 +11,7 @@
 #########################################################################
 
 import re
+import json
 
 def remove_space(EntsList):
     
@@ -251,10 +252,10 @@ def convert2json(EntityHash):
     jsonEntities = []
 
     for i in EntityHash:
-        EntDict = {'entity_group': EntityHash[i]['label'], 'word': EntityHash[i]['ent'],
-                   'start': EntityHash[i]['start'], 'end': EntityHash[i]['end']}
+        EntDict = {"entity_group": EntityHash[i]['label'], "word": EntityHash[i]['ent'],
+                   "start": EntityHash[i]['start'], "end": EntityHash[i]['end']}
         jsonEntities.append(EntDict)
 
-    return jsonEntities
+    return json.dumps(jsonEntities)
    
     
