@@ -46,6 +46,8 @@ def remove_space(EntsList):
     return FinalList
 
 
+
+
 def aggregate_subword_entities(DictList, string):
 
     ''' Postprocess and aggregate annotated entities that are subwords from BERT model
@@ -81,14 +83,14 @@ def aggregate_subword_entities(DictList, string):
                         new_word = word + AuxDict['word']
                         new_start = start
                         new_end = AuxDict['end']
-                        AuxDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': new_start, 'end': new_end}
+                        AuxDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': new_start, 'end': new_end, 'prev_char': string[prev_char]}
                         # if hyphen as first character of sentence (not to be merged with previous entity)
                         if ((string[prev_char]) == "-") and (prev_char != 0) and (string[prev_char - 1] == "\n"):
                             Aggregated.append(AuxDict)
                             AuxDict = {}
                     else:
                         Aggregated.append(AuxDict)
-                        AuxDict = Dict
+                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end'], 'prev_char': string[prev_char]}
                         # If it is the last entity (not to be reconstructed)
                         if ((i + 1) == len(ReverseDictList)):
                             Aggregated.append(AuxDict)
@@ -98,15 +100,15 @@ def aggregate_subword_entities(DictList, string):
                         new_word = word + AuxDict['word']
                         new_start = start
                         new_end = AuxDict['end']
-                        AuxDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': new_start, 'end': new_end}
+                        AuxDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': new_start, 'end': new_end, 'prev_char': string[prev_char]}
                     else:
                         Aggregated.append(AuxDict)
-                    AuxDict = Dict
+                    AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end'], 'prev_char': string[prev_char]}
                     # If it is the last entity (not to be reconstructed)
                     if ((i + 1) == len(ReverseDictList)):
                         Aggregated.append(AuxDict)
             else:
-                AuxDict = {'entity_group': Dict['entity_group'], 'word': word, 'start': start, 'end': end}
+                AuxDict = {'entity_group': Dict['entity_group'], 'word': word, 'start': start, 'end': end, 'prev_char': string[prev_char]}
                 # If it is the first entity (not to be reconstructed)
                 if ((i + 1) == len(ReverseDictList)):
                     Aggregated.append(AuxDict)
@@ -122,32 +124,39 @@ def aggregate_subword_entities(DictList, string):
                     char = AuxDict['word'][0]
                     if (char == "(") and (Dict['entity_group'] == AuxDict['entity_group']):
                         new_word = Dict['word'] + " " + AuxDict['word']
-                        FinalDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': Dict['start'], 'end': AuxDict['end']}
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': Dict['start'], 'end': AuxDict['end'], 'prev_char': string[prev_char]}
                     else:
                         # If not the same label, do not aggregate
-                        Aggregated.append(AuxDict)
-                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end']}
+                        # Check previous character of auxiliary dict to output only a complete word, not subword units
+                        aux_prev_char = AuxDict['prev_char']
+                        if (aux_prev_char) in [" ", "/", "\n", "\r", "¿", "¡", "(", "["]:
+                            Aggregated.append(AuxDict)
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end'], 'prev_char': string[prev_char]}
                     Aggregated.append(FinalDict)
                     AuxDict = {}
                 else:
                     # if character is an opening parenthesis, check to merge it with previous item
                     if word == ("(") and (i < len(ReverseDictList)) and (Dict['entity_group'] == AuxDict['entity_group']):
-                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end']}
+                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end'], 'prev_char': string[prev_char]}
                     #elif (Dict['entity_group'] != AuxDict['entity_group']): # Esto causa "ruido": ej. "S + tent", "interferir + ía"
                         Aggregated.append(AuxDict)
-                        AuxDict = Dict
+                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end'], 'prev_char': string[prev_char]}
                         # If it is the last entity (not to be reconstructed)
                         if ((i + 1) == len(ReverseDictList)):
                             Aggregated.append(AuxDict)
                     else:
-                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end']}
+                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end'], 'prev_char': string[prev_char]}
                         Aggregated.append(FinalDict)
                         AuxDict = {}
             else:
                 Aggregated.append(Dict)
 
     # Reverse again before returning results
-    FinalAggregated = [item for item in reversed(Aggregated)]
+    FinalAggregated = []
+    for item in reversed(Aggregated):
+        FinalDict = {'entity_group': item['entity_group'], 'word': item['word'], 'start': item['start'],
+                     'end': item['end']}
+        FinalAggregated.append(FinalDict)
 
     return FinalAggregated
 
