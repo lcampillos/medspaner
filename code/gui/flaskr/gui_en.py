@@ -9,7 +9,6 @@ import sys
 sys.path.append("../")  # Adds higher directory to python modules path.
 
 import re
-
 import argparse
 
 import spacy
@@ -19,14 +18,34 @@ from spacy_tokenizer import *
 import lexicon_tools
 from lexicon_tools import *
 
-import transformers
-from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
-
 import pickle
 
+# Deep learning libraries
+import transformers
+from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
+import torch
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Function to remove space before predicted entities
+# Load the previously trained Transformers model using full path (no relative)
+model_checkpoint = "/Users/Leonardo 1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification/roberta-es-clinical-trials-umls-7sgs-ner"
+
+# Transformers tokenizer
+tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+
+# Token classifier
+umls_token_classifier = AutoModelForTokenClassification.from_pretrained(model_checkpoint)
+
+# list of exceptions and patterns to change according to task
+EXCEPTIONS_LIST = "../patterns/list_except.txt"
+
+# Read exceptions and save to hash
+ExceptionsDict = read_exceptions_list(EXCEPTIONS_LIST)
+
+
 def remove_space(EntsList):
+
+    ''' Remove white spaces or new lines in predicted entities '''
+
     FinalList = []
     for item in EntsList:
         ent = item['word']
@@ -34,155 +53,149 @@ def remove_space(EntsList):
         finalItem = item
         # Remove space at the beginning of the string
         if ent.startswith(" "):
-            finalItem = {'entity_group': item['entity_group'], 'score': item['score'], 'word': item['word'][1:], 'start': item['start'], 'end': item['end']}
+            finalItem = {'entity_group': item['entity_group'], 'word': item['word'][1:], 'start': item['start'], 'end': item['end']}
+        if ent.startswith("\n"):
+            finalItem = {'entity_group': item['entity_group'], 'word': item['word'][1:], 'start': item['start']+1, 'end': item['end']} #'score': item['score'],
         # Remove spaces at the end of the string
         if ent.endswith("\s") or ent.endswith("\t") or ent.endswith("\n"):
             finalWord = re.sub("(\s+|\t+|\n+)$", "", finalItem['word'])
             # Update offsets
             new_end = int(finalItem['start']) + len(finalWord)
-            finalItem = {'entity_group': finalItem['entity_group'], 'score': finalItem['score'], 'word': finalWord, 'start': finalItem['start'], 'end': new_end}
+            finalItem = {'entity_group': finalItem['entity_group'], 'word': finalWord, 'start': finalItem['start'], 'end': new_end}
         # Remove "\n" in the middle of the string
         if "\n" in finalItem['word']:
             index = finalItem['word'].index("\n")
             finalWord = finalItem['word'][:index]
             new_end = int(finalItem['start']) + len(finalWord)
-            finalItem = {'entity_group': finalItem['entity_group'], 'score': finalItem['score'], 'word': finalWord, 'start': finalItem['start'], 'end': new_end}
+            finalItem = {'entity_group': finalItem['entity_group'], 'word': finalWord, 'start': finalItem['start'], 'end': new_end}
         # Update list of dictionaries
         if finalItem['word']!='':
             FinalList.append(finalItem)
     return FinalList
 
 
-def aggregate_subword_entities(DictList, string):
+def annotate_sentence(string, annotation_model, tokenizer_model, device):
 
-    ''' Postprocess and aggregate annotated entities that are subwords from BERT model
+    ''' Predict entities in sentence with ROBERTa neural classifier. '''
+
+    tokenized = tokenizer_model(string, return_offsets_mapping=True)
+
+    input_ids = tokenizer_model.encode(string, return_tensors="pt")
+
+    tokens = tokenizer_model.convert_ids_to_tokens(tokenized["input_ids"])
+
+    tokens = [tokenizer.decode(tokenized['input_ids'][i]) for i, token in enumerate(tokens)]
+
+    offsets = tokenized["offset_mapping"]
+
+    word_ids = tokenized.word_ids()
+
+    outputs = annotation_model(input_ids.to(device)).logits
+
+    predictions = torch.argmax(outputs, dim=-1)
+
+    TagNames = [annotation_model.config.id2label[i] for i in annotation_model.config.id2label]
+
+    preds = [TagNames[p] for p in predictions[0].cpu().numpy()]
+
+    index2tag = {idx: tag for idx, tag in enumerate(TagNames)}
+
+    tag2index = {tag: idx for idx, tag in enumerate(TagNames)}
+
+    labels = []
+    for pred in preds:
+        labels.append(tag2index[pred])
+
+    previous_word_idx = None
+    label_ids = []
+
+    for i, word_idx in enumerate(word_ids):
+        if word_idx is None or word_idx == previous_word_idx:
+            label_ids.append(-100)
+        elif word_idx != previous_word_idx:
+            label_ids.append(labels[i])
+        previous_word_idx = word_idx
+
+    labels_final = [index2tag[l] if l != -100 else "IGN" for l in label_ids]
+
+    return tokens, offsets, word_ids, label_ids, labels_final
+
+
+def postprocess_entities(DataList):
+    ''' 
+        Postprocess and aggregate annotated entities that are subwords from BERT / RoBERTa model.
         E.g. "auto", "medic", "arse" -> "automedicarse"
     '''
 
-    Aggregated = []
+    Tokens = DataList[0]
+    Offsets = DataList[1]
+    Word_ids = DataList[2]
+    Label_ids = DataList[3]
+    Labels = DataList[4]
 
-    AuxDict = {}
+    Entities = []
 
-    # Sort list of dictionaries in reverse order according to offsets
-    ReverseDictList = [item for item in reversed(DictList)]
+    prev_label = ""
 
-    for i, Dict in enumerate(ReverseDictList):
-
-        word = Dict['word']
-        start = Dict['start']
-
-        prev_char = start - 1
-
-        end = Dict['end']
-
-        # check if the character previous to the starting offset is a white space or a punctuation sign
-        # if it is not a white space or a punctuation sign
-        if (string[prev_char]) not in [" ", "/", "\n", "\r", "?", "!"]:  # TODO: check if add more punctuation characters
-            # Get data from previous entity saved in AuxDict
-            if len(AuxDict) > 0:
-                # Check if entity type matches
-                if (Dict['entity_group'] == AuxDict['entity_group']):
-                    # if continuous entity
-                    if (AuxDict['start']==Dict['end']):
-                        new_word = word + AuxDict['word']
-                        new_start = start
-                        new_end = AuxDict['end']
-                        AuxDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': new_start, 'end': new_end, 'prev_char': string[prev_char]}
-                        # if hyphen as first character of sentence (not to be merged with previous entity)
-                        if ((string[prev_char]) == "-") and (prev_char != 0) and (string[prev_char - 1] == "\n"):
-                            Aggregated.append(AuxDict)
-                            AuxDict = {}
-                    else:
-                        Aggregated.append(AuxDict)
-                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end'], 'prev_char': string[prev_char]}
-                        # If it is the last entity (not to be reconstructed)
-                        if ((i + 1) == len(ReverseDictList)):
-                            Aggregated.append(AuxDict)
-                else:
-                    # if continuous entities, they are merged using the label of the starting entity
-
-                    if (AuxDict['start'] == Dict['end']):
-                        new_word = word + AuxDict['word']
-                        new_start = start
-                        new_end = AuxDict['end']
-                        AuxDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': new_start, 'end': new_end, 'prev_char': string[prev_char]}
-                    else:
-                        Aggregated.append(AuxDict)
-                    AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end'], 'prev_char': string[prev_char]}
-                    # If it is the last entity (not to be reconstructed)
-                    if ((i + 1) == len(ReverseDictList)):
-                        Aggregated.append(AuxDict)
+    for i, k in enumerate(Word_ids):
+        if Word_ids != None:
+            label = Labels[i]
+            if label == 'O':
+                prev_label = label
+                continue
+            elif label == 'IGN' and Tokens[i] != "</s>":  # use the previous label
+                label = prev_label
+                # if previous label is not 'O', update tokens and offsets
+                if prev_label != 'O' and prev_label != "" and len(Entities) > 0:
+                    LastEntity = Entities[len(Entities) - 1]
+                    new_word = LastEntity['word'] + Tokens[i]
+                    new_end = Offsets[i][1]
+                    Entities[len(Entities) - 1]['word'] = new_word
+                    Entities[len(Entities) - 1]['end'] = new_end
+                prev_label = label
             else:
-                AuxDict = {'entity_group': Dict['entity_group'], 'word': word, 'start': start, 'end': end, 'prev_char': string[prev_char]}
-                # If it is the first entity (not to be reconstructed)
-                if ((i + 1) == len(ReverseDictList)):
-                    Aggregated.append(AuxDict)
-                    AuxDict = {}
-
-        else:
-
-            if len(AuxDict) > 0:
-                # Check if end offset of previous word is next to start offset of present word
-                prev_start = AuxDict['start']
-                if (prev_start != end):
-                    # If parenthesis character as part of an entity (check if same label)
-                    char = AuxDict['word'][0]
-                    if (char == "(") and (Dict['entity_group'] == AuxDict['entity_group']):
-                        new_word = Dict['word'] + " " + AuxDict['word']
-                        FinalDict = {'entity_group': Dict['entity_group'], 'word': new_word, 'start': Dict['start'], 'end': AuxDict['end'], 'prev_char': string[prev_char]}
+                # start of entity
+                bio = label[:2]
+                tag = label[2:]
+                if bio == "B-":
+                    # If entity is a contiguous subword, merge it with previous entity
+                    if not (Tokens[i].startswith(" ")) and not (Tokens[i].startswith("\n")) and (len(Entities) > 0) and ((Entities[len(Entities) - 1]['end']) == (Offsets[i][0])):
+                        LastEntity = Entities[len(Entities) - 1]
+                        new_word = LastEntity['word'] + Tokens[i]
+                        new_end = Offsets[i][1]
+                        Entities[len(Entities) - 1]['word'] = new_word
+                        Entities[len(Entities) - 1]['end'] = new_end
+                    # If entity is not a subword
                     else:
-                        # If not the same label, do not aggregate
-                        # Check previous character of auxiliary dict to output only a complete word, not subword units
-                        aux_prev_char = AuxDict['prev_char']
-                        if (aux_prev_char) in [" ", "/", "\n", "\r", "¿", "¡", "(", "["]:
-                            Aggregated.append(AuxDict)
-                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end'], 'prev_char': string[prev_char]}
-
-                    Aggregated.append(FinalDict)
-                    AuxDict = {}
-                else:
-                    # if character is an opening parenthesis, check to merge it with previous item
-                    if word == ("(") and (i < len(ReverseDictList)) and (Dict['entity_group'] == AuxDict['entity_group']):
-                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end'], 'prev_char': string[prev_char]}
-                    #elif (Dict['entity_group'] != AuxDict['entity_group']): # Esto causa "ruido": ej. "S + tent", "interferir + ía"
-                        Aggregated.append(AuxDict)
-                        AuxDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'], 'start': Dict['start'], 'end': Dict['end'], 'prev_char': string[prev_char]}
-                        # If it is the last entity (not to be reconstructed)
-                        if ((i + 1) == len(ReverseDictList)):
-                            Aggregated.append(AuxDict)
+                        Entities.append(
+                            {
+                                "entity_group": tag,
+                                "word": Tokens[i],
+                                "start": Offsets[i][0],
+                                "end": Offsets[i][1],
+                            }
+                        )
+                elif bio == "I-" and len(Entities) > 0:
+                    if prev_label != 'O':  # update tokens and offsets
+                        # if previous token is space or hyphen
+                        LastEntity = Entities[len(Entities) - 1]
+                        new_word = LastEntity['word'] + Tokens[i]
+                        new_end = Offsets[i][1]
+                        Entities[len(Entities) - 1]['word'] = new_word
+                        Entities[len(Entities) - 1]['end'] = new_end
                     else:
-                        FinalDict = {'entity_group': Dict['entity_group'], 'word': Dict['word'] + AuxDict['word'], 'start': Dict['start'], 'end': AuxDict['end'], 'prev_char': string[prev_char]}
-                        Aggregated.append(FinalDict)
-                        AuxDict = {}
-            else:
-                Aggregated.append(Dict)
+                        Entities.append(
+                            {
+                                "entity_group": tag,
+                                "word": Tokens[i],
+                                "start": Offsets[i][0],
+                                "end": Offsets[i][1],
+                            }
+                        )
 
-    # Reverse again before returning results
-    FinalAggregated = []
-    for item in reversed(Aggregated):
-        FinalDict = {'entity_group': item['entity_group'], 'word': item['word'], 'start': item['start'], 'end': item['end']}
-        FinalAggregated.append(FinalDict)
+                prev_label = label
 
-    return FinalAggregated
-
-
-# Load the previously trained Transformers model using full path (no relative)
-model_checkpoint = "/Users/Leonardo 1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification/roberta-es-clinical-trials-umls-7sgs-ner"
-
-# Transformers tokenizer  
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
-
-# Token classifier
-# aggregation_strategy="simple" -> errors in out of vocabulary words, which are split in subwords (e.g. "auto - medi - carse")
-# aggregation_strategy="first" -> errors with entities wrongly tagged, very noisy 
-umls_token_classifier = pipeline("token-classification", model=model_checkpoint, aggregation_strategy="simple", tokenizer=tokenizer)
-
-
-# list of exceptions and patterns to change according to task
-EXCEPTIONS_LIST = "../patterns/list_except.txt"
-
-# Read exceptions and save to hash
-ExceptionsDict = read_exceptions_list(EXCEPTIONS_LIST)
+    return Entities
 
 
 def update_offsets(List,offset,text):
@@ -255,10 +268,10 @@ def annotate_sentences_with_model(SentencesList,text_string,model):
     for sentence in SentencesList:
 
         if not (sentence.text.isspace()):
-            # Predict entities with ROBERTa neural classifier
-            EntsList = remove_space(model(sentence.text))
 
-            EntsList = aggregate_subword_entities(EntsList, sentence.text)
+            EntsList = annotate_sentence(sentence.text, model, tokenizer, device)
+
+            EntsList = remove_space(postprocess_entities(EntsList))
 
             # Change offsets
             if offset != 0:
@@ -279,6 +292,7 @@ def annotate_sentences_with_model(SentencesList,text_string,model):
 
 
 def remove_overlap_gui(Hash):
+
     '''
     Remove overlapped entities to be displayed on GUI:
         e.g. cardiaco, infarto cardiaco => infarto cardiaco
@@ -639,7 +653,7 @@ def gui_tf():
         # Removes first white character of line
         text = text.lstrip()
 
-        # Replace "\r" to "\n" throughtout the string (COMPROBAR QUE NO DA ERROR)
+        # Replace "\r" to "\n" throughtout the string
         text = re.sub("\r","",text)
 
         # If normalization data is needed, load file
@@ -710,8 +724,7 @@ def gui_tf():
             tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
 
             # Token classifier
-            temp_token_classifier = pipeline("token-classification", model=temp_model_checkpoint,
-                                             aggregation_strategy="simple", tokenizer=tokenizer)
+            temp_token_classifier = AutoModelForTokenClassification.from_pretrained(temp_model_checkpoint)
 
             TempOutput = annotate_sentences_with_model(Sentences, text, temp_token_classifier)
 
@@ -741,8 +754,7 @@ def gui_tf():
             tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
 
             # Token classifier
-            medic_attr_token_classifier = pipeline("token-classification", model=medic_attr_model_checkpoint,
-                                                   aggregation_strategy="simple", tokenizer=tokenizer)
+            medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
 
             MedicAttrOutput = annotate_sentences_with_model(Sentences, text, medic_attr_token_classifier)
 
@@ -773,8 +785,7 @@ def gui_tf():
             tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
 
             # Token classifier
-            neg_spec_token_classifier = pipeline("token-classification", model=neg_spec_model_checkpoint,
-                                                 aggregation_strategy="simple", tokenizer=tokenizer)
+            neg_spec_token_classifier =  AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
 
             NegSpecOutput = annotate_sentences_with_model(Sentences, text, neg_spec_token_classifier)
 
