@@ -27,14 +27,16 @@ import lexicon_tools
 from lexicon_tools import *
 import pickle
 
+# Deep learning utilities
 # Transformers
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
+import torch
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Parser for config file
 import configparser
  
-
 # Command line arguments
 parser = argparse.ArgumentParser(description='Given a text file, annotate it with semantic labels')
 parser.add_argument('-conf', required=False, help='use configuration file to parse arguments (optional)')
@@ -132,10 +134,9 @@ def main(arguments):
             tokenizer = AutoTokenizer.from_pretrained(umls_model_checkpoint)
     
             # Token classifier for UMLS entities
-            umls_token_classifier = pipeline("token-classification", model=umls_model_checkpoint,
-                                             aggregation_strategy="simple", tokenizer=tokenizer)
+            umls_token_classifier = AutoModelForTokenClassification.from_pretrained(umls_model_checkpoint)
     
-            Output = annotate_sentences_with_model(Sentences,text,umls_token_classifier)
+            Output = annotate_sentences_with_model(Sentences,text,umls_token_classifier,tokenizer,device)
     
             # Save the annotated entities with the final format
             Entities = {}
@@ -160,9 +161,9 @@ def main(arguments):
             tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
 
             # Token classifier
-            temp_token_classifier = pipeline("token-classification", model=temp_model_checkpoint, aggregation_strategy="simple", tokenizer=tokenizer)
+            temp_token_classifier = AutoModelForTokenClassification.from_pretrained(temp_model_checkpoint)
 
-            TempOutput = annotate_sentences_with_model(Sentences,text,temp_token_classifier)
+            TempOutput = annotate_sentences_with_model(Sentences,text,temp_token_classifier,tokenizer,device)
 
             # Save the annotated entities with the final format
             TempEntities = {}
@@ -188,10 +189,9 @@ def main(arguments):
             tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
 
             # Token classifier
-            medic_attr_token_classifier = pipeline("token-classification", model=medic_attr_model_checkpoint,
-                                             aggregation_strategy="simple", tokenizer=tokenizer)
+            medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
 
-            MedicAttrOutput = annotate_sentences_with_model(Sentences, text, medic_attr_token_classifier)
+            MedicAttrOutput = annotate_sentences_with_model(Sentences, text, medic_attr_token_classifier,tokenizer,device)
 
             # Save the annotated entities with the final format
             MedicAttrEntities = {}
@@ -217,10 +217,9 @@ def main(arguments):
             tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
 
             # Token classifier
-            neg_spec_token_classifier = pipeline("token-classification", model=neg_spec_model_checkpoint,
-                                                   aggregation_strategy="simple", tokenizer=tokenizer)
+            neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
 
-            NegSpecOutput = annotate_sentences_with_model(Sentences, text, neg_spec_token_classifier)
+            NegSpecOutput = annotate_sentences_with_model(Sentences, text, neg_spec_token_classifier,tokenizer,device)
 
             # Save the annotated entities with the final format
             NegSpecEntities = {}
@@ -236,6 +235,7 @@ def main(arguments):
         # Remove entities defined in an exception list
         if (arguments.exc):
             AllFlatEnts = remove_entities(AllFlatEnts, Tokens, ExceptionsDict, 'label', AllNestedEnts)
+
             # If nested entities and use of exceptions list, remove from layer 2 the entities to remove
             # This is needed to change CHEM to ANAT in "sangrado [digestivo]"
             if (arguments.nest):

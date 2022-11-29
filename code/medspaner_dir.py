@@ -27,13 +27,15 @@ import lexicon_tools
 from lexicon_tools import *
 import pickle
 
+# Deep learning utilities
 # Transformers
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
+import torch
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Parser for config file
 import configparser
- 
 
 # Command line arguments
 parser = argparse.ArgumentParser(description='Given a text file, annotate it with semantic labels')
@@ -102,8 +104,7 @@ def main(arguments):
         umls_tokenizer = AutoTokenizer.from_pretrained(umls_model_checkpoint)
 
         # Token classifier for UMLS entities
-        umls_token_classifier = pipeline("token-classification", model=umls_model_checkpoint,
-                                         aggregation_strategy="simple", tokenizer=umls_tokenizer)
+        umls_token_classifier = AutoModelForTokenClassification.from_pretrained(umls_model_checkpoint)
 
     if (arguments.temp):
 
@@ -116,8 +117,7 @@ def main(arguments):
         temp_tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
 
         # Token classifier
-        temp_token_classifier = pipeline("token-classification", model=temp_model_checkpoint,
-                                         aggregation_strategy="simple", tokenizer=temp_tokenizer)
+        temp_token_classifier = AutoModelForTokenClassification.from_pretrained(temp_model_checkpoint)
 
     if (arguments.drg):
 
@@ -131,8 +131,7 @@ def main(arguments):
         drg_tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
 
         # Token classifier
-        medic_attr_token_classifier = pipeline("token-classification", model=medic_attr_model_checkpoint,
-                                               aggregation_strategy="simple", tokenizer=drg_tokenizer)
+        medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
 
     if (arguments.neg):
 
@@ -146,8 +145,7 @@ def main(arguments):
         neg_spec_tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
 
         # Token classifier
-        neg_spec_token_classifier = pipeline("token-classification", model=neg_spec_model_checkpoint,
-                                             aggregation_strategy="simple", tokenizer=neg_spec_tokenizer)
+        neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
 
 
     # Check that input is a folder, not a file
@@ -198,7 +196,7 @@ def main(arguments):
 
                         print("Annotating using transformers neural model for UMLS entities...")
 
-                        Output = annotate_sentences_with_model(Sentences,text,umls_token_classifier)
+                        Output = annotate_sentences_with_model(Sentences,text,umls_token_classifier, umls_tokenizer, device)
 
                         # Save the annotated entities with the final format
                         Entities = {}
@@ -217,7 +215,7 @@ def main(arguments):
 
                         print("Annotating using transformers neural model for temporal entities...")
 
-                        TempOutput = annotate_sentences_with_model(Sentences,text,temp_token_classifier)
+                        TempOutput = annotate_sentences_with_model(Sentences,text,temp_token_classifier, temp_tokenizer, device)
 
                         # Save the annotated entities with the final format
                         TempEntities = {}
@@ -235,7 +233,7 @@ def main(arguments):
 
                         print("Annotating using transformers neural model for drug information...")
 
-                        MedicAttrOutput = annotate_sentences_with_model(Sentences, text, medic_attr_token_classifier)
+                        MedicAttrOutput = annotate_sentences_with_model(Sentences, text, medic_attr_token_classifier, drg_tokenizer, device)
 
                         # Save the annotated entities with the final format
                         MedicAttrEntities = {}
@@ -253,7 +251,7 @@ def main(arguments):
 
                         print("Annotating using transformers neural model for negation and speculation...")
 
-                        NegSpecOutput = annotate_sentences_with_model(Sentences, text, neg_spec_token_classifier)
+                        NegSpecOutput = annotate_sentences_with_model(Sentences, text, neg_spec_token_classifier, neg_spec_tokenizer, device)
 
                         # Save the annotated entities with the final format
                         NegSpecEntities = {}
