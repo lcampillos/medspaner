@@ -20,14 +20,27 @@ The [guideline](https://github.com/lcampillos/medspaner/blob/main/annot_guidelin
 The neural model is [RoBERTA model trained on clinical and EHR data](https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es), trained by the Barcelona Supercomputing Center, and fine-tuned in clinical trials annotated for different tasks: medical named entity recognition, temporal annotation, annotation of medication drug attributes, and annotation of negation and uncertainty/speculation.
 
 
-Requirements
+Installation and requirements
 -------------------------
 
+Install it by cloning the repository in local folder: ```git clone https://github.com/lcampillos/medspaner```
+
+Requirements:
+
+* Flaskr (to use the graphical user interface) (tested with vs. )\
+Install it by running in a terminal: ```pip install Flask```
+* GIT LFS: to download large storage files, e.g. transformers models (tested with vs. 3.1.2)\
+Install it by running in a terminal: ```sudo apt-get install git-lfs```
 * python (tested with vs. 3.7)
-* [spacy](https://spacy.io/) (tested with vs. 3.3.1)
-* [textsearch](https://github.com/kootenpv/textsearch)
-* [torch](https://pypi.org/project/torch/)
-* [Transformers](https://huggingface.co/docs/transformers/installation) library by HuggingFace (tested with vs. 4.17)
+* [spacy](https://spacy.io/) (tested with vs. 3.3.1)\
+Install it by running in a terminal: ```pip install "spacy~=3.3.1"```\
+Download the Spanish part-of-speech tagging model: ```python -m spacy download es_core_news_md```
+* [textsearch](https://github.com/kootenpv/textsearch)\
+Install it by running: ```pip install textsearch```
+* [torch](https://pypi.org/project/torch/) (tested with vs. 1.10.2)\
+Install it by running: ```pip install torch```
+* [Transformers](https://huggingface.co/docs/transformers/installation) library by HuggingFace (tested with vs. 4.17)\
+Install it by running: ```pip install transformers```
 
 
 Usage
@@ -44,6 +57,16 @@ Import the token classification class:
 Then load the specific model. For example, use the following instruction to load the NER model for the UMLS semantic groups: 
 
     model = "roberta-es-clinical-trials-umls-7sgs-ner"
+
+You need to download the models and place them in the ```models``` folder:\
+```cd medspaner/```\
+```cd code/```\
+```cd models/```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-umls-7sgs-ner```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-temporal-ner```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-medic-attr-ner```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-neg-spec```\
+
 
 
 #### Annotation using the integrated python code
@@ -63,7 +86,9 @@ To annotate a directory, run with:
 
 Go to the ```gui``` subfolder and run:
 
-    python flaskr/gui.py
+    python flaskr/gui_en.py
+
+The GUI will be running in a local address, e.g. ```http://127.0.0.1:5000/gui_en```
 
 Requirements: [flaskr](https://flask.palletsprojects.com/en/2.2.x/) (tested with vs. 1.1.2)
 
