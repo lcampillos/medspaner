@@ -126,9 +126,7 @@ def main(arguments):
 
             print("Annotating using transformers neural model for UMLS entities...")
             # Load the previously trained Transformers model using full path (no relative)
-            umls_model_checkpoint = "/Users/Leonardo " \
-                                    "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification/roberta" \
-                                    "-es-clinical-trials-umls-7sgs-ner"
+            umls_model_checkpoint = "models/roberta-es-clinical-trials-umls-7sgs-ner"
     
             # Transformers tokenizer
             tokenizer = AutoTokenizer.from_pretrained(umls_model_checkpoint)
