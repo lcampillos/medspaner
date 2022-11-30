@@ -27,14 +27,14 @@ Install it by cloning the repository in local folder: ```git clone https://githu
 
 Requirements:
 
-* Flaskr (to use the graphical user interface) (tested with vs. )\
+* [Flaskr](https://flask.palletsprojects.com/en/2.2.x/): to use the graphical user interface (tested with vs. 1.1.2)\
 Install it by running in a terminal: ```pip install Flask```
-* GIT LFS: to download large storage files, e.g. transformers models (tested with vs. 3.1.2)\
+* GIT LFS (tested with vs. 3.1.2): to download large storage files, e.g. transformers models\
 Install it by running in a terminal: ```sudo apt-get install git-lfs```
 * python (tested with vs. 3.7)
 * [spacy](https://spacy.io/) (tested with vs. 3.3.1)\
 Install it by running in a terminal: ```pip install "spacy~=3.3.1"```\
-Download the Spanish part-of-speech tagging model: ```python -m spacy download es_core_news_md```
+Then, download the Spanish part-of-speech tagging model: ```python -m spacy download es_core_news_md```
 * [textsearch](https://github.com/kootenpv/textsearch)\
 Install it by running: ```pip install textsearch```
 * [torch](https://pypi.org/project/torch/) (tested with vs. 1.10.2)\
@@ -46,7 +46,17 @@ Install it by running: ```pip install transformers```
 Usage
 -------------------------
 
-Download the pre-trained models from the [HuggingFace hub](https://huggingface.co/lcampillos).
+Download the pre-trained models from the [HuggingFace hub](https://huggingface.co/lcampillos).\
+
+You need to download the models and place them in the ```models``` folder:\
+```cd medspaner/```\
+```cd code/```\
+```cd models/```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-umls-7sgs-ner```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-temporal-ner```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-medic-attr-ner```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-neg-spec```
+
 
 #### Simple annotation using the [Transformers](https://huggingface.co/docs/transformers/installation) library
 
@@ -58,20 +68,10 @@ Then load the specific model. For example, use the following instruction to load
 
     model = "roberta-es-clinical-trials-umls-7sgs-ner"
 
-You need to download the models and place them in the ```models``` folder:\
-```cd medspaner/```\
-```cd code/```\
-```cd models/```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-umls-7sgs-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-temporal-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-medic-attr-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-neg-spec```\
-
-
 
 #### Annotation using the integrated python code
 
-This option provides transformer-based named entity recognition as well as functionalities for lexicon-based annotation, nested entities recognition, and normalization.
+The code provides transformer-based named entity recognition as well as functionalities for lexicon-based annotation, nested entities recognition, and normalization.
 
 To annotate a single text, run with:
 
@@ -89,8 +89,6 @@ Go to the ```gui``` subfolder and run:
     python flaskr/gui_en.py
 
 The GUI will be running in a local address, e.g. ```http://127.0.0.1:5000/gui_en```
-
-Requirements: [flaskr](https://flask.palletsprojects.com/en/2.2.x/) (tested with vs. 1.1.2)
 
 
 Data format
