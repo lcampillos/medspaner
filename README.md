@@ -46,7 +46,7 @@ Install it by running: ```pip install transformers```
 Usage
 -------------------------
 
-Download the pre-trained models from the [HuggingFace hub](https://huggingface.co/lcampillos).\
+Download the pre-trained models from the [HuggingFace hub](https://huggingface.co/lcampillos).
 
 You need to download the models and place them in the ```models``` folder:\
 ```cd medspaner/```\
