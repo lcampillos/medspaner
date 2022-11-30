@@ -23,13 +23,13 @@ The neural model is [RoBERTA model trained on clinical and EHR data](https://hug
 Installation and requirements
 -------------------------
 
-Install it by cloning the repository in local folder: ```git clone https://github.com/lcampillos/medspaner```
+Install it by cloning the repository in local folder; run in a terminal: ```git clone https://github.com/lcampillos/medspaner```
 
 Requirements:
 
-* [Flaskr](https://flask.palletsprojects.com/en/2.2.x/): to use the graphical user interface (tested with vs. 1.1.2)\
+* [Flaskr](https://flask.palletsprojects.com/en/2.2.x/) (tested with vs. 1.1.2): to use the graphical user interface.\
 Install it by running in a terminal: ```pip install Flask```
-* [GIT LFS](https://git-lfs.github.com/) (tested with vs. 3.1.2): to download large storage files, e.g. transformers models\
+* [GIT LFS](https://git-lfs.github.com/) (tested with vs. 3.1.2): to download large storage files, e.g. transformers models.\
 Install it by running in a terminal: ```sudo apt-get install git-lfs```
 * [python](https://www.python.org/downloads/) (tested with vs. 3.7)
 * [spacy](https://spacy.io/) (tested with vs. 3.3.1)\
