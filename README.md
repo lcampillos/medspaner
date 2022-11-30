@@ -26,6 +26,7 @@ Requirements
 * python (tested with vs. 3.7)
 * [spacy](https://spacy.io/) (tested with vs. 3.3.1)
 * [textsearch](https://github.com/kootenpv/textsearch)
+* [torch](https://pypi.org/project/torch/)
 * [Transformers](https://huggingface.co/docs/transformers/installation) library by HuggingFace (tested with vs. 4.17)
 
 

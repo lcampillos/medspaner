@@ -7,7 +7,7 @@ from flask import Flask, request, render_template, Markup
 import sys
 
 sys.path.append("../")  # Adds higher directory to python modules path.
-
+gist
 import re
 import argparse
 
@@ -24,10 +24,11 @@ import pickle
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
 import torch
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # If CUDA is needed
+device = torch.device("cpu")
 
 # Load the previously trained Transformers model using full path (no relative)
-model_checkpoint = "/Users/Leonardo 1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification/roberta-es-clinical-trials-umls-7sgs-ner"
+model_checkpoint = "../models/roberta-es-clinical-trials-umls-7sgs-ner"
 
 # Transformers tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
@@ -84,7 +85,7 @@ def annotate_sentence(string, annotation_model, tokenizer_model, device):
 
     tokens = tokenizer_model.convert_ids_to_tokens(tokenized["input_ids"])
 
-    tokens = [tokenizer.decode(tokenized['input_ids'][i]) for i, token in enumerate(tokens)]
+    tokens = [tokenizer_model.decode(tokenized['input_ids'][i]) for i, token in enumerate(tokens)]
 
     offsets = tokenized["offset_mapping"]
 
@@ -715,10 +716,8 @@ def gui_tf():
         if (temp):
 
             print("Annotating using transformers neural model for temporal entities...")
-            # Load the previously trained Transformers model using full path (no relative)
-            temp_model_checkpoint = "/Users/Leonardo " \
-                                    "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification" \
-                                    "/roberta-es-clinical-trials-temporal-ner"
+            # Load the previously trained Transformers model
+            temp_model_checkpoint = "../models/roberta-es-clinical-trials-temporal-ner"
 
             # Transformers tokenizer
             tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
@@ -744,11 +743,8 @@ def gui_tf():
         if (drg):
 
             print("Annotating using transformers neural model for drug information...")
-            # Load the previously trained Transformers model using full path (no relative)
-            medic_attr_model_checkpoint = "/Users/Leonardo " \
-                                          "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification" \
-                                          "/roberta" \
-                                          "-es-clinical-trials-medic-attr-ner"
+            # Load the previously trained Transformers model
+            medic_attr_model_checkpoint = "../models/roberta-es-clinical-trials-medic-attr-ner"
 
             # Transformers tokenizer
             tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
@@ -774,13 +770,9 @@ def gui_tf():
         neg = request.form.getlist("neg")
         if (neg):
 
-            # Load the previously trained Transformers model using full path (no relative)
             print("Annotating using transformers neural model for negation and speculation...")
-            neg_spec_model_checkpoint = "/Users/Leonardo " \
-                                        "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification" \
-                                        "/roberta" \
-                                        "-es-clinical-trials-neg-spec-ner"
-
+            # Load the previously trained Transformers model
+            neg_spec_model_checkpoint = "../models/roberta-es-clinical-trials-neg-spec"
             # Transformers tokenizer
             tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
 

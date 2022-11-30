@@ -32,7 +32,8 @@ import pickle
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
 import torch
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # If CUDA is needed
+device = torch.device("cpu")
 
 # Parser for config file
 import configparser
@@ -152,8 +153,8 @@ def main(arguments):
         if (arguments.temp):
 
             print("Annotating using transformers neural model for temporal entities...")
-            # Load the previously trained Transformers model using full path (no relative)
-            temp_model_checkpoint = "/Users/Leonardo 1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification/roberta-es-clinical-trials-temporal-ner"
+            # Load the previously trained Transformers model
+            temp_model_checkpoint = "models/roberta-es-clinical-trials-temporal-ner"
 
             # Transformers tokenizer
             tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
@@ -178,10 +179,8 @@ def main(arguments):
         if (arguments.drg):
 
             print("Annotating using transformers neural model for drug information...")
-            # Load the previously trained Transformers model using full path (no relative)
-            medic_attr_model_checkpoint = "/Users/Leonardo " \
-                                    "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification/roberta" \
-                                    "-es-clinical-trials-medic-attr-ner"
+            # Load the previously trained Transformers model
+            medic_attr_model_checkpoint = "models/roberta-es-clinical-trials-medic-attr-ner"
 
             # Transformers tokenizer
             tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
@@ -205,11 +204,9 @@ def main(arguments):
         # Annotation of entities expressing negation and uncertainty
         if (arguments.neg):
 
-            # Load the previously trained Transformers model using full path (no relative)
+            # Load the previously trained Transformers model
             print("Annotating using transformers neural model for negation and speculation...")
-            neg_spec_model_checkpoint = "/Users/Leonardo " \
-                                          "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification/roberta" \
-                                          "-es-clinical-trials-neg-spec-ner"
+            neg_spec_model_checkpoint = "models/roberta-es-clinical-trials-neg-spec-ner"
 
             # Transformers tokenizer
             tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
@@ -224,8 +221,7 @@ def main(arguments):
 
             # Change format
             for i, Ent in enumerate(NegSpecOutput):
-                NegSpecEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'],
-                                        'label': Ent['entity_group']}
+                NegSpecEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'],'label': Ent['entity_group']}
 
             # Merge all entities
             AllFlatEnts = merge_dicts(AllFlatEnts, NegSpecEntities)
@@ -258,7 +254,6 @@ def main(arguments):
                 AllFinalEntities = AllFlatEnts
             
             for i in AllFinalEntities:
-                # T#  Annotation  Start   End String
                 print("T{}\t{} {} {}\t{}".format(i, AllFinalEntities[i]['label'], AllFinalEntities[i]['start'], AllFinalEntities[i]['end'], AllFinalEntities[i]['ent']),file=out)
                 # Print UMLS codes in additional comment
                 if (arguments.norm):
@@ -267,7 +262,6 @@ def main(arguments):
                         # Complete normalization data of UMLS CUIs
                         CUIsList = complete_norm_data(CUIsList,UMLSData)
                         n_comm += 1
-                        #codes_string = ", ".join(CUIsList)
                         codes_string = " | ".join(CUIsList)
                         print("#{}	AnnotatorNotes T{}	{}".format(n_comm,i,codes_string),file=out)
 

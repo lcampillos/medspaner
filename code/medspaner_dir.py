@@ -32,7 +32,8 @@ import pickle
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
 import torch
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # If CUDA is needed
+device = torch.device("cpu")
 
 # Parser for config file
 import configparser
@@ -96,9 +97,7 @@ def main(arguments):
     if (arguments.neu):
 
         # Load the model for UMLS entities using full path (no relative)
-        umls_model_checkpoint = "/Users/Leonardo " \
-                                "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification/roberta" \
-                                "-es-clinical-trials-umls-7sgs-ner"
+        umls_model_checkpoint = "models/roberta-es-clinical-trials-umls-7sgs-ner"
 
         # Transformers tokenizer
         umls_tokenizer = AutoTokenizer.from_pretrained(umls_model_checkpoint)
@@ -109,9 +108,7 @@ def main(arguments):
     if (arguments.temp):
 
         # Load the previously trained model for temporal entities using full path (no relative)
-        temp_model_checkpoint = "/Users/Leonardo " \
-                                "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification/roberta" \
-                                "-es-clinical-trials-temporal-ner"
+        temp_model_checkpoint = "models/roberta-es-clinical-trials-temporal-ner"
 
         # Transformers tokenizer
         temp_tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
@@ -122,10 +119,7 @@ def main(arguments):
     if (arguments.drg):
 
         # Load the previously trained transformers model for medication information using full path (no relative)
-        medic_attr_model_checkpoint = "/Users/Leonardo " \
-                                      "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification" \
-                                      "/roberta" \
-                                      "-es-clinical-trials-medic-attr-ner"
+        medic_attr_model_checkpoint = "models/roberta-es-clinical-trials-medic-attr-ner"
 
         # Transformers tokenizer
         drg_tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
@@ -136,10 +130,7 @@ def main(arguments):
     if (arguments.neg):
 
         # Load the previously trained transformers model for negation / speculation using full path (no relative)
-        neg_spec_model_checkpoint = "/Users/Leonardo " \
-                                    "1/Documents/Trabajo/nn-workspace/BERT-2022/transformers/token-classification" \
-                                    "/roberta" \
-                                    "-es-clinical-trials-neg-spec-ner"
+        neg_spec_model_checkpoint = "models/roberta-es-clinical-trials-neg-spec-ner"
 
         # Transformers tokenizer
         neg_spec_tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
