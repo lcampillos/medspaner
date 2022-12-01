@@ -18,6 +18,7 @@ import re
 import os
 import sys
 import spacy
+from spacy.lang.es import Spanish
 import argparse
 import requests
 
@@ -139,12 +140,26 @@ def tokenize_spacy_text(text,POSDict):
     return Tokens
 
 
+# Extend set of characters defining the sentence boundary (e.g. new line)
+@Spanish.component("set_custom_boundaries")
+def set_custom_boundaries(doc):
+    for token in doc[:-1]:
+        if token.text == "\n\n":
+            doc[token.i + 1].is_sent_start = True
+        elif token.text == "\n":
+            doc[token.i + 1].is_sent_start = True
+        elif token.text == "\r":
+            doc[token.i + 1].is_sent_start = True
+    return doc
+
+
 def sentences_spacy(text):
     
     ''' Split text into sentences (returns a list) '''
-    
-    #nlp = spacy.load('es_core_news_sm') # Small size model
-    nlp = spacy.load('es_core_news_md') # Medium size model
+
+    nlp = Spanish()
+    nlp.add_pipe("set_custom_boundaries")
+    nlp.add_pipe("sentencizer")
 
     doc = nlp(text)
     
