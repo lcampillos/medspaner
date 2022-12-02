@@ -5,8 +5,6 @@
 #
 # Note that Python 3 has processed better the UTF8 characters.
 # 
-# Leonardo Campillos-Llanos (UAM & CSIC)
-# 2019-2022
 #
 #########################################################################
 

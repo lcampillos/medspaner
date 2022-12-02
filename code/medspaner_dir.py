@@ -9,8 +9,6 @@
 #
 #   python medspaner_dir.py -conf <CONFIG_FILE> -input <FOLDER>
 # 
-# Leonardo Campillos-Llanos (UAM & CSIC)
-# 2019-2022
 #
 #########################################################################
 
