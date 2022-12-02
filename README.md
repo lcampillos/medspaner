@@ -11,13 +11,19 @@ The annotation tool can perform the following tasks:
 - annotation of negation and uncertainty/speculation
 - annotation of medication information: Contraindication, Dosage or Strength, Route and Form
 
-The lexicon is [MedLexSp](https://github.com/lcampillos/MedLexSp), a computational vocabulary with lemmas and variant forms mapped to UMLS CUIs. It can be obtained via an usage license at: [https://digital.csic.es/handle/10261/270429](https://digital.csic.es/handle/10261/270429)
+<!---The lexicon is [MedLexSp](https://github.com/lcampillos/MedLexSp), a computational vocabulary with lemmas and variant forms mapped to UMLS CUIs. It can be obtained via an usage license at: [https://digital.csic.es/handle/10261/270429](https://digital.csic.es/handle/10261/270429)
 
 Rules were developed iteratively during the annotation of the [CT-EBM-ES corpus](https://zenodo.org/record/6059737#.YtPYTMHP1H0). Standard algorithms were implemented, such as [NegEx](https://github.com/PlanTL-GOB-ES/NegEx-MES) and [HeidelTime](https://github.com/HeidelTime/heideltime) adapted to the [Spanish language](https://github.com/PlanTL-GOB-ES/EHR-TTS).
 
 The [guideline](https://github.com/lcampillos/medspaner/blob/main/annot_guideline_2022_anonyn.pdf) with the criteria for annotating the [CT-EBM-ES corpus](https://zenodo.org/record/6059737#.YtPYTMHP1H0) is [available in this repository](https://github.com/lcampillos/medspaner/blob/main/annot_guideline_2022_anonyn.pdf).
 
-The neural model is [RoBERTA model trained on clinical and EHR data](https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es), trained by the Barcelona Supercomputing Center, and fine-tuned in clinical trials annotated for different tasks: medical named entity recognition, temporal annotation, annotation of medication drug attributes, and annotation of negation and uncertainty/speculation.
+The neural model is [RoBERTA model trained on clinical and EHR data](https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es), trained by the Barcelona Supercomputing Center, and fine-tuned in clinical trials annotated for different tasks: medical named entity recognition, temporal annotation, annotation of medication drug attributes, and annotation of negation and uncertainty/speculation.-->
+
+The lexicon is a computational vocabulary with lemmas and variant forms mapped to UMLS CUIs. It can be obtained via an usage license.
+
+Rules were developed iteratively during the annotation of the CT-EBM-ES corpus. Standard algorithms were implemented, such as [NegEx](https://github.com/PlanTL-GOB-ES/NegEx-MES) and [HeidelTime](https://github.com/HeidelTime/heideltime) adapted to the Spanish language.
+
+The guideline with the criteria for annotating the CT-EBM-ES corpus is available in this repository.
 
 
 Installation and requirements
@@ -52,10 +58,10 @@ You need to download the models and place them in the ```models``` folder:\
 ```cd medspaner/```\
 ```cd code/```\
 ```cd models/```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-umls-7sgs-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-temporal-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-medic-attr-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-neg-spec```
+```git clone https://huggingface.co/USER/roberta-es-clinical-trials-umls-7sgs-ner```\
+```git clone https://huggingface.co/USER/roberta-es-clinical-trials-temporal-ner```\
+```git clone https://huggingface.co/USER/roberta-es-clinical-trials-medic-attr-ner```\
+```git clone https://huggingface.co/USER/roberta-es-clinical-trials-neg-spec```
 
 
 #### Simple annotation using the [Transformers](https://huggingface.co/docs/transformers/installation) library
@@ -145,7 +151,6 @@ References
 **Hybrid tool for semantic annotation of clinical trial texts**  
 Leonardo Campillos-Llanos ...  
 *In Proceedings of ...*
---->
 
 The Medical Lexicon for Spanish (MedLexSp) is described here:
 
@@ -162,7 +167,7 @@ The Clinical Trials for Evidence-based Medicine in Spanish (CT-EBM-SP) corpus is
 [**A clinical trials corpus annotated with UMLS entities to enhance the access to evidence-based medicine**](https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/s12911-021-01395-z)  
 Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión and Antonio Moreno-Sandoval 
 *BMC Med Inform Decis Mak* (2021) 21:69 
-
+--->
 
 Intended uses & limitations
 ---------------------------
@@ -180,7 +185,7 @@ License
 The code is distributed under the General Public License 3 (AGPL-3.0) by default. 
 If you wish to use it under a different license, feel free to get in touch.
 
-Copyright (c) 2019-2022 Leonardo Campillos-Llanos
+Copyright (c) 2019-2022 ANONYMIZED
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
