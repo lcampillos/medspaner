@@ -105,6 +105,14 @@ The input data is a standard text file (```.txt```).
 The output data format can be a BRAT (```.ann```) file or ```json```.
 
 
+Lexicon
+-------------------------
+
+Please, contact to get a license to use the Spanish medical lexicon. The usage is free for educational and research purposes.
+
+If you do not have a license, the ```pickle``` files (located at the ```lexicon``` subfolder) may throw an error.
+
+
 List of patterns and annotation exceptions
 -------------------------------------------------
 
@@ -156,7 +164,7 @@ The Medical Lexicon for Spanish (MedLexSp) is described here:
 
 [**MedLexSp – A Medical Lexicon for Spanish Medical Natural Language Processing**](https://github.com/lcampillos/MedLexSp)  
 Leonardo Campillos-Llanos  
-*(Under review)*
+*Journal of Biomedical Semantics*
 
 [**First Steps towards Building a Medical Lexicon for Spanish with Linguistic and Semantic Information**](https://aclanthology.org/W19-5017/)  
 Leonardo Campillos-Llanos.
