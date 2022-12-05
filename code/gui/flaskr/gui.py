@@ -357,7 +357,10 @@ def remove_overlap_gui(Hash):
                                 InnerEnts.append(Dict[n])
                 # Overlapping entities (e.g. "trastorno de conducta" y "conducta suicida")
                 elif (Start_ToCompare1 <= Start_ToCompare2) and (End_ToCompare1 <= End_ToCompare2) and (Start_ToCompare2 <= End_ToCompare1):
-                    ToDelete.append(Dict[n])
+                    # if not a juxtaposed entity
+                    if (Start_ToCompare2 != End_ToCompare1):
+                        ToDelete.append(Dict[n])
+
             n = n - 1
 
     FinalEntities = {}
