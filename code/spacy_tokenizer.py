@@ -18,7 +18,6 @@ import sys
 import spacy
 from spacy.lang.es import Spanish
 import argparse
-import requests
 
 
 def format_pos_name(POS_label_name,predicted_POS):

@@ -1,0 +1,5 @@
+Flask==1.1.2
+spacy==3.3.1
+textsearch==0.0.21
+torch==1.10.2
+transformers==4.16.2

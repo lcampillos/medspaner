@@ -48,6 +48,8 @@ Install it by running: ```pip install torch```
 * [Transformers](https://huggingface.co/docs/transformers/installation) library by HuggingFace (tested with vs. 4.17)\
 Install it by running: ```pip install transformers```
 
+You can install the packages (except GIT LFS) by using the ```requirements.txt``` file and running the following command: ```pip install -r requirements.txt```
+
 
 Usage
 -------------------------
