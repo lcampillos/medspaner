@@ -280,7 +280,7 @@ def main(arguments):
                     codes_string = " | ".join(CUIsList)                    
                     entityData['umls'] = codes_string
             
-        print(jsonEntities)
+        print(json.dumps(jsonEntities, indent=4))
 
     print("Done!")
 

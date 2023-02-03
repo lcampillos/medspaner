@@ -281,6 +281,6 @@ def convert2json(EntityHash):
                    "start": EntityHash[i]['start'], "end": EntityHash[i]['end']}
         jsonEntities.append(EntDict)
     
-    return json.dumps(jsonEntities)
+    return jsonEntities
    
     
