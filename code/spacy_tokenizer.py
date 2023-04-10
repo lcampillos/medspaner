@@ -143,6 +143,10 @@ def set_custom_boundaries(doc):
     for token in doc[:-1]:
         if token.text == "\n\n":
             doc[token.i + 1].is_sent_start = True
+        elif token.text == "\n\r\n":
+            doc[token.i + 1].is_sent_start = True
+        elif token.text == "\n\r":
+            doc[token.i + 1].is_sent_start = True
         elif token.text == "\n":
             doc[token.i + 1].is_sent_start = True
         elif token.text == "\r":
@@ -162,7 +166,32 @@ def sentences_spacy(text):
     
     Sentences = [sentence for sentence in doc.sents]
     
-    return Sentences
+    # Truncate sentences >512 characters to avoid surpassing the maximum sequence length for this model
+
+    FinalSentences = []
+
+    for sentence in Sentences:
+
+        # length of the sentence in characters (not words), excluding white spaces
+        sent_str_length = len(str(sentence))
+        if sent_str_length>512:
+            final_sentence = sentence
+            substring_length = 0
+            # Get the index of the word below 512 character length
+            for i,token in enumerate(sentence):
+                start = token.idx
+                end = (token.idx + len(token))
+                substring_length = substring_length + (end - start)
+                if substring_length<512:
+                    final_sentence = sentence[:i]
+                elif substring_length>512:
+                    break
+            s_final_sentence = str(final_sentence)
+            FinalSentences.append(final_sentence)
+        else:
+            FinalSentences.append(sentence)
+
+    return FinalSentences
 
 
 def main(filename):
