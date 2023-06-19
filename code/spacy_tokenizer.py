@@ -140,7 +140,7 @@ def tokenize_spacy_text(text,POSDict):
 # Extend set of characters defining the sentence boundary (e.g. new line)
 @Spanish.component("set_custom_boundaries")
 def set_custom_boundaries(doc):
-    for token in doc[:-1]:
+    for ix, token in enumerate(doc[:-1]):
         if token.text == "\n\n":
             doc[token.i + 1].is_sent_start = True
         elif token.text == "\n\r\n":
@@ -151,6 +151,12 @@ def set_custom_boundaries(doc):
             doc[token.i + 1].is_sent_start = True
         elif token.text == "\r":
             doc[token.i + 1].is_sent_start = True
+        elif token.text == ".":            
+            next_word = doc[ix+1]
+            next_word = next_word.text            
+            # check if next word begins with lowercase; if so, do not start new sentence (it can be an abbreviation)
+            if next_word[0].islower():
+                doc[token.i + 1].is_sent_start = False
     return doc
 
 

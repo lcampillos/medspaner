@@ -5,16 +5,55 @@
 #
 # Note that Python 3 has processed better the UTF8 characters.
 # 
+# Leonardo Campillos-Llanos (UAM & CSIC)
+# 2019-2022
 #
 #########################################################################
 
 import re
 import json
 import torch
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # If CUDA is needed
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # If CUDA is needed
 device = torch.device("cpu")
 
 
+def normalize(string):
+    
+    ''' Normalize characters that cause issues with BPE tokenized characters '''
+    
+    string = re.sub('ª', 'a', string)
+    string = re.sub('º', 'o', string)
+    
+    return string
+    
+                        
+def normalize_back(Hash):
+    
+    ''' Normalize to the original string those characters that were normalized due to BPE tokenization problems '''
+    
+    word = Hash['word']
+    
+    # 1o -> 1º
+    normalized_o = re.search("\do ", word)
+    if normalized_o:
+        word = re.sub("(\d)o ", r"\1º ", word)
+        Hash['word'] = word
+    
+    # 2a -> 1ª
+    normalized_a = re.search("\da ", word)
+    if normalized_a:
+        word = re.sub("(\d)a ", r"\1ª ", word)
+        Hash['word'] = word
+    
+    # "Tª (Temperatura)
+    normalized_Ta = re.search(r"\bTa\b", word)
+    if normalized_Ta:
+        word = re.sub("a", "ª", word)
+        Hash['word'] = word
+    
+    return Hash
+                        
+                        
 def remove_space(EntsList):
     
     ''' Remove white spaces or new lines in predicted entities '''
@@ -52,7 +91,9 @@ def remove_space(EntsList):
 def annotate_sentence(string, annotation_model, tokenizer_model, device):
 
     ''' Predict entities in sentence with ROBERTa neural classifier. '''
-
+    
+    string = normalize(string)
+    
     tokenized = tokenizer_model(string, return_offsets_mapping=True)
 
     input_ids = tokenizer_model.encode(string, return_tensors="pt")
@@ -185,6 +226,8 @@ def update_offsets(List, offset, text):
         
         start_old = dictionary['start']
         end_old = dictionary['end']
+        # Normalize back if needed
+        dictionary = normalize_back(dictionary)
         entity = dictionary['word']
         new_start = int(start_old) + int(offset)
         new_end = int(end_old) + int(offset)
@@ -228,6 +271,17 @@ def update_offsets(List, offset, text):
                         NewList.append(dictionary)
                         print("Check offsets of entity: %s" % (entity))
                     except:
+                        pass
+                    try:
+                        # Try normalization if not found previously
+                        entity = normalize(entity)
+                        new_start, new_end = re.search(re.escape(entity),text).span()
+                        dictionary['start'] = new_start
+                        dictionary['end'] = new_end
+                        dictionary['word'] = entity
+                        NewList.append(dictionary)
+                        print("Check offsets of entity: %s" % (entity))
+                    except:                            
                         print("Error in offsets of entity: %s" % (entity))
 
     return NewList
@@ -247,9 +301,9 @@ def annotate_sentences_with_model(SentencesList,text_string,model,tokenizer,devi
         if not (sentence.text.isspace()):
 
             EntsList = annotate_sentence(sentence.text, model, tokenizer, device)
-
             EntsList = remove_space(postprocess_entities(EntsList))
-
+            EntsList = [ normalize_back(EntHash) for EntHash in EntsList ]
+            
             # Change offsets
             if offset != 0:
                 EntsList = update_offsets(EntsList, offset, text_string)
@@ -268,8 +322,6 @@ def annotate_sentences_with_model(SentencesList,text_string,model,tokenizer,devi
     return HashList
 
 
-
-
 def convert2json(EntityHash):
 
     ''' Convert a hash of entities to json format '''
@@ -281,6 +333,7 @@ def convert2json(EntityHash):
                    "start": EntityHash[i]['start'], "end": EntityHash[i]['end']}
         jsonEntities.append(EntDict)
     
+    #return json.dumps(jsonEntities) # Esto no usado pq convierte a una string, se deja solo una lista de entidades
     return jsonEntities
    
     
