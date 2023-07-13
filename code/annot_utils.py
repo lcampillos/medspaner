@@ -23,6 +23,8 @@ def normalize(string):
     
     string = re.sub('ª', 'a', string)
     string = re.sub('º', 'o', string)
+    string = re.sub('µ', '&mu;', string)
+    string = re.sub('²', '&sup2;', string)
     
     return string
     
@@ -45,11 +47,23 @@ def normalize_back(Hash):
         word = re.sub("(\d)a ", r"\1ª ", word)
         Hash['word'] = word
     
-    # "Tª (Temperatura)
+    # Tª (Temperatura)
     normalized_Ta = re.search(r"\bTa\b", word)
     if normalized_Ta:
         word = re.sub("a", "ª", word)
         Hash['word'] = word
+    
+    # µ
+    normalized_mu = re.search("&mu;", word)
+    if normalized_mu:
+        word = re.sub("&mu;", "µ", word)
+        Hash['word'] = word
+    
+    # ² (e.g. "m²")
+    normalized_2 = re.search("&sup2;", word)
+    if normalized_2:
+        string = re.sub('&sup2;', '²', string)
+        Hash['word'] = word    
     
     return Hash
                         
@@ -270,19 +284,21 @@ def update_offsets(List, offset, text):
                         dictionary['end'] = new_end
                         NewList.append(dictionary)
                         print("Check offsets of entity: %s" % (entity))
+                        corrected = True
                     except:
                         pass
-                    try:
-                        # Try normalization if not found previously
-                        entity = normalize(entity)
-                        new_start, new_end = re.search(re.escape(entity),text).span()
-                        dictionary['start'] = new_start
-                        dictionary['end'] = new_end
-                        dictionary['word'] = entity
-                        NewList.append(dictionary)
-                        print("Check offsets of entity: %s" % (entity))
-                    except:                            
-                        print("Error in offsets of entity: %s" % (entity))
+                    if corrected == False:
+                        try:
+                            # Try normalization if not found previously
+                            entity = normalize(entity)
+                            new_start, new_end = re.search(re.escape(entity),text).span()
+                            dictionary['start'] = new_start
+                            dictionary['end'] = new_end
+                            dictionary['word'] = entity
+                            NewList.append(dictionary)
+                            print("Check offsets of entity: %s" % (entity))
+                        except:                            
+                            print("Error in offsets of entity: %s" % (entity))
 
     return NewList
 
