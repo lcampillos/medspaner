@@ -56,7 +56,15 @@ Usage
 
 Download the pre-trained models from the HuggingFace hub.
 
-You need to download the models and place them in the ```models``` folder:\
+Make sure you have ```git-lfs``` installed before downloading the models (```git-lfs``` is needed to download large files):\
+- In Mac OS:
+Download git-lfs from: [https://git-lfs.github.com/](https://git-lfs.github.com/)
+Unzip the file, get into the folder and then install it:
+```sudo ./install.sh```
+You then will see this message: ```Git LFS initialized.```
+- In Linux (e.g. Ubuntu): ```sudo apt install git-lfs```
+
+To clone the models into the ```models``` folder:\
 ```cd medspaner/```\
 ```cd code/```\
 ```cd models/```\
@@ -68,11 +76,11 @@ You need to download the models and place them in the ```models``` folder:\
 
 #### Simple annotation using the [Transformers](https://huggingface.co/docs/transformers/installation) library
 
-Import the token classification class: 
+Import the token classification class:
 
     from transformers import AutoModelForTokenClassification
 
-Then load the specific model. For example, use the following instruction to load the NER model for the UMLS semantic groups: 
+Then load the specific model. For example, use the following instruction to load the NER model for the UMLS semantic groups:
 
     model = "roberta-es-clinical-trials-umls-7sgs-ner"
 
@@ -129,9 +137,9 @@ For example, to exclude all entities from the ```DEVI``` semantic group (medical
 To re-label *edad* tagged as ```PHYS``` to ```O``` (no label), write:
 
     edad/PHYS|O
-    
+
 For two-word patterns, note that the current version only supports re-labelling the second token. For example, to re-label *iv* from ```Route``` to ```O```, write:
-    
+
     estadio/O iv/Route|O
 
 
@@ -175,8 +183,8 @@ Leonardo Campillos-Llanos.
 The Clinical Trials for Evidence-based Medicine in Spanish (CT-EBM-SP) corpus is explained in this article:
 
 [**A clinical trials corpus annotated with UMLS entities to enhance the access to evidence-based medicine**](https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/s12911-021-01395-z)  
-Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión and Antonio Moreno-Sandoval 
-*BMC Med Inform Decis Mak* (2021) 21:69 
+Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión and Antonio Moreno-Sandoval
+*BMC Med Inform Decis Mak* (2021) 21:69
 --->
 
 Intended uses & limitations
@@ -192,7 +200,7 @@ The owner or creator of the annotation system will in no event be liable for any
 License
 ---------------------------
 
-The code is distributed under the General Public License 3 (AGPL-3.0) by default. 
+The code is distributed under the General Public License 3 (AGPL-3.0) by default.
 If you wish to use it under a different license, feel free to get in touch.
 
 Copyright (c) 2019-2022 ANONYMIZED
@@ -206,6 +214,3 @@ Funding
 ---------------------------
 
 ANONYMIZED
-
-
-
