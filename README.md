@@ -71,7 +71,7 @@ To clone the models into the ```models``` folder:\
 ```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-umls-7sgs-ner```\
 ```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-temporal-ner```\
 ```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-medic-attr-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-neg-spec```
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-neg-spec-ner```
 
 
 #### Simple annotation using the [Transformers](https://huggingface.co/docs/transformers/installation) library
