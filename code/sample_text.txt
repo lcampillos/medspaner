@@ -1,0 +1,23 @@
+
+La COVID-19 afecta de distintas maneras en función de cada persona. La mayoría de las personas que se contagian presentan síntomas de intensidad leve o moderada, y se recuperan sin necesidad de hospitalización.
+Los síntomas más habituales son los siguientes: fiebre, tos seca y cansancio.
+Otros síntomas menos comunes son los siguientes: Molestias y dolores, dolor de garganta, diarrea, conjuntivitis, dolor de cabeza, pérdida del sentido del olfato, erupciones cutáneas en los dedos de las manos o de los pies.
+(www.who.int)
+_____________________________________________________________________________________
+
+La hipertensión y la enfermedad cardiovascular son más frecuentes en quienes evolucionan peor por COVID-19. Los pacientes mayores de 60 años, así como aquellos con enfermedad cardiovascular, deberían evitar especialmente la exposición al coronavirus, no automedicarse y consultar rápidamente ante la aparición de síntomas. El mecanismo de entrada del coronavirus a las células ha puesto en tela de juicio el uso de IECA.
+(Salazar et al. 2020, PMID: 32591283)
+_____________________________________________________________________________________
+
+Título público: Tocilizumab más terapia de base versus placebo más terapia de base en pacientes con neumonía grave por COVID-19
+Indicación pública: NEUMONÍA GRAVE POR EL COVID-19
+Criterios de inclusión:
+- Edad >=18 años
+- Hospitalizado con neumonía de la COVID-19 confirmada (incluida una RCP positiva de sangre, orina, heces, otro líquido corporal) y mediante radiografía de tórax o TAC
+(EudraCT nº 2020-001154-22)
+_____________________________________________________________________________________
+
+Cefazolina vs. Ciprofloxacino en la profilaxis de infecciones en pacientes cirróticos con sangrado digestivo
+OBJETIVO: Determinar si el uso de Cefazolina como profilaxis antibiótica produce una disminución significativa de las infecciones en pacientes cirróticos con sangrado digestivo, comparado con Ciprofloxacino.
+MATERIAL Y MÉTODOS: Ensayo Clínico aleatorizado. Se incluyeron a pacientes cirróticos mayores de 18 años, con sangrado digestivo, que ingresaron entre Julio del 2008 a julio del 2010 a la Unidad de hemorragia Digestiva del HNERM, sin evidencia clínica ni de laboratorio de infección al momento del ingreso y que no hubieran recibido tratamiento antibiótico las últimas 2 semanas. A un grupo se le administró Ciprofloxacino 200 mg bid EV y al otro Cefazolina 1 g tid EV. x 7 días. 
+(Díaz Ferrer et al. 2011, PMID: 22476119)
