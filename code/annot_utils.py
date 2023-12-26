@@ -41,7 +41,7 @@ def normalize_back(Hash):
     
     # 1o -> 1º
     #normalized_o = re.search("\do ", word)
-    normalized_o = re.search(r"\b\do\b", word)
+    normalized_o = re.search(r"\do\b", word)
     if normalized_o:
         word = re.sub("(\d)o", r"\1º", word)
         Hash['word'] = word
