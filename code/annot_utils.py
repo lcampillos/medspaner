@@ -23,8 +23,10 @@ def normalize(string):
     
     string = re.sub('ª', 'a', string)
     string = re.sub('º', 'o', string)
-    string = re.sub('µ', '&mu;', string)
-    string = re.sub('²', '&sup2;', string)
+    string = re.sub('²', '2', string)
+    string = re.sub('µL', 'm#L', string)
+    string = re.sub('µg', 'm#g', string)
+    string = re.sub('µm', 'm#m', string)
     
     return string
     
@@ -52,18 +54,30 @@ def normalize_back(Hash):
     if normalized_Ta:
         word = re.sub("a", "ª", word)
         Hash['word'] = word
-    
-    # µ
-    normalized_mu = re.search("&mu;", word)
-    if normalized_mu:
-        word = re.sub("&mu;", "µ", word)
+
+    # m² 
+    normalized_m2 = re.search(r"m2\b", word)
+    if normalized_m2:
+        word = re.sub("m2", "m²", word)
+        Hash['word'] = word
+
+    # µL 
+    normalized_ml = re.search(r"m#L", word)
+    if normalized_ml:
+        word = re.sub("m#L", "µL", word)
         Hash['word'] = word
     
-    # ² (e.g. "m²")
-    normalized_2 = re.search("&sup2;", word)
-    if normalized_2:
-        string = re.sub('&sup2;', '²', string)
-        Hash['word'] = word    
+    # µg 
+    normalized_mg = re.search(r"m#g", word)
+    if normalized_mg:
+        word = re.sub("m#g", "µg", word)
+        Hash['word'] = word
+
+    # µm 
+    normalized_mm = re.search(r"m#m", word)
+    if normalized_mm:
+        word = re.sub("m#m", "µm", word)
+        Hash['word'] = word
     
     return Hash
                         
@@ -297,7 +311,8 @@ def update_offsets(List, offset, text):
                             dictionary['word'] = entity
                             NewList.append(dictionary)
                             print("Check offsets of entity: %s" % (entity))
-                        except:                            
+                            corrected = True
+                        except:                      
                             print("Error in offsets of entity: %s" % (entity))
 
     return NewList
@@ -321,8 +336,7 @@ def annotate_sentences_with_model(SentencesList,text_string,model,tokenizer,devi
             EntsList = [ normalize_back(EntHash) for EntHash in EntsList ]
             
             # Change offsets
-            if offset != 0:
-                EntsList = update_offsets(EntsList, offset, text_string)
+            EntsList = update_offsets(EntsList, offset, text_string)
 
             last_token = sentence[-1]
             last_token_offset = int(last_token.idx) + int(len(last_token))
