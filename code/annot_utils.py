@@ -27,6 +27,8 @@ def normalize(string):
     string = re.sub('µL', 'm#L', string)
     string = re.sub('µg', 'm#g', string)
     string = re.sub('µm', 'm#m', string)
+    # non-standard, hidden white space character
+    string = re.sub(" ","_", string)
     
     return string
     
@@ -38,15 +40,17 @@ def normalize_back(Hash):
     word = Hash['word']
     
     # 1o -> 1º
-    normalized_o = re.search("\do ", word)
+    #normalized_o = re.search("\do ", word)
+    normalized_o = re.search(r"\b\do\b", word)
     if normalized_o:
-        word = re.sub("(\d)o ", r"\1º ", word)
+        word = re.sub("(\d)o", r"\1º", word)
         Hash['word'] = word
     
     # 2a -> 1ª
-    normalized_a = re.search("\da ", word)
+    #normalized_a = re.search("\da ", word)
+    normalized_a = re.search(r"\b\da\b", word)
     if normalized_a:
-        word = re.sub("(\d)a ", r"\1ª ", word)
+        word = re.sub("(\d)a", r"\1ª", word)
         Hash['word'] = word
     
     # Tª (Temperatura)
@@ -77,6 +81,12 @@ def normalize_back(Hash):
     normalized_mm = re.search(r"m#m", word)
     if normalized_mm:
         word = re.sub("m#m", "µm", word)
+        Hash['word'] = word
+    
+    # non-standard, hidden white space character
+    normalized_hws = re.search("_", word)
+    if normalized_hws:
+        word = re.sub("_", " ", word)
         Hash['word'] = word
     
     return Hash
@@ -251,7 +261,6 @@ def update_offsets(List, offset, text):
     NewList = []
     
     for dictionary in List:
-        
         start_old = dictionary['start']
         end_old = dictionary['end']
         # Normalize back if needed
@@ -312,7 +321,7 @@ def update_offsets(List, offset, text):
                             NewList.append(dictionary)
                             print("Check offsets of entity: %s" % (entity))
                             corrected = True
-                        except:                      
+                        except:                                             
                             print("Error in offsets of entity: %s" % (entity))
 
     return NewList
