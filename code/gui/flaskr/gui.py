@@ -60,6 +60,7 @@ def remove_space(EntsList):
     return FinalList
 
 
+# UMLS entities
 # Load the previously trained Transformers model using full path (no relative)
 model_checkpoint = "../models/roberta-es-clinical-trials-umls-7sgs-ner"
 
@@ -68,6 +69,37 @@ tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
 
 # Token classifier
 umls_token_classifier = AutoModelForTokenClassification.from_pretrained(model_checkpoint)
+
+# Temporal information entities
+# Load the previously trained Transformers model using full path (no relative)
+temp_model_checkpoint = "../models/roberta-es-clinical-trials-temporal-ner"
+
+# Transformers tokenizer
+tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
+
+# Token classifier
+temp_token_classifier = AutoModelForTokenClassification.from_pretrained(temp_model_checkpoint)
+
+# Medication information
+# Load the previously trained Transformers model using full path (no relative)
+medic_attr_model_checkpoint = "../models/roberta-es-clinical-trials-medic-attr-ner"
+
+# Transformers tokenizer
+tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
+
+# Token classifier
+medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
+
+# Negation and speculation
+# Load the previously trained Transformers model using full path (no relative)
+neg_spec_model_checkpoint = "../models/roberta-es-clinical-trials-neg-spec"
+
+# Transformers tokenizer
+tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
+
+# Token classifier
+neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
+
 
 # list of exceptions and patterns to change according to task
 EXCEPTIONS_LIST = "../patterns/list_except.txt"
@@ -721,15 +753,7 @@ def gui():
         if (temp):
 
             print("Annotating using transformers neural model for temporal entities...")
-            # Load the previously trained Transformers model using full path (no relative)
-            temp_model_checkpoint = "../models/roberta-es-clinical-trials-temporal-ner"
-
-            # Transformers tokenizer
-            tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
-
-            # Token classifier
-            temp_token_classifier = AutoModelForTokenClassification.from_pretrained(temp_model_checkpoint)
-
+        
             TempOutput = annotate_sentences_with_model(Sentences, text, temp_token_classifier)
 
             # Save the annotated entities with the final format
@@ -748,15 +772,7 @@ def gui():
         if (drg):
 
             print("Annotating using transformers neural model for drug information...")
-            # Load the previously trained Transformers model using full path (no relative)
-            medic_attr_model_checkpoint = "../models/roberta-es-clinical-trials-medic-attr-ner"
-
-            # Transformers tokenizer
-            tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
-
-            # Token classifier
-            medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
-
+            
             MedicAttrOutput = annotate_sentences_with_model(Sentences, text, medic_attr_token_classifier)
 
             # Save the annotated entities with the final format
@@ -777,14 +793,7 @@ def gui():
 
             # Load the previously trained Transformers model using full path (no relative)
             print("Annotating using transformers neural model for negation and speculation...")
-            neg_spec_model_checkpoint = "../models/roberta-es-clinical-trials-neg-spec"
-
-            # Transformers tokenizer
-            tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
-
-            # Token classifier
-            neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
-
+            
             NegSpecOutput = annotate_sentences_with_model(Sentences, text, neg_spec_token_classifier)
 
             # Save the annotated entities with the final format
