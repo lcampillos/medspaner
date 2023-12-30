@@ -342,13 +342,13 @@ form div#text_input span.Speculated {
 }
 
 /* Style of title when hovering over a word */
-span[title]:hover:after {
+span[data-title]:hover:after {
   opacity: 1;
   visibility: visible;
 }
 
-span[title]:after {
-  content: attr(title);
+span[data-title]:after {
+  content: attr(data-title);
   color: #333;
   font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
@@ -374,7 +374,7 @@ span[title]:after {
   background-image: -o-linear-gradient(top, #eeeeee, #e0e8e1);
 }
 
-span[title] {
+span[data-title] {
   position: relative;
 }
 

@@ -509,16 +509,16 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
                     CUIsList = complete_norm_data(CUIsList, UMLSDataDict)
                     codes_string = " | ".join(CUIsList)
                     # HTML tag to write in string
-                    open_tag = "<span class=\"" + label + "\" " + "title=\"" + translate_label(
+                    open_tag = "<span class=\"" + label + "\" " + "data-title=\"" + translate_label(
                         label) + " - UMLS: " + codes_string + "\" id=\"flat" + id_entity + "\">"
                 else:
                     # HTML tag to write in string
-                    open_tag = "<span class=\"" + label + "\" " + "title=\"" + translate_label(
+                    open_tag = "<span class=\"" + label + "\" " + "data-title=\"" + translate_label(
                         label) + "\" id=\"flat" + id_entity + "\">"
             except:
                 # For temporal, negation or drug entities not in dictionary (cause errors)
                 # HTML tag to write in string
-                open_tag = "<span class=\"" + label + "\" " + "title=\"" + translate_label(
+                open_tag = "<span class=\"" + label + "\" " + "data-title=\"" + translate_label(
                     label) + "\" id=\"flat" + id_entity + "\">"
 
             # Search for nested entities
@@ -542,15 +542,15 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
                                     CUIsList = complete_norm_data(CUIsList, UMLSDataDict)
                                     codes_string = " | ".join(CUIsList)
                                     # HTML tag to write in string
-                                    tag_nested = "<span class=\"" + label_nested + "\" " + "title=\"" + translate_label(
+                                    tag_nested = "<span class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(
                                         label_nested) + " - UMLS: " + codes_string + "\" id=\"inner" + id_entity + "\">" + ent_nested + "</span>"
                                 else:
                                     # HTML tag to write in string
-                                    tag_nested = "<span class=\"" + label_nested + "\" " + "title=\"" + translate_label(
+                                    tag_nested = "<span class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(
                                         label_nested) + "\" id=\"inner" + id_entity + "\">" + ent_nested + "</span>"
                             except:
 
-                                tag_nested = "<span class=\"" + label_nested + "\" " + "title=\"" + translate_label(
+                                tag_nested = "<span class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(
                                     label_nested) + "\" id=\"inner" + id_entity + "\">" + ent_nested + "</span>"
 
                         # Converts inner string to list of characters and replace with inner tags using offsets
@@ -600,7 +600,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
         else:
 
             # HTML tag to write in string
-            open_tag = "<span class=\"" + label + "\" " + "title=\"" + translate_label(
+            open_tag = "<span class=\"" + label + "\" " + "data-title=\"" + translate_label(
                 label) + "\" id=\"flat" + id_entity + "\">"
             # Search for nested entities
             if Nested and (len(Nested) > 0):
@@ -613,7 +613,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
                     if (start_nested >= start) and (end_nested <= end):
                         ent_nested = SortedNested[NestedEnt]['ent']
                         label_nested = SortedNested[NestedEnt]['label']
-                        tag_nested = "<span class=\"" + label_nested + "\" " + "title=\"" + translate_label(
+                        tag_nested = "<span class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(
                             label_nested) + "\" id=\"inner" + id_entity + "\">" + ent_nested + "</span>"
 
                         # Converts inner string to list of characters and replace with inner tags using offsets
