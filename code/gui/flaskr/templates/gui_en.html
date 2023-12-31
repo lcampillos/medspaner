@@ -34,7 +34,66 @@
     <table border="0" align="center">
     <tr>
       <td>
-        <input class="css-button-2" onclick="load_sample()" style="width:120px" readonly value="Sample text" >
+        <label class="container">UMLS entities
+        <input type="checkbox" name="neu">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <!--<td>&#160;</td>-->
+      <td>
+        <label class="container">Drug information
+        <input type="checkbox" name="drg">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Temporal entities 
+        <input type="checkbox" name="temp">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Miscellaneous entities
+        <input type="checkbox" name="misc">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Negation
+        <input type="checkbox" name="neg">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Attributes
+        <input type="checkbox" name="att">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Nested entities
+        <input type="checkbox" name="nest">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Use lexicon
+        <input type="checkbox" name="lex">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Normalize
+        <input type="checkbox" name="norm">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+    </tr>
+    </table>
+    <table border="0" align="center">
+    <tr>
+      <td>
+        <input class="css-button-2" onclick="load_sample()" style="width:100px" readonly value="Sample text" >
       </td>
       <td>&#160;</td>
       <td>
@@ -42,57 +101,9 @@
       </td>
       <td>&#160;</td>
       <td>
-        <label class="container">Medication information
-        <input type="checkbox" name="drg">
-        <span class="checkmark"></span>
-        </label>
+        <input type="submit" class="css-button" onclick="nav();" readonly value="Analyze" >
       </td>
       <td>&#160;</td>
-      <td>
-        <label class="container">Temporal entities
-        <input type="checkbox" name="temp">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Negation
-        <input type="checkbox" name="neg">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Nested entities
-        <input type="checkbox" name="nest">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">UMLS lexicon
-        <input type="checkbox" name="lex">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">UMLS neural model
-        <input type="checkbox" name="neu">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Normalize
-        <input type="checkbox" name="norm">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <input type="submit" class="css-button" onclick="nav();" readonly value="Analize" >
-      </td>
     </tr>
     <tr>
       <td><br /></td>

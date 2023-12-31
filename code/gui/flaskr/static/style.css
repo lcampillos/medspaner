@@ -14,7 +14,7 @@ table.advert {
     background-color: #FFDAB9;
     margin-left: auto;
     margin-right: auto;
-    font-size: 14px;
+    font-size: 12px;
     width: 100%;
 }
 
@@ -31,7 +31,7 @@ textarea {
     border: 2px solid #ccc;
     border-radius: 4px;
     background-color: #f8f8f8;
-    font-size: 14px;
+    font-size: 12px;
     resize: vertical;
     }
 
@@ -45,7 +45,7 @@ form div#text_input {
     border: 2px solid #ccc;
     border-radius: 4px;
     background-color: #f8f8f8;
-    font-size: 14px;
+    font-size: 12px;
     font-family: Arial, Helvetica, sans-serif;
     resize: vertical;
     overflow: auto;
@@ -341,6 +341,114 @@ form div#text_input span.Speculated {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+form div#text_input span.History_of[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.History_of {
+  background: rgba(246,245,240); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Future[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Future {
+  background: rgba(246,245,240); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Patient[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Patient {
+  background: rgba(252,254,250); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Other[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Other {
+  background: rgba(252,254,250); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Family_member[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Family_member {
+  background: rgba(252,254,250); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Food[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Food {
+  background: rgba(211,191,178); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Observation[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Observation {
+  background: rgba(246,221,204); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Quantifier_or_Qualifier[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Quantifier_or_Qualifier {
+  background: rgba(242,244,244); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input span.Result_or_Value[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.Result_or_Value {
+  background: rgba(244,248,254); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 /* Style of title when hovering over a word */
 span[data-title]:hover:after {
   opacity: 1;
@@ -350,7 +458,7 @@ span[data-title]:hover:after {
 span[data-title]:after {
   content: attr(data-title);
   color: #333;
-  font-size: 14px;
+  font-size: 12px;
   font-family: Arial, Helvetica, sans-serif;
   position: absolute;
   padding: 4px 8px;
@@ -412,7 +520,7 @@ span[data-title] {
 }
 
 .css-button-2 {
-  font-size: 12px;
+  font-size: 11px;
   border-radius: 5px;
   border: solid 1px #ccc; /* azul #3866A3; */
   color: #000000;
@@ -458,11 +566,11 @@ div#show-after-results.hide {
   border-width: thick;
   display: block;
   position: relative;
-  padding-left: 25px;
-  padding-top: 3px;
+  padding-left: 25px; /*25px;*/
+  padding-top: 2px;
   margin-bottom: 7px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11.5px;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   -webkit-user-select: none;

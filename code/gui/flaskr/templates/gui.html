@@ -31,7 +31,66 @@
       <td><br /><br /></td>
     </tr>
   </table>      
-  <form method="POST" action="" onsubmit="return getContent()" name='input_form'> <!-- -->
+  <form method="POST" action="" onsubmit="return getContent()" name='input_form'>
+    <table border="0" align="center">
+    <tr>
+      <td>
+        <label class="container">Entidades UMLS 
+        <input type="checkbox" name="neu">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <!--<td>&#160;</td>-->
+      <td>
+        <label class="container">Posología
+        <input type="checkbox" name="drg">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Expresiones temporales
+        <input type="checkbox" name="temp">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Entidades misceláneas
+        <input type="checkbox" name="misc">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Negación
+        <input type="checkbox" name="neg">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Atributos
+        <input type="checkbox" name="att">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Entidades anidadas
+        <input type="checkbox" name="nest">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Usar léxico
+        <input type="checkbox" name="lex">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>
+        <label class="container">Normalizar
+        <input type="checkbox" name="norm">
+        <span class="checkmark"></span>
+        </label>
+      </td>
+    </tr>
+    </table>
     <table border="0" align="center">
     <tr>
       <td>
@@ -40,55 +99,6 @@
       <td>&#160;</td>
       <td>
         <input class="css-button-2" id="clear" onclick="document.getElementById('text_input').innerText = '';document.getElementById('show-after-results').className = 'hide';" readonly value="Borrar">  
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Posología
-        <input type="checkbox" name="drg">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Expresiones temporales
-        <input type="checkbox" name="temp">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Negación
-        <input type="checkbox" name="neg">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Entidades anidadas
-        <input type="checkbox" name="nest">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Léxico UMLS
-        <input type="checkbox" name="lex">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Modelo neural UMLS 
-        <input type="checkbox" name="neu">
-        <span class="checkmark"></span>
-        </label>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <label class="container">Normalizar
-        <input type="checkbox" name="norm">
-        <span class="checkmark"></span>
-        </label>
       </td>
       <td>&#160;</td>
       <td>

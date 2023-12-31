@@ -58,6 +58,16 @@ tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
 # Token classifier
 medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
 
+# Miscellaneous medical entities
+# Load the previously trained Transformers model using full path (no relative)
+misc_model_checkpoint = "../models/roberta-es-clinical-trials-misc-ents"
+
+# Transformers tokenizer
+tokenizer = AutoTokenizer.from_pretrained(misc_model_checkpoint)
+
+# Token classifier
+misc_token_classifier = AutoModelForTokenClassification.from_pretrained(misc_model_checkpoint)
+
 # Negation and speculation
 # Load the previously trained Transformers model using full path (no relative)
 neg_spec_model_checkpoint = "../models/roberta-es-clinical-trials-neg-spec"
@@ -67,6 +77,23 @@ tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
 
 # Token classifier
 neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
+
+# Experiencer and temporality attributes
+# Load the previously trained Transformers model using full path (no relative)
+attributes_model_checkpoint = "../models/roberta-es-clinical-trials-attributes"
+
+# Transformers tokenizer
+tokenizer = AutoTokenizer.from_pretrained(attributes_model_checkpoint)
+
+# Token classifier
+attributes_token_classifier = AutoModelForTokenClassification.from_pretrained(attributes_model_checkpoint)
+
+
+# Transformers tokenizer
+tokenizer = AutoTokenizer.from_pretrained(attributes_model_checkpoint)
+
+# Token classifier
+attributes_token_classifier = AutoModelForTokenClassification.from_pretrained(attributes_model_checkpoint)
 
 
 # list of exceptions and patterns to change according to task

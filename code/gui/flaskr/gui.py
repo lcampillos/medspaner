@@ -24,8 +24,7 @@ import pickle
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
 import torch
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # If CUDA is needed
-device = torch.device("cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def remove_space(EntsList):
@@ -90,6 +89,16 @@ tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
 # Token classifier
 medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
 
+# Miscellaneous medical entities
+# Load the previously trained Transformers model using full path (no relative)
+misc_model_checkpoint = "../models/roberta-es-clinical-trials-misc-ents"
+
+# Transformers tokenizer
+tokenizer = AutoTokenizer.from_pretrained(misc_model_checkpoint)
+
+# Token classifier
+misc_token_classifier = AutoModelForTokenClassification.from_pretrained(misc_model_checkpoint)
+
 # Negation and speculation
 # Load the previously trained Transformers model using full path (no relative)
 neg_spec_model_checkpoint = "../models/roberta-es-clinical-trials-neg-spec"
@@ -99,6 +108,16 @@ tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
 
 # Token classifier
 neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
+
+# Experiencer and temporality attributes
+# Load the previously trained Transformers model using full path (no relative)
+attributes_model_checkpoint = "/Users/leonardo/Documents/Trabajo/nn-workspace/transformers/token-classification/roberta-es-clinical-trials-attributes"
+
+# Transformers tokenizer
+tokenizer = AutoTokenizer.from_pretrained(attributes_model_checkpoint)
+
+# Token classifier
+attributes_token_classifier = AutoModelForTokenClassification.from_pretrained(attributes_model_checkpoint)
 
 
 # list of exceptions and patterns to change according to task
@@ -118,7 +137,7 @@ def annotate_sentence(string, annotation_model, tokenizer_model, device):
 
     tokens = tokenizer_model.convert_ids_to_tokens(tokenized["input_ids"])
     
-    tokens = [tokenizer.decode(tokenized['input_ids'][i]) for i,token in enumerate(tokens)]
+    tokens = [tokenizer_model.decode(tokenized['input_ids'][i]) for i,token in enumerate(tokens)]
     
     offsets = tokenized["offset_mapping"]
     
@@ -465,16 +484,27 @@ def translate_label(label):
         'Duration': "Duración",
         'Frequency': "Frecuencia",
         'Time': 'Hora o parte del día',
-        # Drug attributes
+        # Medical drug information
         'Contraindicated': "Contraindicado",
         'Dose': "Dosis o concentración",
         'Form': "Forma de presentación",
         'Route': 'Vía de administración',
+        # Miscellaneous medical entities
+        'Food': "Alimento o bebida",
+        'Observation': "Observación/Hallazgo",
+        'Quantifier_or_Qualifier': "Calificador o cuantificador",
+        'Result_or_Value': 'Resultado o valor',
         # Negation and uncertainty
         'Neg_cue': 'Marca de negación',
         'Negated': 'Negado',
         'Spec_cue': 'Marca de especulación',
-        'Speculated': 'Especulado'
+        'Speculated': 'Especulado',
+        # Attributes
+        'Patient': 'Paciente',
+        'Family_member': 'Miembro de la familia',
+        'Other': 'Otro tipo de persona',
+        'History_of': 'Antecedente médico',
+        'Future': 'Evento futuro'
     }
     return LabelDict[label]
 
@@ -786,12 +816,28 @@ def gui():
             # Merge all entities
             AllFlatEnts = merge_dicts(AllFlatEnts, MedicAttrEntities)
 
+        # Annotation of miscellaneous medical entities
+        misc = request.form.getlist("misc")
+        if (misc):
+
+            print("Annotating using transformers neural model for miscellaneous medical entities...")
+
+            MiscOutput = annotate_sentences_with_model(Sentences, text, misc_token_classifier)
+
+            # Save the annotated entities with the final format
+            MiscEntities = {}
+
+            # Change format
+            for i, Ent in enumerate(MiscOutput):
+                MiscEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
+
+            # Merge all entities
+            AllFlatEnts = merge_dicts(AllFlatEnts, MiscEntities)
 
         # Annotation of entities expressing negation
         neg = request.form.getlist("neg")
         if (neg):
 
-            # Load the previously trained Transformers model using full path (no relative)
             print("Annotating using transformers neural model for negation and speculation...")
             
             NegSpecOutput = annotate_sentences_with_model(Sentences, text, neg_spec_token_classifier)
@@ -805,6 +851,24 @@ def gui():
 
             # Merge all entities
             AllFlatEnts = merge_dicts(AllFlatEnts, NegSpecEntities)
+
+        # Annotation of experiencer and event temporality attributes
+        att = request.form.getlist("att")
+        if (att):
+
+            print("Annotating using transformers neural model for experiencer and temporality attributes...")
+            
+            AttrOutput = annotate_sentences_with_model(Sentences, text, attributes_token_classifier)
+
+            # Save the annotated entities with the final format
+            Attributes = {}
+
+            # Change format
+            for i, Ent in enumerate(AttrOutput):
+                Attributes[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
+            
+            # Merge all entities
+            AllFlatEnts = merge_dicts(AllFlatEnts, Attributes)
 
         # Remove entities defined in an exception list (it could be selected with a parameter: (exc))
         AllFlatEnts = remove_entities(AllFlatEnts, Tokens, ExceptionsDict, 'label', AllNestedEnts)
