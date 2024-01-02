@@ -451,13 +451,13 @@ def codeAttribute(Hash):
                     ent2 = FinalHash[j]['ent']
                     if ent == ent2:
                         found = True
-                        if label in Assertion:
+                        if (label in Assertion) and (label != FinalHash[j]['label']):
                             FinalHash[j]['assertion'] = label
-                        elif label in Experiencer:
+                        elif (label in Experiencer) and (label != FinalHash[j]['label']):
                             FinalHash[j]['experiencer'] = label
-                        elif label in Event_temp:
+                        elif (label in Event_temp) and (label != FinalHash[j]['label']):
                             FinalHash[j]['event_temp'] = label
-                        elif label in Attribute:
+                        elif (label in Attribute) and (label != FinalHash[j]['label']):
                             FinalHash[j]['attribute'] = label
                 if found == False:
                     FinalHash[len(FinalHash)+1] = Hash[i]

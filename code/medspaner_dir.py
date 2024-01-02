@@ -322,7 +322,7 @@ def main(arguments):
                 if (arguments.out == "ann"):
                     # Open output file to print
                     outFileName = re.sub("txt$", "ann", file_path)
-                    with open(outFileName, 'w', encoding='utf8') as out:
+                    with open(outFileName, 'w', encoding='utf8') as outFile:
                         n_comm = 0
                         if (arguments.nest):
                             # Merge both dictionaries of nesting (outer) and nested entities to output in BRAT format
