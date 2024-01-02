@@ -30,19 +30,20 @@ import pickle
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
 import torch
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # If CUDA is needed
-device = torch.device("cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Parser for config file
 import configparser
 
 # Command line arguments
 parser = argparse.ArgumentParser(description='Given a text file, annotate it with semantic labels')
+parser.add_argument('-att', required=False, default=False, action='store_true', help='annotate entity attributes (experiencer and event temporality)')
 parser.add_argument('-conf', required=False, help='use configuration file to parse arguments (optional)')
 parser.add_argument('-drg', required=False, default=False, action='store_true', help='annotate drug features such as dose (not annotated by default)')
 parser.add_argument('-exc', required=False, default=False, help='use a list of exceptions of entity types not to be annotated, or word patterns to re-label')
 parser.add_argument('-input', required=True, default=False, help='specify file to annotate')
 parser.add_argument('-lex', required=False, help='specify pickle object dictionary for preannotation (neural model is used by default); indicate using: -lex "lexicon/MedLexSp.pickle"')
+parser.add_argument('-misc', required=False, default=False, action='store_true', help='annotate miscellaneous medical entities (observations, qualifiers and results/values)')
 parser.add_argument('-neu', required=False, default=True, action='store_true', help='specify to annotate UMLS entities with neural model (used by default)')
 parser.add_argument('-neg', required=False, default=False, action='store_true', help='annotate entities expressing negation and uncertainty (not annotated by default)')
 parser.add_argument('-nest', required=False, default=False, action='store_true', help='annotate inner or nested entities inside wider entities (not annotated by default)')
@@ -94,7 +95,7 @@ def main(arguments):
     # Load the previously trained transformers model
     if (arguments.neu):
 
-        # Load the model for UMLS entities using full path (no relative)
+        # Load the model for UMLS entities using full path
         umls_model_checkpoint = "models/roberta-es-clinical-trials-umls-7sgs-ner"
 
         # Transformers tokenizer
@@ -105,7 +106,7 @@ def main(arguments):
 
     if (arguments.temp):
 
-        # Load the previously trained model for temporal entities using full path (no relative)
+        # Load the previously trained model for temporal entities
         temp_model_checkpoint = "models/roberta-es-clinical-trials-temporal-ner"
 
         # Transformers tokenizer
@@ -116,7 +117,7 @@ def main(arguments):
 
     if (arguments.drg):
 
-        # Load the previously trained transformers model for medication information using full path (no relative)
+        # Load the previously trained transformers model for medication information
         medic_attr_model_checkpoint = "models/roberta-es-clinical-trials-medic-attr-ner"
 
         # Transformers tokenizer
@@ -125,9 +126,20 @@ def main(arguments):
         # Token classifier
         medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
 
+    if (arguments.misc):        
+    
+        # Load the previously trained Transformers model
+        misc_model_checkpoint = "models/roberta-es-clinical-trials-misc-ents-ner"
+
+        # Transformers tokenizer
+        tokenizer = AutoTokenizer.from_pretrained(misc_model_checkpoint)
+
+        # Token classifier
+        misc_token_classifier = AutoModelForTokenClassification.from_pretrained(misc_model_checkpoint)
+
     if (arguments.neg):
 
-        # Load the previously trained transformers model for negation / speculation using full path (no relative)
+        # Load the previously trained transformers model for negation / speculation
         neg_spec_model_checkpoint = "models/roberta-es-clinical-trials-neg-spec-ner"
 
         # Transformers tokenizer
@@ -136,6 +148,16 @@ def main(arguments):
         # Token classifier
         neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
 
+    if (arguments.att):
+                        
+        # Load the previously trained Transformers model for attributes                        
+        att_model_checkpoint = "models/roberta-es-clinical-trials-attributes-ner"
+
+        # Transformers tokenizer
+        tokenizer = AutoTokenizer.from_pretrained(att_model_checkpoint)
+
+        # Token classifier
+        att_token_classifier = AutoModelForTokenClassification.from_pretrained(att_model_checkpoint)
 
     # Check that input is a folder, not a file
     if os.path.isfile(arguments.input):
@@ -145,8 +167,8 @@ def main(arguments):
     for base, dirs, files in os.walk(arguments.input):
         # Annotate all files in folder
         for file in files:
-            annot = re.search(".ann$", file)
-            if file and not annot:
+            text_file = re.search(".txt$", file)
+            if file and text_file:
                 file_path = os.path.join(base, file)
                 print("Processing %s ..." % file_path)
 
@@ -216,7 +238,6 @@ def main(arguments):
                         # Merge all entities
                         AllFlatEnts = merge_dicts(AllFlatEnts, TempEntities)
 
-
                     # Annotation of drug features
                     if (arguments.drg):
 
@@ -230,10 +251,27 @@ def main(arguments):
                         # Change format to:
                         #   Entities = {1: {'start': 3, 'end': 11, 'ent': 'COVID-19', 'label': 'DISO'}, 2: ... }
                         for i, Ent in enumerate(MedicAttrOutput):
-                            MedicAttrEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'],'label': Ent['entity_group']}
+                            MedicAttrEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
 
                         # Merge all entities
                         AllFlatEnts = merge_dicts(AllFlatEnts, MedicAttrEntities)
+
+                    # Annotation of miscellaneous medical entities (observations, qualifiers and results/values)
+                    if (arguments.misc):
+                                 
+                        print("Annotating using transformers neural model for miscellaneous medical entities...")                       
+                                       
+                        MiscOutput = annotate_sentences_with_model(Sentences,text,misc_token_classifier,tokenizer,device)
+
+                        # Save the annotated entities with the final format
+                        MiscEntities = {}
+
+                        # Change format
+                        for i, Ent in enumerate(MiscOutput):
+                            MiscEntities[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
+
+                        # Merge all entities
+                        AllFlatEnts = merge_dicts(AllFlatEnts, MiscEntities)
 
                     # Annotation of entities expressing negation and uncertainty
                     if (arguments.neg):
@@ -252,6 +290,23 @@ def main(arguments):
 
                         # Merge all entities
                         AllFlatEnts = merge_dicts(AllFlatEnts, NegSpecEntities)
+
+                    # Annotation of experiencer and event temporality attributes
+                    if (arguments.att):
+                        
+                        print("Annotating using transformers neural model for experiencer and event temporality attributes...")
+                       
+                        AttOutput = annotate_sentences_with_model(Sentences,text,att_token_classifier,tokenizer,device)
+
+                        # Save the annotated entities with the final format
+                        Attributes = {}
+
+                        # Change format
+                        for i, Ent in enumerate(AttOutput):
+                            Attributes[i] = {'start': Ent['start'], 'end': Ent['end'], 'ent': Ent['word'], 'label': Ent['entity_group']}
+
+                        # Merge all entities
+                        AllFlatEnts = merge_dicts(AllFlatEnts, Attributes)
 
                     # Remove entities defined in an exception list
                     if (arguments.exc):
@@ -278,19 +333,12 @@ def main(arguments):
                         else:
                             AllFinalEntities = AllFlatEnts
 
-                        for i in AllFinalEntities:
-                            # T#  Annotation  Start   End String
-                            print("T{}\t{} {} {}\t{}".format(i, AllFinalEntities[i]['label'], AllFinalEntities[i]['start'], AllFinalEntities[i]['end'], AllFinalEntities[i]['ent']),file=out)
-                            # Print UMLS codes in additional comment
-                            if (arguments.norm):
-                                CUIsList = get_codes_from_lexicon(AllFinalEntities[i]['ent'], AllFinalEntities[i]['label'], LexiconData)
-                                if (CUIsList):
-                                    # Complete normalization data of UMLS CUIs
-                                    CUIsList = complete_norm_data(CUIsList,UMLSData)
-                                    n_comm += 1
-                                    #codes_string = ", ".join(CUIsList)
-                                    codes_string = " | ".join(CUIsList)
-                                    print("#{}	AnnotatorNotes T{}	{}".format(n_comm,i,codes_string),file=out)
+                        FinalHash = codeAttribute(AllFinalEntities)
+
+                        if (arguments.norm):
+                            convert2brat(FinalHash,outFile,LexiconData,UMLSData)
+                        else:
+                            convert2brat(FinalHash,outFile,None,None)
 
                 elif (arguments.out == "json"):
 
@@ -298,17 +346,14 @@ def main(arguments):
                     # Remove entities with same label as wider entities (e.g. "dolor" in "dolor de muelas")
                     AllFinalEntities, AllNestedEntities = remove_overlap(AllFinalEntities)
                     AllFinalEntities = merge_dicts(AllFinalEntities, AllNestedEntities)
-                    jsonEntities = convert2json(AllFinalEntities)
-                    # Normalization to UMLS CUIs
+                    
+                    FinalHash = codeAttribute(AllFinalEntities)
+        
                     if (arguments.norm):
-                        for entityData in jsonEntities:
-                            CUIsList = get_codes_from_lexicon(entityData['word'],entityData['entity_group'], LexiconData)
-                            if (CUIsList):
-                                # Complete normalization data of UMLS CUIs
-                                CUIsList = complete_norm_data(CUIsList,UMLSData)
-                                codes_string = " | ".join(CUIsList)
-                                entityData['umls'] = codes_string
-
+                        jsonEntities = convert2json(FinalHash,LexiconData,UMLSData)
+                    else:
+                        jsonEntities = convert2json(FinalHash,None,None)
+  
                     print(json.dumps(jsonEntities, indent=4))
 
     print("Done!")

@@ -29,7 +29,10 @@ def normalize(string):
     string = re.sub('µm', 'm#m', string)
     # non-standard, hidden white space character
     string = re.sub(" ","_", string)
-    
+    # Superscript mark (∧)
+    string = re.sub("∧","ᶺ", string)
+    # Other
+    string = re.sub("x´","x'", string)
     return string
     
                         
@@ -40,19 +43,23 @@ def normalize_back(Hash):
     word = Hash['word']
     
     # 1o -> 1º
-    #normalized_o = re.search("\do ", word)
     normalized_o = re.search(r"\do\b", word)
     if normalized_o:
         word = re.sub("(\d)o", r"\1º", word)
         Hash['word'] = word
     
-    # 2a -> 1ª
-    #normalized_a = re.search("\da ", word)
+    # 1a -> 1ª
     normalized_a = re.search(r"\b\da\b", word)
     if normalized_a:
         word = re.sub("(\d)a", r"\1ª", word)
         Hash['word'] = word
-    
+
+    # 1ah -> 1ªh
+    normalized_ha = re.search(r"\b\dah\b", word)
+    if normalized_ha:
+        word = re.sub("(\d)ah", r"\1ªh", word)
+        Hash['word'] = word
+            
     # Tª (Temperatura)
     normalized_Ta = re.search(r"\bTa\b", word)
     if normalized_Ta:
@@ -88,7 +95,19 @@ def normalize_back(Hash):
     if normalized_hws:
         word = re.sub("_", " ", word)
         Hash['word'] = word
-    
+
+    # Superindex mark (∧)
+    normalized_sp = re.search("ᶺ", word)
+    if normalized_sp:
+        word = re.sub("ᶺ", "∧", word)
+        Hash['word'] = word
+        
+    # Other
+    normalized_apost = re.search("x'", word)
+    if normalized_apost:
+        word = re.sub("x'", "x´", word)
+        Hash['word'] = word
+            
     return Hash
                         
                         
@@ -361,18 +380,163 @@ def annotate_sentences_with_model(SentencesList,text_string,model,tokenizer,devi
     return HashList
 
 
-def convert2json(EntityHash):
+def codeAttribute(Hash):
+    
+    '''
+    Code attribute and value of annotated entity.
+    '''
+    
+    Assertion = ['Negated', 'Speculated']
+    Experiencer = ['Family_member', 'Patient', 'Other']
+    Event_temp = ['Future', 'History_of', 'Hypothetical']
+    Attribute = ['Age', 'Contraindicated']
+    
+    FinalHash = {}
+    
+    Saved = []
+    
+    for i in Hash:
+        s = Hash[i]['start']
+        e = Hash[i]['end']
+        label = Hash[i]['label']
+        if label in Assertion:
+            # Check offsets
+            for k in FinalHash.copy():
+                start = FinalHash[k]['start']
+                end = FinalHash[k]['end']
+                tag = FinalHash[k]['label'] 
+                if (start == s and end == e):
+                    FinalHash[k]['assertion'] = label
+                    Saved.append(Hash[i])
+        elif label in Experiencer:
+            # Check offsets
+            for k in FinalHash.copy():
+                start = FinalHash[k]['start']
+                end = FinalHash[k]['end']
+                tag = FinalHash[k]['label']
+                if start == s and end == e:
+                    FinalHash[k]['experiencer'] = label
+                    Saved.append(Hash[i])
+        elif label in Event_temp:
+            # Check offsets
+            for k in FinalHash.copy():
+                start = FinalHash[k]['start']
+                end = FinalHash[k]['end']
+                tag = FinalHash[k]['label']
+                if start == s and end == e:
+                    FinalHash[k]['event_temp'] = label
+                    Saved.append(Hash[i])
+        elif label in Attribute:
+            # Check offsets
+            for k in FinalHash.copy():
+                start = FinalHash[k]['start']
+                end = FinalHash[k]['end']
+                tag = FinalHash[k]['label']
+                if start == s and end == e:
+                    FinalHash[k]['attribute'] = label
+                    Saved.append(Hash[i])
+        elif Hash[i] not in Saved:
+            Saved.append(Hash[i])
+            FinalHash[len(FinalHash)+1] = Hash[i]
+    
+    # Rest of unprocessed entities
+    for i in Hash:
+        if Hash[i] not in Saved:
+            label = Hash[i]['label']
+            ent = Hash[i]['ent']
+            found = False
+            if label in Assertion or label in Experiencer or label in Event_temp or label in Attribute:
+                # Check if missing attribute
+                for j in FinalHash.copy():
+                    ent2 = FinalHash[j]['ent']
+                    if ent == ent2:
+                        found = True
+                        if label in Assertion:
+                            FinalHash[j]['assertion'] = label
+                        elif label in Experiencer:
+                            FinalHash[j]['experiencer'] = label
+                        elif label in Event_temp:
+                            FinalHash[j]['event_temp'] = label
+                        elif label in Attribute:
+                            FinalHash[j]['attribute'] = label
+                if found == False:
+                    FinalHash[len(FinalHash)+1] = Hash[i]
+    
+    return FinalHash
 
-    ''' Convert a hash of entities to json format '''
+
+def convert2brat(Hash,FileName,LexiconData,UMLSData):
+
+    ''' Convert a hash of entities to BRAT format 
+        LexiconData and UMLSData are optional parameters (if normalization is selected)
+    '''
+    
+    n_comm = 0
+    n_att = 0
+
+    for i in Hash:
+        # T#  Annotation  Start   End String
+        print("T{}\t{} {} {}\t{}".format(i, Hash[i]['label'], Hash[i]['start'], Hash[i]['end'], Hash[i]['ent']),file=FileName)
+        # Attributes with format: A#	AttributeType T# Value
+        if 'assertion' in Hash[i].keys():
+            n_att += 1
+            print("A{}\tAssertion T{} {}".format(n_att, i, Hash[i]['assertion']),file=FileName)
+        if 'event_temp' in Hash[i].keys():
+            n_att += 1
+            print("A{}\tStatus T{} {}".format(n_att, i, Hash[i]['event_temp']),file=FileName)
+        if 'experiencer' in Hash[i].keys():
+            n_att += 1
+            print("A{}\tExperiencer T{} {}".format(n_att, i, Hash[i]['experiencer']),file=FileName)
+        if 'attribute' in Hash[i].keys():
+            n_att += 1
+            if Hash[i]['attribute'] == 'Age':
+                print("A{}\tPopulation_data T{} {}".format(n_att, i, Hash[i]['attribute']),file=FileName)    
+            if Hash[i]['attribute'] == 'Contraindicated':
+                print("A{}\tAssertion T{} {}".format(n_att, i, Hash[i]['attribute']),file=FileName)    
+        # Print UMLS codes in additional comment
+        if LexiconData and UMLSData:
+            CUIsList = get_codes_from_lexicon(Hash[i]['ent'], Hash[i]['label'], LexiconData)
+            if (CUIsList):
+                # Complete normalization data of UMLS CUIs
+                CUIsList = complete_norm_data(CUIsList,UMLSData)
+                n_comm += 1
+                codes_string = " | ".join(CUIsList)
+                print("#{}	AnnotatorNotes T{}	{}".format(n_comm,i,codes_string),file=FileName)
+
+
+def convert2json(EntityHash, LexiconData, UMLSData):
+
+    ''' Convert a hash of entities to json format 
+        LexiconData and UMLSData are optional parameters (if normalization is selected)
+     '''
 
     jsonEntities = []
 
     for i in EntityHash:
-        EntDict = {"entity_group": EntityHash[i]['label'], "word": EntityHash[i]['ent'],
-                   "start": EntityHash[i]['start'], "end": EntityHash[i]['end']}
+    
+        EntDict = {"entity_group": EntityHash[i]['label'], 
+                    "word": EntityHash[i]['ent'],
+                    "start": EntityHash[i]['start'], 
+                    "end": EntityHash[i]['end']}
+        
+        if 'assertion' in EntityHash[i].keys():
+            EntDict["assertion"] = EntityHash[i]["assertion"]
+        elif 'experiencer' in EntityHash[i].keys():
+            EntDict["experiencer"] = EntityHash[i]["experiencer"]
+        elif 'event_temp' in EntityHash[i].keys():
+            EntDict["status"] = EntityHash[i]["event_temp"]
+        elif 'attribute' in EntityHash[i].keys():
+            EntDict["attribute"] = EntityHash[i]["attribute"]            
         jsonEntities.append(EntDict)
     
-    #return json.dumps(jsonEntities) # Esto no usado pq convierte a una string, se deja solo una lista de entidades
+    if (LexiconData and UMLSData):
+        for entityData in jsonEntities:
+            CUIsList = get_codes_from_lexicon(entityData['word'],entityData['entity_group'], LexiconData)
+            if (CUIsList):
+                # Complete normalization data of UMLS CUIs
+                CUIsList = complete_norm_data(CUIsList,UMLSData)
+                codes_string = " | ".join(CUIsList)                    
+                entityData['umls'] = codes_string
+    
     return jsonEntities
    
-    

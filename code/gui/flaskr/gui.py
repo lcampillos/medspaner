@@ -60,7 +60,7 @@ def remove_space(EntsList):
 
 
 # UMLS entities
-# Load the previously trained Transformers model using full path (no relative)
+# Load the previously trained Transformers model
 model_checkpoint = "../models/roberta-es-clinical-trials-umls-7sgs-ner"
 
 # Transformers tokenizer  
@@ -70,7 +70,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
 umls_token_classifier = AutoModelForTokenClassification.from_pretrained(model_checkpoint)
 
 # Temporal information entities
-# Load the previously trained Transformers model using full path (no relative)
+# Load the previously trained Transformers model
 temp_model_checkpoint = "../models/roberta-es-clinical-trials-temporal-ner"
 
 # Transformers tokenizer
@@ -80,7 +80,7 @@ tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
 temp_token_classifier = AutoModelForTokenClassification.from_pretrained(temp_model_checkpoint)
 
 # Medication information
-# Load the previously trained Transformers model using full path (no relative)
+# Load the previously trained Transformers model
 medic_attr_model_checkpoint = "../models/roberta-es-clinical-trials-medic-attr-ner"
 
 # Transformers tokenizer
@@ -90,8 +90,8 @@ tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
 medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
 
 # Miscellaneous medical entities
-# Load the previously trained Transformers model using full path (no relative)
-misc_model_checkpoint = "../models/roberta-es-clinical-trials-misc-ents"
+# Load the previously trained Transformers model
+misc_model_checkpoint = "../models/roberta-es-clinical-trials-misc-ents-ner"
 
 # Transformers tokenizer
 tokenizer = AutoTokenizer.from_pretrained(misc_model_checkpoint)
@@ -100,8 +100,8 @@ tokenizer = AutoTokenizer.from_pretrained(misc_model_checkpoint)
 misc_token_classifier = AutoModelForTokenClassification.from_pretrained(misc_model_checkpoint)
 
 # Negation and speculation
-# Load the previously trained Transformers model using full path (no relative)
-neg_spec_model_checkpoint = "../models/roberta-es-clinical-trials-neg-spec"
+# Load the previously trained Transformers model
+neg_spec_model_checkpoint = "../models/roberta-es-clinical-trials-neg-spec-ner"
 
 # Transformers tokenizer
 tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
@@ -110,8 +110,8 @@ tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
 neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
 
 # Experiencer and temporality attributes
-# Load the previously trained Transformers model using full path (no relative)
-attributes_model_checkpoint = "/Users/leonardo/Documents/Trabajo/nn-workspace/transformers/token-classification/roberta-es-clinical-trials-attributes"
+# Load the previously trained Transformers model
+attributes_model_checkpoint = "/Users/leonardo/Documents/Trabajo/nn-workspace/transformers/token-classification/roberta-es-clinical-trials-attributes-ner"
 
 # Transformers tokenizer
 tokenizer = AutoTokenizer.from_pretrained(attributes_model_checkpoint)

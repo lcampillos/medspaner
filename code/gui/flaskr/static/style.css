@@ -401,6 +401,18 @@ form div#text_input span.Family_member {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+form div#text_input span.CONC[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input span.CONC {
+  background: rgba(221,231,230);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 form div#text_input span.Food[id^="inner"]{
   padding: 0.2em 0.2em;
 }
@@ -430,7 +442,7 @@ form div#text_input span.Quantifier_or_Qualifier[id^="inner"]{
 }
 
 form div#text_input span.Quantifier_or_Qualifier {
-  background: rgba(242,244,244); 
+  background: rgba(238,238,238); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
