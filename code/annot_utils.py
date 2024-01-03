@@ -12,6 +12,8 @@
 
 import re
 import json
+import lexicon_tools
+from lexicon_tools import *
 import torch
 # device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # If CUDA is needed
 device = torch.device("cpu")
