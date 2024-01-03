@@ -5,11 +5,13 @@
 
 This is a hybrid (neural-network-based, lexicon-based and rule-based) sequence labeling tool for Spanish medical texts. It was originally developed for clinical trial texts, but it can be applied to other medical text genres.
 
-The annotation tool can perform the following tasks:
-- medical named entity recognition of 7 [Unified Medical Language System (UMLS)](https://www.nlm.nih.gov/research/umls/index.html) semantic groups (ANAT, CHEM, DEVI, DISO, LIVB, PHYS, PROC)
-- temporal annotation using the TimeML scheme: Date, Duration, Frequency (also known as *set*) and Time; Age is also added to the scheme
-- annotation of negation and uncertainty/speculation
-- annotation of medication information: Contraindication, Dosage or Strength, Route and Form
+The tool can annotate the following type of information:
+- medical entities of 7 [Unified Medical Language System (UMLS)](https://www.nlm.nih.gov/research/umls/index.html) semantic groups (ANAT, CHEM, DEVI, DISO, LIVB, PHYS, PROC)
+- temporal entities using the TimeML scheme: Date, Duration, Frequency (also known as *set*) and Time; Age is also added to the scheme
+- negation and uncertainty/speculation
+- medication information: Contraindication, Dosage or Strength, Route and Form
+- miscellaneous medical entities: Concept, Observation\_or\_Finding, Food\_or\_Drink, Quantifier\_or\_Qualifier and Result\_or\_Value
+- experiencer (Patient, Family\_member, Other) and event temporality attributes (History_of, Future)
 
 <!---The lexicon is [MedLexSp](https://github.com/lcampillos/MedLexSp), a computational vocabulary with lemmas and variant forms mapped to UMLS CUIs. It can be obtained via an usage license at: [https://digital.csic.es/handle/10261/270429](https://digital.csic.es/handle/10261/270429)
 
@@ -71,7 +73,9 @@ To clone the models into the ```models``` folder:\
 ```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-umls-7sgs-ner```\
 ```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-temporal-ner```\
 ```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-medic-attr-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-neg-spec-ner```
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-neg-spec-ner```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-misc-entities-ner```\
+```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-attributes-ner```
 
 
 #### Simple annotation using the [Transformers](https://huggingface.co/docs/transformers/installation) library
@@ -148,11 +152,13 @@ Configuration
 
 Edit the fields in the configuration file (config.conf) to adapt it to your purposes:
 
+* **att** - Select ```True``` to annotate entity attributes (experiencer and event temporality); select ```False``` otherwise
 * **conf** - Use configuration file to parse arguments; select ```False``` if no file is used
 * **drg** - Select ```True``` to annotate drug features such as Dosage Form, Dose or Strength, or Route; select ```False``` otherwise
 * **exc** - Use a list of exceptions of entity types not to be annotated, or word patterns to re-label; indicate ```False``` if no patterns are applied
 * **input** - Specify path to file or folder to annotate
 * **lex** - Use lexicon for the annotation of UMLS entities; by default, the lexicon is located at: ```lexicon/MedLexSp.pickle```; indicate ```False``` if no lexicon is needed
+* **misc** - Select ```True``` to annotate miscellaneous medical entities (observation/finding, food/drink, quantifier/qualifier and result/value); select ```False``` otherwise
 * **neg** - Select ```True``` to annotate entities expressing negation and uncertainty; select ```False``` otherwise
 * **nest** - Select ```True``` to output inner or nested entities inside wider entities (e.g. *pecho* in *cáncer de pecho*); select ```False``` to output only the entities with the wider scope (*flat entities*)
 * **neu** - Select ```True``` (default value) to annotate UMLS entities with the trained neural model; select ```False``` otherwise
@@ -203,7 +209,7 @@ License
 The code is distributed under the General Public License 3 (AGPL-3.0) by default.
 If you wish to use it under a different license, feel free to get in touch.
 
-Copyright (c) 2019-2022 ANONYMIZED
+Copyright (c) 2019-2023 ANONYMIZED
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

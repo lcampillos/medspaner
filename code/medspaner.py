@@ -43,7 +43,7 @@ parser.add_argument('-drg', required=False, default=False, action='store_true', 
 parser.add_argument('-exc', required=False, default=False, help='use a list of exceptions of entity types not to be annotated, or word patterns to re-label')
 parser.add_argument('-input', required=True, default=False, help='specify file to annotate')
 parser.add_argument('-lex', required=False, help='specify pickle object dictionary for preannotation (neural model is used by default); indicate using: -lex "lexicon/MedLexSp.pickle"')
-parser.add_argument('-misc', required=False, default=False, action='store_true', help='annotate miscellaneous medical entities (observations, qualifiers and results/values)')
+parser.add_argument('-misc', required=False, default=False, action='store_true', help='annotate miscellaneous medical entities (observation/finding, food/drink, quantifier/qualifier and result/value)')
 parser.add_argument('-neu', required=False, default=True, action='store_true', help='specify to annotate UMLS entities with neural model (used by default)')
 parser.add_argument('-neg', required=False, default=False, action='store_true', help='annotate entities expressing negation and uncertainty (not annotated by default)')
 parser.add_argument('-nest', required=False, default=False, action='store_true', help='annotate inner or nested entities inside wider entities (not annotated by default)')
