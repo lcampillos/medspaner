@@ -416,7 +416,7 @@ def codeAttribute(Hash):
                 start = FinalHash[k]['start']
                 end = FinalHash[k]['end']
                 tag = FinalHash[k]['label']
-                if start == s and end == e:
+                if (start == s and end == e):
                     FinalHash[k]['experiencer'] = label
                     Saved.append(Hash[i])
         elif label in Event_temp:
@@ -425,7 +425,7 @@ def codeAttribute(Hash):
                 start = FinalHash[k]['start']
                 end = FinalHash[k]['end']
                 tag = FinalHash[k]['label']
-                if start == s and end == e:
+                if (start == s and end == e):
                     FinalHash[k]['event_temp'] = label
                     Saved.append(Hash[i])
         elif label in Attribute:
@@ -434,7 +434,7 @@ def codeAttribute(Hash):
                 start = FinalHash[k]['start']
                 end = FinalHash[k]['end']
                 tag = FinalHash[k]['label']
-                if start == s and end == e:
+                if (start == s and end == e):
                     FinalHash[k]['attribute'] = label
                     Saved.append(Hash[i])
         elif Hash[i] not in Saved:
@@ -446,12 +446,14 @@ def codeAttribute(Hash):
         if Hash[i] not in Saved:
             label = Hash[i]['label']
             ent = Hash[i]['ent']
+            start = Hash[i]['start']
+            end = Hash[i]['end']
             found = False
             if label in Assertion or label in Experiencer or label in Event_temp or label in Attribute:
                 # Check if missing attribute
                 for j in FinalHash.copy():
                     ent2 = FinalHash[j]['ent']
-                    if ent == ent2:
+                    if (ent == ent2) and (start == FinalHash[j]['start']) and (end == FinalHash[j]['end']):
                         found = True
                         if (label in Assertion) and (label != FinalHash[j]['label']):
                             FinalHash[j]['assertion'] = label
