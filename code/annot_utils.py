@@ -6,7 +6,7 @@
 # Note that Python 3 has processed better the UTF8 characters.
 # 
 # Leonardo Campillos-Llanos (UAM & CSIC)
-# 2019-2022
+# 2019-2024
 #
 #########################################################################
 
@@ -55,13 +55,13 @@ def normalize_back(Hash):
     if normalized_a:
         word = re.sub("(\d)a", r"\1ª", word)
         Hash['word'] = word
-
+    
     # 1ah -> 1ªh
     normalized_ha = re.search(r"\b\dah\b", word)
     if normalized_ha:
         word = re.sub("(\d)ah", r"\1ªh", word)
         Hash['word'] = word
-            
+    
     # Tª (Temperatura)
     normalized_Ta = re.search(r"\bTa\b", word)
     if normalized_Ta:
@@ -97,7 +97,7 @@ def normalize_back(Hash):
     if normalized_hws:
         word = re.sub("_", " ", word)
         Hash['word'] = word
-
+        
     # Superindex mark (∧)
     normalized_sp = re.search("ᶺ", word)
     if normalized_sp:
@@ -109,10 +109,73 @@ def normalize_back(Hash):
     if normalized_apost:
         word = re.sub("x'", "x´", word)
         Hash['word'] = word
-            
+    
     return Hash
                         
-                        
+
+def remove_nested_entity(EntsOut,EntsIn):
+
+    ''' 
+        Remove nested entity if:
+        a) same label of outer entity: e.g. "dolor" in "dolor de cabeza"
+        b) same span as another nested entity, except Negated/Speculated/Contraindicated: 
+        e.g. "alteraciones" DISO and CONC 
+    '''
+        
+    # First, remove nested entity if same label of outer entity
+    for i in EntsOut:
+        outLabel = EntsOut[i]['label']
+        outStart = EntsOut[i]['start']
+        outEnd = EntsOut[i]['end']
+        outEnt = EntsOut[i]['ent']
+        for j in EntsIn.copy(): 
+            inLabel = EntsIn[j]['label']
+            if outLabel == inLabel:
+                inStart = EntsIn[j]['start']
+                inEnd = EntsIn[j]['end']
+                inEnt = EntsIn[j]['ent']
+                if (int(inStart) <= int(outStart)) and (int(inEnd) <= int(outEnd)) and (int(outEnd) > int(inStart))  and (int(inEnd) > int(outStart)) and (inEnt in outEnt):
+                    EntsIn.pop(j, None)
+    
+    LabelsToKeep = ["Negated", "Speculated", "Contraindicated"]
+    
+    # Second, remove nested entities with same span, except assertion labels 
+    ToDelete = []
+    # Auxiliar hash
+    AuxInEnts = EntsIn
+    for i in EntsIn:
+        inEnt = EntsIn[i]['ent']
+        inStart = EntsIn[i]['start']
+        inEnd = EntsIn[i]['end']
+        inLabel = EntsIn[i]['label']
+        for j in AuxInEnts.copy():
+            AuxInEnt = AuxInEnts[j]['ent']
+            AuxInStart = AuxInEnts[j]['start']
+            AuxInEnd = AuxInEnts[j]['end']
+            AuxInLabel = AuxInEnts[j]['label']
+            if EntsIn[i] != AuxInEnts[j]:
+                if (inEnt in AuxInEnt):
+                    if (inLabel not in LabelsToKeep):
+                        if (int(inStart) <= int(AuxInStart)) and (int(inEnd) >= int(AuxInEnd)):
+                            ToDelete.append(EntsIn[i])
+                        elif (int(inStart) >= int(AuxInStart)) and (int(inEnd) <= int(AuxInEnd)):
+                            ToDelete.append(EntsIn[i])
+                    # if both nested entities have assertion labels, keep only one
+                    elif ((inLabel and AuxInLabel) in LabelsToKeep):
+                        if (int(inStart) <= int(AuxInStart)) and (int(inEnd) >= int(AuxInEnd)):
+                            ToDelete.append(EntsIn[i])
+                        elif (int(inStart) >= int(AuxInStart)) and (int(inEnd) <= int(AuxInEnd)):
+                            ToDelete.append(EntsIn[i])
+
+    FinalEntsIn = {}
+    
+    for i in EntsIn:
+        if EntsIn[i] not in ToDelete:
+            FinalEntsIn[len(FinalEntsIn)+1] = EntsIn[i]
+        
+    return FinalEntsIn
+
+                    
 def remove_space(EntsList):
     
     ''' Remove white spaces or new lines in predicted entities '''
@@ -235,8 +298,7 @@ def postprocess_entities(DataList):
                 tag = label[2:]
                 if bio == "B-":
                     # If entity is a contiguous subword, merge it with previous entity
-                    if not (Tokens[i].startswith(" ")) and not (Tokens[i].startswith("\n")) and (
-                        len(Entities) > 0) and ((Entities[len(Entities) - 1]['end']) == (Offsets[i][0])):
+                    if not (Tokens[i].startswith(" ")) and not (Tokens[i].startswith("\n")) and (len(Entities) > 0) and ((Entities[len(Entities) - 1]['end']) == (Offsets[i][0])):
                         LastEntity = Entities[len(Entities) - 1]
                         new_word = LastEntity['word'] + Tokens[i]
                         new_end = Offsets[i][1]
@@ -440,7 +502,7 @@ def codeAttribute(Hash):
         elif Hash[i] not in Saved:
             Saved.append(Hash[i])
             FinalHash[len(FinalHash)+1] = Hash[i]
-    
+
     # Rest of unprocessed entities
     for i in Hash:
         if Hash[i] not in Saved:
@@ -544,3 +606,4 @@ def convert2json(EntityHash, LexiconData, UMLSData):
     
     return jsonEntities
    
+    

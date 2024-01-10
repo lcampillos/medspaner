@@ -18,14 +18,16 @@ from spacy_tokenizer import *
 import lexicon_tools
 from lexicon_tools import *
 
+import annot_utils
+from annot_utils import *
+
 import pickle
 
 # Deep learning libraries
 import transformers
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer, pipeline
 import torch
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # If CUDA is needed
-device = torch.device("cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # UMLS entities
@@ -33,9 +35,9 @@ device = torch.device("cpu")
 model_checkpoint = "../models/roberta-es-clinical-trials-umls-7sgs-ner"
 
 # Transformers tokenizer  
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+umls_tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
 
-# Token classifier
+# UMLS entities token classifier
 umls_token_classifier = AutoModelForTokenClassification.from_pretrained(model_checkpoint)
 
 # Temporal information entities
@@ -43,7 +45,7 @@ umls_token_classifier = AutoModelForTokenClassification.from_pretrained(model_ch
 temp_model_checkpoint = "../models/roberta-es-clinical-trials-temporal-ner"
 
 # Transformers tokenizer
-tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
+temp_tokenizer = AutoTokenizer.from_pretrained(temp_model_checkpoint)
 
 # Token classifier
 temp_token_classifier = AutoModelForTokenClassification.from_pretrained(temp_model_checkpoint)
@@ -53,27 +55,27 @@ temp_token_classifier = AutoModelForTokenClassification.from_pretrained(temp_mod
 medic_attr_model_checkpoint = "../models/roberta-es-clinical-trials-medic-attr-ner"
 
 # Transformers tokenizer
-tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
+medic_attr_tokenizer = AutoTokenizer.from_pretrained(medic_attr_model_checkpoint)
 
 # Token classifier
 medic_attr_token_classifier = AutoModelForTokenClassification.from_pretrained(medic_attr_model_checkpoint)
 
 # Miscellaneous medical entities
 # Load the previously trained Transformers model using full path (no relative)
-misc_model_checkpoint = "../models/roberta-es-clinical-trials-misc-ents-ner"
+misc_ents_model_checkpoint = "../models/roberta-es-clinical-trials-misc-ents-ner"
 
 # Transformers tokenizer
-tokenizer = AutoTokenizer.from_pretrained(misc_model_checkpoint)
+misc_ents_tokenizer = AutoTokenizer.from_pretrained(misc_ents_model_checkpoint)
 
 # Token classifier
-misc_token_classifier = AutoModelForTokenClassification.from_pretrained(misc_model_checkpoint)
+misc_ents_token_classifier = AutoModelForTokenClassification.from_pretrained(misc_ents_model_checkpoint)
 
 # Negation and speculation
 # Load the previously trained Transformers model using full path (no relative)
 neg_spec_model_checkpoint = "../models/roberta-es-clinical-trials-neg-spec-ner"
 
 # Transformers tokenizer
-tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
+neg_spec_tokenizer = AutoTokenizer.from_pretrained(neg_spec_model_checkpoint)
 
 # Token classifier
 neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_spec_model_checkpoint)
@@ -83,14 +85,7 @@ neg_spec_token_classifier = AutoModelForTokenClassification.from_pretrained(neg_
 attributes_model_checkpoint = "../models/roberta-es-clinical-trials-attributes-ner"
 
 # Transformers tokenizer
-tokenizer = AutoTokenizer.from_pretrained(attributes_model_checkpoint)
-
-# Token classifier
-attributes_token_classifier = AutoModelForTokenClassification.from_pretrained(attributes_model_checkpoint)
-
-
-# Transformers tokenizer
-tokenizer = AutoTokenizer.from_pretrained(attributes_model_checkpoint)
+attributes_tokenizer = AutoTokenizer.from_pretrained(attributes_model_checkpoint)
 
 # Token classifier
 attributes_token_classifier = AutoModelForTokenClassification.from_pretrained(attributes_model_checkpoint)
@@ -101,255 +96,6 @@ EXCEPTIONS_LIST = "../patterns/list_except.txt"
 
 # Read exceptions and save to hash
 ExceptionsDict = read_exceptions_list(EXCEPTIONS_LIST)
-
-
-def remove_space(EntsList):
-
-    ''' Remove white spaces or new lines in predicted entities '''
-
-    FinalList = []
-    for item in EntsList:
-        ent = item['word']
-        # default value
-        finalItem = item
-        # Remove space at the beginning of the string
-        if ent.startswith(" "):
-            finalItem = {'entity_group': item['entity_group'], 'word': item['word'][1:], 'start': item['start'], 'end': item['end']}
-        if ent.startswith("\n"):
-            finalItem = {'entity_group': item['entity_group'], 'word': item['word'][1:], 'start': item['start']+1, 'end': item['end']} #'score': item['score'],
-        # Remove spaces at the end of the string
-        if ent.endswith("\s") or ent.endswith("\t") or ent.endswith("\n"):
-            finalWord = re.sub("(\s+|\t+|\n+)$", "", finalItem['word'])
-            # Update offsets
-            new_end = int(finalItem['start']) + len(finalWord)
-            finalItem = {'entity_group': finalItem['entity_group'], 'word': finalWord, 'start': finalItem['start'], 'end': new_end}
-        # Remove "\n" in the middle of the string
-        if "\n" in finalItem['word']:
-            index = finalItem['word'].index("\n")
-            finalWord = finalItem['word'][:index]
-            new_end = int(finalItem['start']) + len(finalWord)
-            finalItem = {'entity_group': finalItem['entity_group'], 'word': finalWord, 'start': finalItem['start'], 'end': new_end}
-        # Update list of dictionaries
-        if finalItem['word']!='':
-            FinalList.append(finalItem)
-    return FinalList
-
-
-def annotate_sentence(string, annotation_model, tokenizer_model, device):
-
-    ''' Predict entities in sentence with ROBERTa neural classifier. '''
-
-    tokenized = tokenizer_model(string, return_offsets_mapping=True)
-
-    input_ids = tokenizer_model.encode(string, return_tensors="pt")
-
-    tokens = tokenizer_model.convert_ids_to_tokens(tokenized["input_ids"])
-
-    tokens = [tokenizer_model.decode(tokenized['input_ids'][i]) for i, token in enumerate(tokens)]
-
-    offsets = tokenized["offset_mapping"]
-
-    word_ids = tokenized.word_ids()
-
-    outputs = annotation_model(input_ids.to(device)).logits
-
-    predictions = torch.argmax(outputs, dim=-1)
-
-    TagNames = [annotation_model.config.id2label[i] for i in annotation_model.config.id2label]
-
-    preds = [TagNames[p] for p in predictions[0].cpu().numpy()]
-
-    index2tag = {idx: tag for idx, tag in enumerate(TagNames)}
-
-    tag2index = {tag: idx for idx, tag in enumerate(TagNames)}
-
-    labels = []
-    for pred in preds:
-        labels.append(tag2index[pred])
-
-    previous_word_idx = None
-    label_ids = []
-
-    for i, word_idx in enumerate(word_ids):
-        if word_idx is None or word_idx == previous_word_idx:
-            label_ids.append(-100)
-        elif word_idx != previous_word_idx:
-            label_ids.append(labels[i])
-        previous_word_idx = word_idx
-
-    labels_final = [index2tag[l] if l != -100 else "IGN" for l in label_ids]
-
-    return tokens, offsets, word_ids, label_ids, labels_final
-
-
-def postprocess_entities(DataList):
-    ''' 
-        Postprocess and aggregate annotated entities that are subwords from BERT / RoBERTa model.
-        E.g. "auto", "medic", "arse" -> "automedicarse"
-    '''
-
-    Tokens = DataList[0]
-    Offsets = DataList[1]
-    Word_ids = DataList[2]
-    Label_ids = DataList[3]
-    Labels = DataList[4]
-
-    Entities = []
-
-    prev_label = ""
-
-    for i, k in enumerate(Word_ids):
-        if Word_ids != None:
-            label = Labels[i]
-            if label == 'O':
-                prev_label = label
-                continue
-            elif label == 'IGN' and Tokens[i] != "</s>":  # use the previous label
-                label = prev_label
-                # if previous label is not 'O', update tokens and offsets
-                if prev_label != 'O' and prev_label != "" and len(Entities) > 0:
-                    LastEntity = Entities[len(Entities) - 1]
-                    new_word = LastEntity['word'] + Tokens[i]
-                    new_end = Offsets[i][1]
-                    Entities[len(Entities) - 1]['word'] = new_word
-                    Entities[len(Entities) - 1]['end'] = new_end
-                prev_label = label
-            else:
-                # start of entity
-                bio = label[:2]
-                tag = label[2:]
-                if bio == "B-":
-                    # If entity is a contiguous subword, merge it with previous entity
-                    if not (Tokens[i].startswith(" ")) and not (Tokens[i].startswith("\n")) and (len(Entities) > 0) and ((Entities[len(Entities) - 1]['end']) == (Offsets[i][0])):
-                        LastEntity = Entities[len(Entities) - 1]
-                        new_word = LastEntity['word'] + Tokens[i]
-                        new_end = Offsets[i][1]
-                        Entities[len(Entities) - 1]['word'] = new_word
-                        Entities[len(Entities) - 1]['end'] = new_end
-                    # If entity is not a subword
-                    else:
-                        Entities.append(
-                            {
-                                "entity_group": tag,
-                                "word": Tokens[i],
-                                "start": Offsets[i][0],
-                                "end": Offsets[i][1],
-                            }
-                        )
-                elif bio == "I-" and len(Entities) > 0:
-                    if prev_label != 'O':  # update tokens and offsets
-                        # if previous token is space or hyphen
-                        LastEntity = Entities[len(Entities) - 1]
-                        new_word = LastEntity['word'] + Tokens[i]
-                        new_end = Offsets[i][1]
-                        Entities[len(Entities) - 1]['word'] = new_word
-                        Entities[len(Entities) - 1]['end'] = new_end
-                    else:
-                        Entities.append(
-                            {
-                                "entity_group": tag,
-                                "word": Tokens[i],
-                                "start": Offsets[i][0],
-                                "end": Offsets[i][1],
-                            }
-                        )
-
-                prev_label = label
-
-    return Entities
-
-
-def update_offsets(List,offset,text):
-    
-    ''' Updates offsets of annotated entities according to given position in paragraph '''
-    
-    NewList = []
-    
-    for dictionary in List:
-        
-        start_old = dictionary['start']
-        end_old = dictionary['end']
-        entity = dictionary['word']
-        new_start = int(start_old) + int(offset)
-        new_end = int(end_old) + int(offset)
-        dictionary['start'] = new_start
-        dictionary['end'] = new_end
-        
-        # Validate offsets with original text
-        candidate = text[new_start:new_end]
-        if (entity==candidate):
-            NewList.append(dictionary)
-        else:
-            corrected = False
-            # Correct offsets
-            # 1 different offset
-            new_start = new_start + 1
-            new_end = new_end + 1
-            dictionary['start'] = new_start
-            dictionary['end'] = new_end
-            candidate = text[new_start:new_end]
-
-            if (entity == candidate):
-                NewList.append(dictionary)
-                corrected = True
-
-            if (corrected == False):
-                # 2 different offsets
-                new_start = new_start + 1
-                new_end = new_start + len(entity)
-                dictionary['start'] = new_start
-                dictionary['end'] = new_end
-                candidate = text[new_start:new_end]
-                if (entity == candidate):
-                    corrected = True
-                    NewList.append(dictionary)
-                else:
-                    # Try to get offsets from original text
-                    try:
-                        new_start, new_end = re.search(re.escape(entity),text).span()
-                        dictionary['start'] = new_start
-                        dictionary['end'] = new_end
-                        NewList.append(dictionary)
-                        print("Check offsets of entity: %s" % (entity))
-                    except:
-                        print("Error in offsets of entity: %s" % (entity))
-    
-    return NewList
-
-
-def annotate_sentences_with_model(SentencesList,text_string,model):
-
-    ''' Given a list of sentences, and given a transformer model, 
-    annotate sentences and yield a list of hashes with data of annotated entities '''
-
-    offset = 0
-
-    HashList = []
-
-    for sentence in SentencesList:
-
-        if not (sentence.text.isspace()):
-
-            EntsList = annotate_sentence(sentence.text, model, tokenizer, device)
-
-            EntsList = remove_space(postprocess_entities(EntsList))
-
-            # Change offsets
-            if offset != 0:
-                EntsList = update_offsets(EntsList, offset, text_string)
-
-            last_token = sentence[-1]
-            last_token_offset = int(last_token.idx) + int(len(last_token))
-            offset = last_token_offset
-
-            HashList.append(EntsList)
-        else:
-            offset = offset + 1
-
-    # Merge list of lists
-    HashList = [item for sublist in HashList for item in sublist]
-
-    return HashList
 
 
 def remove_overlap_gui(Hash):
@@ -415,10 +161,7 @@ def remove_overlap_gui(Hash):
                                 InnerEnts.append(Dict[n])
                 # Overlapping entities (e.g. "trastorno de conducta" y "conducta suicida")
                 elif (Start_ToCompare1 <= Start_ToCompare2) and (End_ToCompare1 <= End_ToCompare2) and (Start_ToCompare2 <= End_ToCompare1):
-                    # if not a juxtaposed entity
-                    if (Start_ToCompare2 != End_ToCompare1):
-                        ToDelete.append(Dict[n])
-
+                    ToDelete.append(Dict[n])
             n = n - 1
 
     FinalEntities = {}
@@ -438,31 +181,6 @@ def remove_overlap_gui(Hash):
             NestedEnts[n] = ent
 
     return FinalEntities, NestedEnts
-
-
-def get_codes_from_lexicon_gui(entity, label, LexiconData, TuplesList):
-    '''
-    Get CUI data from lexicon using entity and semantic label.
-    Data format in lexicon:
-        {'dolor': [('DISO', ['C0030193', 'C0234238']), ('PHYS', ['C0018235'])]
-    Data format of LexiconData match (TextSearch library):
-        {'norm': [('DISO', ['C0030193', 'C0234238']), ('PHYS', ['C0018235']), 'exact': False, 'match': 'dolor', 'case': 'lower', 'start': 0, 'end': 6}
-    '''
-
-    Data = LexiconData.findall(entity)
-
-    CUIsList = []
-
-    # Apply exact match to avoid mapping of "signo" and "signo de infección"
-    if (Data):
-        for Dict in Data:
-            if (Dict['match']) == entity:
-                TuplesList = Dict['norm']
-                for Tuple in TuplesList:
-                    if (Tuple[0]) == label:
-                        return sorted(Tuple[1])
-
-    return None
 
 
 def translate_label(label):
@@ -491,12 +209,12 @@ def translate_label(label):
         'Duration': "Duration",
         'Frequency': "Frecuency",
         'Time': 'Time or part of the day',
-        # Drug attributes
+        # Medical drug attributes
         'Contraindicated': "Contraindicated",
         'Dose': "Dose, concentration or strength",
         'Form': "Dosage form",
         'Route': 'Administration route',
-         # Miscellaneous medical entities
+        # Miscellaneous medical entities
         'Food': "Food or drink",
         'Observation': "Observation/Finding",
         'Quantifier_or_Qualifier': "Quantifier or qualifier",
@@ -514,6 +232,82 @@ def translate_label(label):
         'Future': 'Future event'
     }
     return LabelDict[label]
+
+
+def convert2brat_gui(Hash,LexiconData,UMLSData):
+
+    ''' Convert a hash of entities to BRAT format. 
+        LexiconData and UMLSData are optional parameters (if normalization is selected).
+        Variant of the convert2brat function, used for the GUI.
+    '''
+    
+    n_comm = 0
+    n_att = 0
+
+    annot = ""
+
+    for i in Hash:
+        # T#  Annotation  Start   End String
+        line = "T{}\t{} {} {}\t{}".format(i, Hash[i]['label'], Hash[i]['start'], Hash[i]['end'], Hash[i]['ent'])
+        annot = annot + line + "\n"
+        # Attributes with format: A#	AttributeType T# Value
+        if 'assertion' in Hash[i].keys():
+            n_att += 1
+            line = "A{}\tAssertion T{} {}".format(n_att, i, Hash[i]['assertion'])
+            annot = annot + line + "\n"
+        if 'event_temp' in Hash[i].keys():
+            n_att += 1
+            line = "A{}\tStatus T{} {}".format(n_att, i, Hash[i]['event_temp'])
+            annot = annot + line + "\n"
+        if 'experiencer' in Hash[i].keys():
+            n_att += 1
+            line = "A{}\tExperiencer T{} {}".format(n_att, i, Hash[i]['experiencer'])
+            annot = annot + line + "\n"
+        if 'attribute' in Hash[i].keys():
+            n_att += 1
+            if Hash[i]['attribute'] == 'Age':
+                line = "A{}\tPopulation_data T{} {}".format(n_att, i, Hash[i]['attribute']) 
+                annot = annot + line + "\n"  
+            if Hash[i]['attribute'] == 'Contraindicated':
+                line = "A{}\tAssertion T{} {}".format(n_att, i, Hash[i]['attribute'])
+                annot = annot + line + "\n"
+        # Print UMLS codes in additional comment
+        if LexiconData and UMLSData:
+            CUIsList = get_codes_from_lexicon(Hash[i]['ent'], Hash[i]['label'], LexiconData)
+            if (CUIsList):
+                # Complete normalization data of UMLS CUIs
+                CUIsList = complete_norm_data(CUIsList,UMLSData)
+                n_comm += 1
+                codes_string = " | ".join(CUIsList)
+                line = "#{}	AnnotatorNotes T{}	{}".format(n_comm,i,codes_string)
+                annot = annot + line + "\n"
+    
+    return annot
+
+
+def get_codes_from_lexicon_gui(entity, label, LexiconData, TuplesList):
+    '''
+    Get CUI data from lexicon using entity and semantic label.
+    Data format in lexicon:
+        {'dolor': [('DISO', ['C0030193', 'C0234238']), ('PHYS', ['C0018235'])]
+    Data format of LexiconData match (TextSearch library):
+        {'norm': [('DISO', ['C0030193', 'C0234238']), ('PHYS', ['C0018235']), 'exact': False, 'match': 'dolor', 'case': 'lower', 'start': 0, 'end': 6}
+    '''
+
+    Data = LexiconData.findall(entity)
+
+    CUIsList = []
+
+    # Apply exact match to avoid mapping of "signo" and "signo de infección"
+    if (Data):
+        for Dict in Data:
+            if (Dict['match']) == entity:
+                TuplesList = Dict['norm']
+                for Tuple in TuplesList:
+                    if (Tuple[0]) == label:
+                        return sorted(Tuple[1])
+
+    return None
 
 
 def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
@@ -547,17 +341,14 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
                     CUIsList = complete_norm_data(CUIsList, UMLSDataDict)
                     codes_string = " | ".join(CUIsList)
                     # HTML tag to write in string
-                    open_tag = "<span class=\"" + label + "\" " + "data-title=\"" + translate_label(
-                        label) + " - UMLS: " + codes_string + "\" id=\"flat" + id_entity + "\">"
+                    open_tag = "<mark class=\"" + label + "\" " + "data-title=\"" + translate_label(label) + " - UMLS: " + codes_string + "\" id=\"flat" + id_entity + "\">"
                 else:
                     # HTML tag to write in string
-                    open_tag = "<span class=\"" + label + "\" " + "data-title=\"" + translate_label(
-                        label) + "\" id=\"flat" + id_entity + "\">"
+                    open_tag = "<mark class=\"" + label + "\" " + "data-title=\"" + translate_label(label) + "\" id=\"flat" + id_entity + "\">"
             except:
                 # For temporal, negation or drug entities not in dictionary (cause errors)
                 # HTML tag to write in string
-                open_tag = "<span class=\"" + label + "\" " + "data-title=\"" + translate_label(
-                    label) + "\" id=\"flat" + id_entity + "\">"
+                open_tag = "<mark class=\"" + label + "\" " + "data-title=\"" + translate_label(label) + "\" id=\"flat" + id_entity + "\">"
 
             # Search for nested entities
             if Nested and (len(Nested) > 0):
@@ -580,16 +371,13 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
                                     CUIsList = complete_norm_data(CUIsList, UMLSDataDict)
                                     codes_string = " | ".join(CUIsList)
                                     # HTML tag to write in string
-                                    tag_nested = "<span class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(
-                                        label_nested) + " - UMLS: " + codes_string + "\" id=\"inner" + id_entity + "\">" + ent_nested + "</span>"
+                                    tag_nested = "<mark class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(label_nested) + " - UMLS: " + codes_string + "\" id=\"inner" + id_entity + "\">" + ent_nested + "<span class=\"inner_title\">" + label_nested + "</span></mark>"
                                 else:
                                     # HTML tag to write in string
-                                    tag_nested = "<span class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(
-                                        label_nested) + "\" id=\"inner" + id_entity + "\">" + ent_nested + "</span>"
+                                    tag_nested = "<mark class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(label_nested) + "\" id=\"inner" + id_entity + "\">" + ent_nested + "<span class=\"inner_title\">" + label_nested + "</span></mark>"
                             except:
 
-                                tag_nested = "<span class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(
-                                    label_nested) + "\" id=\"inner" + id_entity + "\">" + ent_nested + "</span>"
+                                tag_nested = "<mark class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(label_nested) + "\" id=\"inner" + id_entity + "\">" + ent_nested + "<span class=\"inner_title\">" + label_nested + "</span></mark>"
 
                         # Converts inner string to list of characters and replace with inner tags using offsets
                         NestedStringChars = list(ent)
@@ -604,7 +392,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
 
                         # Check if the inner entity is full word; otherwise, do not output
                         # Exceptions are negated, speculated or contraindicated entities (can be the full word)
-                        if label_nested not in ['Negated', 'Speculated', 'Contraindicated']:
+                        if label_nested not in ['Negated', 'Speculated', 'Contraindicated', 'Future', 'History_of', 'Patient', 'Family_member', 'Other']:
                             # Beginning of string
                             if ((start_inner == 0) and not (end_inner == len(ent))):
                                 try:
@@ -638,8 +426,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
         else:
 
             # HTML tag to write in string
-            open_tag = "<span class=\"" + label + "\" " + "data-title=\"" + translate_label(
-                label) + "\" id=\"flat" + id_entity + "\">"
+            open_tag = "<mark class=\"" + label + "\" " + "data-title=\"" + translate_label(label) + "\" id=\"flat" + id_entity + "\">"
             # Search for nested entities
             if Nested and (len(Nested) > 0):
                 # Sort hash of nested entities in reverse offset order
@@ -651,8 +438,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
                     if (start_nested >= start) and (end_nested <= end):
                         ent_nested = SortedNested[NestedEnt]['ent']
                         label_nested = SortedNested[NestedEnt]['label']
-                        tag_nested = "<span class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(
-                            label_nested) + "\" id=\"inner" + id_entity + "\">" + ent_nested + "</span>"
+                        tag_nested = "<mark class=\"" + label_nested + "\" " + "data-title=\"" + translate_label(label_nested) + "\" id=\"inner" + id_entity + "\">" + ent_nested + "<span class=\"inner_title\">" + label_nested + "</span></mark>"
 
                         # Converts inner string to list of characters and replace with inner tags using offsets
                         NestedStringChars = list(ent)
@@ -665,7 +451,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
 
                         # Check if the inner entity is full word; otherwise, do not output
                         # Exceptions are negated, speculated or contraindicated entities (can be the full word)
-                        if label_nested not in ['Negated', 'Speculated', 'Contraindicated']:
+                        if label_nested not in ['Negated', 'Speculated', 'Contraindicated', 'Future', 'History_of', 'Patient', 'Family_member', 'Other']:
                             # Beginning of string
                             if ((start_inner == 0) and not (end_inner == len(ent))):
                                 try:
@@ -696,9 +482,10 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
                         # Join again characters to string
                         ent = "".join(NestedStringChars)
 
-        close_tag = "</span>"
+        title_tag = "<span class=\"inner_title\">" + label + "</span>"
+        close_tag = "</mark>"
         # Final replacement in original string
-        stringChars[start:end] = open_tag + ent + close_tag
+        stringChars[start:end] = open_tag + ent + title_tag + close_tag
 
     # Join again characters to string
     string = "".join(stringChars)
@@ -773,7 +560,7 @@ def gui_tf():
             # Usage of transformers neural model
             print("Annotating using transformers neural model for UMLS entities...")
 
-            Output = annotate_sentences_with_model(Sentences,text,umls_token_classifier)
+            Output = annotate_sentences_with_model(Sentences, text, umls_token_classifier, umls_tokenizer, device)
 
             # Change format to:
             #   Entities = {1: {'start': 3, 'end': 11, 'ent': 'COVID-19', 'label': 'DISO'}, 2: ... }
@@ -790,8 +577,8 @@ def gui_tf():
         if (temp):
 
             print("Annotating using transformers neural model for temporal entities...")
-
-            TempOutput = annotate_sentences_with_model(Sentences, text, temp_token_classifier)
+            
+            TempOutput = annotate_sentences_with_model(Sentences, text, temp_token_classifier, temp_tokenizer, device)
 
             # Save the annotated entities with the final format
             TempEntities = {}
@@ -809,7 +596,7 @@ def gui_tf():
 
             print("Annotating using transformers neural model for drug information...")
 
-            MedicAttrOutput = annotate_sentences_with_model(Sentences, text, medic_attr_token_classifier)
+            MedicAttrOutput = annotate_sentences_with_model(Sentences, text, medic_attr_token_classifier, medic_attr_tokenizer, device)
 
             # Save the annotated entities with the final format
             MedicAttrEntities = {}
@@ -828,7 +615,7 @@ def gui_tf():
 
             print("Annotating using transformers neural model for miscellaneous medical entities...")
 
-            MiscOutput = annotate_sentences_with_model(Sentences, text, misc_token_classifier)
+            MiscOutput = annotate_sentences_with_model(Sentences, text, misc_ents_token_classifier, misc_ents_tokenizer, device)
 
             # Save the annotated entities with the final format
             MiscEntities = {}
@@ -840,13 +627,13 @@ def gui_tf():
             # Merge all entities
             AllFlatEnts = merge_dicts(AllFlatEnts, MiscEntities)
 
-        # Annotation of entities expressing negation
+        # Annotation of entities expressing negation and speculation
         neg = request.form.getlist("neg")
         if (neg):
 
             print("Annotating using transformers neural model for negation and speculation...")
 
-            NegSpecOutput = annotate_sentences_with_model(Sentences, text, neg_spec_token_classifier)
+            NegSpecOutput = annotate_sentences_with_model(Sentences, text, neg_spec_token_classifier, neg_spec_tokenizer, device)
 
             # Save the annotated entities with the final format
             NegSpecEntities = {}
@@ -864,7 +651,7 @@ def gui_tf():
 
             print("Annotating using transformers neural model for experiencer and temporality attributes...")
             
-            AttrOutput = annotate_sentences_with_model(Sentences, text, attributes_token_classifier)
+            AttrOutput = annotate_sentences_with_model(Sentences, text, attributes_token_classifier, attributes_tokenizer, device)
 
             # Save the annotated entities with the final format
             Attributes = {}
@@ -888,10 +675,12 @@ def gui_tf():
         # Flat entities
         EntitiesNoOverlap, NestedEntities = remove_overlap_gui(AllFlatEnts)
 
-        # Remove nested entities with same offset, to avoir error in gui
+        # Remove nested entities with same offset, to avoid error in gui
         NestedEntsCleaned = merge_dicts(NestedEntities, NestedEntsCleaned)
         NestedEntsCleaned, NestedEntities = remove_overlap_gui(NestedEntsCleaned)
 
+        # Remove nested entities with same label for gui
+        NestedEntsCleaned = remove_nested_entity(EntitiesNoOverlap, NestedEntsCleaned)
         text = Markup(EntsDict2html(text, EntitiesNoOverlap, LexiconData, NestedEntsCleaned, UMLSData))
             
 
@@ -905,33 +694,13 @@ def gui_tf():
         else:
             AllFinalEntities = AllFlatEnts
 
-        for i in AllFinalEntities:
+        FinalHash = codeAttribute(AllFinalEntities)
 
-            # T#  Annotation  Start   End String
-            line = "T{}\t{} {} {}\t{}".format(i, AllFinalEntities[i]['label'], AllFinalEntities[i]['start'], AllFinalEntities[i]['end'],
-                                              AllFinalEntities[i]['ent'])
-            annot = annot + line + "\n"
-            # If normalization to UMLS CUIs
-            norm = request.form.getlist("norm")
-            if (norm):
-
-                try:
-                    TuplesList = LexiconData.findall(AllFinalEntities[i]['ent'])[0]['norm']
-
-                    CUIsList = get_codes_from_lexicon_gui(AllFinalEntities[i]['ent'], AllFinalEntities[i]['label'], LexiconData,
-                                                          TuplesList)
-
-                    if (CUIsList):
-                        # Complete normalization data of UMLS CUIs
-                        CUIsList = complete_norm_data(CUIsList, UMLSData)
-                        n_comm += 1
-                        codes_string = " | ".join(CUIsList)
-                        line = "#{}	AnnotatorNotes T{}	{}".format(n_comm, i, codes_string)
-                        annot = annot + line + "\n"
-                except:
-                    # For temporal, negation or other entities without a CUI in lexicon
-                    pass
-
+        if (norm):
+            annot = convert2brat_gui(FinalHash,LexiconData,UMLSData)
+        else:
+            annot = convert2brat_gui(FinalHash,None,None)
+            
     else:
 
         text = ""

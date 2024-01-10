@@ -38,7 +38,6 @@ textarea {
 form div#text_input {
     width: 100%;
     height: 400px;
-    /* padding: 12px 20px; */
     padding: 1em 1em;
     line-height: 2; /* Space between lines, to avoid overlapping of highlighted results */
     box-sizing: border-box;
@@ -62,11 +61,10 @@ form div#text_input {
 
 /* Loader */
 form div.loader {
-  border: 10px solid #e0e8e1; /* verde claro: #b0e0e6; gris claro: #f3f3f3; azul medio: #3498db*/
+  border: 10px solid #e0e8e1;
   border-radius: 50%; 
-  border-top: 10px solid #008080; /* #3498db; */
+  border-top: 10px solid #008080; 
   display: none;
-  /*display: block;*/
   position: fixed;
   width: 25px;
   height: 25px;
@@ -90,28 +88,27 @@ form div.loader {
   100% { transform: rotate(360deg); }
 }
 
+
 /* Highlight colors of results */
 /* Inner entities are shorter and less transparent */
 
-form div#text_input span.ANAT[id^="inner"] {
+form div#text_input mark.ANAT[id^="inner"] {
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.ANAT {
-  /*background: rgba(255,228,181, 0.5);*/ /* Opacity only in background, not text */
+form div#text_input mark.ANAT {
   background: rgba(255,228,181);
-  padding: 0.4em 0.4em; /* top and bottom: 0.45em ; right and left; 0.6em */ /*0.2em 0.2em;*/
+  padding: 0.4em 0.4em; 
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.CHEM[id^="inner"] {
+form div#text_input mark.CHEM[id^="inner"] {
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.CHEM {
-  /*background: rgba(110, 100, 205, 0.5);*/
+form div#text_input mark.CHEM {
   background: rgba(176, 171, 229);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -119,11 +116,11 @@ form div#text_input span.CHEM {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.DEVI[id^="inner"] {
+form div#text_input mark.DEVI[id^="inner"] {
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.DEVI {
+form div#text_input mark.DEVI {
   background: rgba(166, 226, 45, 0.7);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -131,12 +128,11 @@ form div#text_input span.DEVI {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.DISO[id^="inner"] {
+form div#text_input mark.DISO[id^="inner"] {
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.DISO {
-  /*background: rgba(128, 0, 0, 0.3);*/
+form div#text_input mark.DISO {
   background: rgba(213, 172, 172);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -144,12 +140,11 @@ form div#text_input span.DISO {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.LIVB[id^="inner"]{
+form div#text_input mark.LIVB[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.LIVB {
-  /* background: rgba(252, 237, 204, 0.6); Pale yellow */
+form div#text_input mark.LIVB {
   background: rgba(234, 248, 201, 0.6);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -157,11 +152,11 @@ form div#text_input span.LIVB {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.PHYS[id^="inner"]{
+form div#text_input mark.PHYS[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.PHYS {
+form div#text_input mark.PHYS {
   background: rgba(253,151,32, 0.5);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -169,12 +164,11 @@ form div#text_input span.PHYS {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.PROC[id^="inner"]{
+form div#text_input mark.PROC[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.PROC {
-  /*background: rgba(0, 128, 128, 0.3);*/
+form div#text_input mark.PROC {
   background: rgba(172, 221, 221);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -182,36 +176,35 @@ form div#text_input span.PROC {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Age[id^="inner"]{
+form div#text_input mark.Age[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Age {
-  background: rgba(216, 235, 255, 0.7); /*very pale blue*/
+form div#text_input mark.Age {
+  background: rgba(216, 235, 255, 0.7); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Date[id^="inner"]{
+form div#text_input mark.Date[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Date {
-  background: rgba(173,216,230, 0.5); /*light blue*/
+form div#text_input mark.Date {
+  background: rgba(173,216,230, 0.5);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Duration[id^="inner"]{
+form div#text_input mark.Duration[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Duration {
-  /*background: rgba(70,130,180, 0.3); /*steel blue*/
+form div#text_input mark.Duration {
   background: rgba(181,205,225);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -219,71 +212,71 @@ form div#text_input span.Duration {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Frequency[id^="inner"]{
+form div#text_input mark.Frequency[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Frequency {
-  background: rgba(0,191,255, 0.3); /*deep sky blue*/
+form div#text_input mark.Frequency {
+  background: rgba(0,191,255, 0.3); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Time[id^="inner"]{
+form div#text_input mark.Time[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Time {
-  background: rgba(100,149,237, 0.3); /*cornflower blue*/
+form div#text_input mark.Time {
+  background: rgba(100,149,237, 0.3);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Contraindicated[id^="inner"]{
+form div#text_input mark.Contraindicated[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Contraindicated {
-  background: rgba(190, 203, 204); /*Iron*/
+form div#text_input mark.Contraindicated {
+  background: rgba(190, 203, 204); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Dose[id^="inner"]{
+form div#text_input mark.Dose[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Dose {
-  background: rgba(238,213,210, 0.5); /*plum1*/
+form div#text_input mark.Dose {
+  background: rgba(238,213,210, 0.5);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Form[id^="inner"]{
+form div#text_input mark.Form[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Form {
-  background: rgba(201,186,218, 0.5); /*c9bada*/
+form div#text_input mark.Form {
+  background: rgba(201,186,218, 0.5);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Route[id^="inner"]{
+form div#text_input mark.Route[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Route { /* azure3 */
+form div#text_input mark.Route { 
   background: rgba(193,205,205, 0.5);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -291,61 +284,71 @@ form div#text_input span.Route { /* azure3 */
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Neg_cue[id^="inner"]{
+form div#text_input mark.Neg_cue[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Neg_cue {
-  /* background: rgba(153,153,153); gray60*/
-  background: rgba(202, 202, 202); /* Very light grey */
+form div#text_input mark.Neg_cue {
+  background: rgba(202, 202, 202); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Negated[id^="inner"]{
+form div#text_input mark.Negated[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Negated {
-  /* background: rgba(153,153,153); gray60*/
-  background: rgba(211, 211, 211); /* Very light grey */
+form div#text_input mark.Negated {
+  background: rgba(211, 211, 211); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Spec_cue[id^="inner"]{
+form div#text_input mark.Spec_cue[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Spec_cue {
-  background: rgba(174,182,191); /*gray60*/
+form div#text_input mark.Spec_cue {
+  background: rgba(174,182,191);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Speculated[id^="inner"]{
+form div#text_input mark.Speculated[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Speculated {
-  background: rgba(228,228,228); /*gray60*/
+form div#text_input mark.Speculated {
+  background: rgba(228,228,228); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.History_of[id^="inner"]{
+form div#text_input mark.History_of[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.History_of {
+form div#text_input mark.History_of {
+  background: rgba(246,245,240, 0.7); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Future[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Future {
   background: rgba(246,245,240); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -353,23 +356,11 @@ form div#text_input span.History_of {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Future[id^="inner"]{
+form div#text_input mark.Patient[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Future {
-  background: rgba(246,245,240); 
-  padding: 0.4em 0.4em;
-  margin: 0 0.25em; line-height: 1;
-  border-radius: 0.35em;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-form div#text_input span.Patient[id^="inner"]{
-  padding: 0.2em 0.2em;
-}
-
-form div#text_input span.Patient {
+form div#text_input mark.Patient {
   background: rgba(252,254,250); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -377,11 +368,11 @@ form div#text_input span.Patient {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Other[id^="inner"]{
+form div#text_input mark.Other[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Other {
+form div#text_input mark.Other {
   background: rgba(252,254,250); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -389,11 +380,11 @@ form div#text_input span.Other {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Family_member[id^="inner"]{
+form div#text_input mark.Family_member[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Family_member {
+form div#text_input mark.Family_member {
   background: rgba(252,254,250); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -401,11 +392,11 @@ form div#text_input span.Family_member {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.CONC[id^="inner"] {
+form div#text_input mark.CONC[id^="inner"] {
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.CONC {
+form div#text_input mark.CONC {
   background: rgba(221,231,230);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -413,11 +404,11 @@ form div#text_input span.CONC {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Food[id^="inner"]{
+form div#text_input mark.Food[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Food {
+form div#text_input mark.Food {
   background: rgba(211,191,178); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -425,11 +416,11 @@ form div#text_input span.Food {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Observation[id^="inner"]{
+form div#text_input mark.Observation[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Observation {
+form div#text_input mark.Observation {
   background: rgba(246,221,204); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -437,11 +428,11 @@ form div#text_input span.Observation {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Quantifier_or_Qualifier[id^="inner"]{
+form div#text_input mark.Quantifier_or_Qualifier[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Quantifier_or_Qualifier {
+form div#text_input mark.Quantifier_or_Qualifier {
   background: rgba(238,238,238); 
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
@@ -449,25 +440,35 @@ form div#text_input span.Quantifier_or_Qualifier {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-form div#text_input span.Result_or_Value[id^="inner"]{
+form div#text_input mark.Result_or_Value[id^="inner"]{
   padding: 0.2em 0.2em;
 }
 
-form div#text_input span.Result_or_Value {
-  background: rgba(244,248,254); 
+form div#text_input mark.Result_or_Value {
+  background: rgba(221,233,252, 0.7);
   padding: 0.4em 0.4em;
   margin: 0 0.25em; line-height: 1;
   border-radius: 0.35em;
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Style of entity label inside the highlighted markup */
+form div#text_input span.inner_title {
+  font-size: 0.8em;
+  font-weight: bold;
+  line-height: 1; 
+  border-radius: 0.35em; 
+  vertical-align: middle; 
+  margin-left: 0.5rem
+}
+
 /* Style of title when hovering over a word */
-span[data-title]:hover:after {
+mark[data-title]:hover:after {
   opacity: 1;
   visibility: visible;
 }
 
-span[data-title]:after {
+mark[data-title]:after {
   content: attr(data-title);
   color: #333;
   font-size: 12px;
@@ -494,7 +495,7 @@ span[data-title]:after {
   background-image: -o-linear-gradient(top, #eeeeee, #e0e8e1);
 }
 
-span[data-title] {
+mark[data-title] {
   position: relative;
 }
 
@@ -503,12 +504,10 @@ span[data-title] {
 .css-button {
   font-size: 12px;
   border-radius: 5px;
-  border: solid 1px #0a837d; /* azul #3866A3; */
+  border: solid 1px #0a837d;
   color: #FFFFFF;
-  /* background: linear-gradient(180deg, #63B8EE 5%, #468CCF 100%); azul */
   background: linear-gradient(180deg, #20b2ab 5%, #0a837d 100%); 
   text-shadow: 1px 1px 0px #528ecc;
-  /* box-shadow: inset 1px 1px 2px 0px #bbdaf7; */
   font-family: Arial, Helvetica, sans-serif;
   cursor: pointer;
   text-align: center;
@@ -519,7 +518,6 @@ span[data-title] {
   display: block;
   padding: 4px 10px;
   border-right: 1px solid rgba(255, 255, 255, 0.16);
-  /* box-shadow: rgba(0, 0, 0, 0.14) -1px 0px 0px inset; */
 }
 
 .css-button:hover {
@@ -534,11 +532,10 @@ span[data-title] {
 .css-button-2 {
   font-size: 11px;
   border-radius: 5px;
-  border: solid 1px #ccc; /* azul #3866A3; */
+  border: solid 1px #ccc; 
   color: #000000;
   background: linear-gradient(180deg, #f8f8f8 5%, #eeeeee 100%); 
   text-shadow: 1px 1px 0px #eeeeee;
-  /* box-shadow: inset 1px 1px 2px 0px #bbdaf7; */
   font-family: Arial, Helvetica, sans-serif;
   cursor: pointer;
   text-align: center;
@@ -555,7 +552,7 @@ span[data-title] {
 }
 
 .css-button-2:hover {
-  background: linear-gradient(180deg, #e0e8e1 5%, #eeeeee 100%); /*#eef6f3 15%, #eff7fd 100%);*/
+  background: linear-gradient(180deg, #e0e8e1 5%, #eeeeee 100%);
 }
 
 /* Download button (show only after results can be downloaded) */
@@ -573,12 +570,12 @@ div#show-after-results.hide {
 }
 
 /* Checkbox */
- /* Customize the label (the container) */
+/* Customize the label (the container) */
 .container {
   border-width: thick;
   display: block;
   position: relative;
-  padding-left: 25px; /*25px;*/
+  padding-left: 25px;
   padding-top: 2px;
   margin-bottom: 7px;
   cursor: pointer;
@@ -610,19 +607,19 @@ div#show-after-results.hide {
   vertical-align: middle;
   height: 15px;
   width: 15px;
-  background-color: #f8f8f8; /* light grey #eee */
+  background-color: #f8f8f8;
   border: 2px solid #ccc;
   border-radius: 4px;
 }
 
 /* On mouse-over, add a background color */
 .container:hover input ~ .checkmark {
-  background-color: #e0e8e1; /* grey #ccc */
+  background-color: #e0e8e1;
 }
 
 /* When the checkbox is checked, add a color background */
 .container input:checked ~ .checkmark {
-  background-color: #20b2ab; /* #2196F3 blue */
+  background-color: #20b2ab;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
