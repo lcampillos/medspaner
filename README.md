@@ -70,12 +70,12 @@ To clone the models into the ```models``` folder:\
 ```cd medspaner/```\
 ```cd code/```\
 ```cd models/```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-umls-7sgs-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-temporal-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-medic-attr-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-neg-spec-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-misc-ents-ner```\
-```git clone https://huggingface.co/lcampillos/roberta-es-clinical-trials-attributes-ner```
+```git clone https://huggingface.co/medspaner/roberta-es-clinical-trials-umls-7sgs-ner```\
+```git clone https://huggingface.co/medspaner/roberta-es-clinical-trials-temporal-ner```\
+```git clone https://huggingface.co/medspaner/roberta-es-clinical-trials-medic-attr-ner```\
+```git clone https://huggingface.co/medspaner/roberta-es-clinical-trials-neg-spec-ner```\
+```git clone https://huggingface.co/medspaner/roberta-es-clinical-trials-misc-ents-ner```\
+```git clone https://huggingface.co/medspaner/roberta-es-clinical-trials-attributes-ner```
 
 
 #### Simple annotation using the [Transformers](https://huggingface.co/docs/transformers/installation) library
@@ -178,7 +178,7 @@ Leonardo Campillos-Llanos ...
 
 The Medical Lexicon for Spanish (MedLexSp) is described here:
 
-[**MedLexSp – A Medical Lexicon for Spanish Medical Natural Language Processing**](https://github.com/lcampillos/MedLexSp)  
+[**MedLexSp – A Medical Lexicon for Spanish Medical Natural Language Processing**](https://github.com/medspaner/MedLexSp)  
 Leonardo Campillos-Llanos  
 *Journal of Biomedical Semantics*
 
