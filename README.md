@@ -1,7 +1,7 @@
 
 ![Graphical User Interface](gui.png)
 
-## Medical Semantic python-assisted Named Entity Recognizer
+## Medical Semantic python-based Named Entity Recognizer
 
 This is a hybrid (neural-network-based, lexicon-based and rule-based) sequence labeling tool for Spanish medical texts. It was originally developed for clinical trial texts, but it can be applied to other medical text genres.
 
