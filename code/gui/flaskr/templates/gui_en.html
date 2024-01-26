@@ -59,7 +59,7 @@
         </label>
       </td>
       <td>
-        <label class="container">Negation
+        <label class="container">Negation/Speculation
         <input type="checkbox" name="neg">
         <span class="checkmark"></span>
         </label>
@@ -93,7 +93,12 @@
     <table border="0" align="center">
     <tr>
       <td>
-        <input class="css-button-2" onclick="load_sample()" style="width:100px" readonly value="Sample text" >
+        <select class="css-button-2" id="seleccionarTexto" onchange="mostrarTexto()">
+             <option value="empty">Sample text</option>
+             <option value="texto1">Clinical case</option>
+             <option value="texto2">Clinical trial</option>
+             <option value="texto3">Journal article</option>
+         </select>
       </td>
       <td>&#160;</td>
       <td>
