@@ -157,8 +157,26 @@ def remove_overlap_gui(Hash):
                                 InnerEnts.append(Dict[n])
                         # In case that an entity can have 2 types of labels: e.g. insulina, CHEM and PROC
                         elif span2 == span1:
-                            if Dict[n] not in InnerEnts:
+                            # Keep only entities expressing assertion, experiencer or event temporality
+                            if (Dict[n] not in InnerEnts) and (Tag_ToCompare2=='Negated'):
                                 InnerEnts.append(Dict[n])
+                            elif (Dict[n] not in InnerEnts) and (Tag_ToCompare2=='Speculated'):
+                                InnerEnts.append(Dict[n])
+                            elif (Dict[n] not in InnerEnts) and (Tag_ToCompare2=='Contraindicated'):
+                                InnerEnts.append(Dict[n])
+                            elif (Dict[n] not in InnerEnts) and (Tag_ToCompare2=='Future'):
+                                InnerEnts.append(Dict[n])
+                            elif (Dict[n] not in InnerEnts) and (Tag_ToCompare2=='History_of'):
+                                InnerEnts.append(Dict[n])
+                            elif (Dict[n] not in InnerEnts) and (Tag_ToCompare2=='Patient'):
+                                InnerEnts.append(Dict[n])
+                            elif (Dict[n] not in InnerEnts) and (Tag_ToCompare2=='Family_member'):
+                                InnerEnts.append(Dict[n])
+                            elif (Dict[n] not in InnerEnts) and (Tag_ToCompare2=='Other'):
+                                InnerEnts.append(Dict[n])
+                            elif (Dict[n] not in InnerEnts):
+                                ToDelete.append(Dict[n])
+                                
                 # Overlapping entities (e.g. "trastorno de conducta" y "conducta suicida")
                 elif (Start_ToCompare1 <= Start_ToCompare2) and (End_ToCompare1 <= End_ToCompare2) and (Start_ToCompare2 <= End_ToCompare1):
                     ToDelete.append(Dict[n])
@@ -391,7 +409,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
 
 
                         # Check if the inner entity is full word; otherwise, do not output
-                        # Exceptions are negated, speculated or contraindicated entities (can be the full word)
+                        # Exceptions are entities expressing assertion, event temporality or experiencer (can be the full word)
                         if label_nested not in ['Negated', 'Speculated', 'Contraindicated', 'Future', 'History_of', 'Patient', 'Family_member', 'Other']:
                             # Beginning of string
                             if ((start_inner == 0) and not (end_inner == len(ent))):
@@ -450,7 +468,7 @@ def EntsDict2html(text, Hash, LexiconData, Nested, UMLSDataDict):
                         end_inner = start_inner + len(ent_nested)
 
                         # Check if the inner entity is full word; otherwise, do not output
-                        # Exceptions are negated, speculated or contraindicated entities (can be the full word)
+                        # Exceptions are entities expressing assertion, event temporality or experiencer (can be the full word)
                         if label_nested not in ['Negated', 'Speculated', 'Contraindicated', 'Future', 'History_of', 'Patient', 'Family_member', 'Other']:
                             # Beginning of string
                             if ((start_inner == 0) and not (end_inner == len(ent))):
