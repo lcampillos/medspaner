@@ -531,10 +531,11 @@ def codeAttribute(Hash):
     return FinalHash
 
 
-def convert2brat(Hash,FileName,LexiconData,UMLSData):
+def convert2brat(Hash,FileName,LexiconData,SourceData,Source):
 
     ''' Convert a hash of entities to BRAT format 
-        LexiconData and UMLSData are optional parameters (if normalization is selected)
+        LexiconData, SourceData and Source are optional parameters (if normalization is selected).
+        Source must be either "umls" or "snomed".
     '''
     
     n_comm = 0
@@ -560,20 +561,29 @@ def convert2brat(Hash,FileName,LexiconData,UMLSData):
             if Hash[i]['attribute'] == 'Contraindicated':
                 print("A{}\tAssertion T{} {}".format(n_att, i, Hash[i]['attribute']),file=FileName)    
         # Print UMLS codes in additional comment
-        if LexiconData and UMLSData:
+        if LexiconData and SourceData:
             CUIsList = get_codes_from_lexicon(Hash[i]['ent'], Hash[i]['label'], LexiconData)
             if (CUIsList):
-                # Complete normalization data of UMLS CUIs
-                CUIsList = complete_norm_data(CUIsList,UMLSData)
-                n_comm += 1
-                codes_string = " | ".join(CUIsList)
-                print("#{}	AnnotatorNotes T{}	{}".format(n_comm,i,codes_string),file=FileName)
+                if (Source == "umls"):
+                    # Complete normalization data of UMLS CUIs
+                    CUIsList = complete_norm_data(CUIsList,SourceData)
+                    n_comm += 1
+                    codes_string = " | ".join(CUIsList)
+                    print("#{}	AnnotatorNotes T{}	{}".format(n_comm,i,codes_string),file=FileName)
+                elif (Source == "snomed"):
+                    # Complete normalization data of SNOMED
+                    CUIsList = complete_snomed_code(CUIsList,SourceData)
+                    if len(CUIsList)>0:
+                        n_comm += 1
+                        codes_string = " | ".join(CUIsList)
+                        print("#{}	AnnotatorNotes T{}	{}".format(n_comm,i,codes_string),file=FileName)
 
 
-def convert2json(EntityHash, LexiconData, UMLSData):
+def convert2json(EntityHash, LexiconData, SourceData, Source):
 
     ''' Convert a hash of entities to json format 
-        LexiconData and UMLSData are optional parameters (if normalization is selected)
+        LexiconData, SourceData and Source are optional parameters (if normalization is selected).
+        Source must be either "umls" or "snomed"
      '''
 
     jsonEntities = []
@@ -595,14 +605,21 @@ def convert2json(EntityHash, LexiconData, UMLSData):
             EntDict["attribute"] = EntityHash[i]["attribute"]            
         jsonEntities.append(EntDict)
     
-    if (LexiconData and UMLSData):
+    if (LexiconData and SourceData):
         for entityData in jsonEntities:
             CUIsList = get_codes_from_lexicon(entityData['word'],entityData['entity_group'], LexiconData)
-            if (CUIsList):
-                # Complete normalization data of UMLS CUIs
-                CUIsList = complete_norm_data(CUIsList,UMLSData)
-                codes_string = " | ".join(CUIsList)                    
-                entityData['umls'] = codes_string
+            if (CUIsList): 
+                if (Source == "umls"):
+                    # Complete normalization data of UMLS CUIs
+                    CUIsList = complete_norm_data(CUIsList,SourceData)
+                    codes_string = " | ".join(CUIsList)                    
+                    entityData['umls'] = codes_string
+                elif (Source == "snomed"):
+                    # Complete normalization data of SNOMED
+                    CUIsList = complete_snomed_code(CUIsList,SourceData)
+                    if len(CUIsList)>0:
+                        codes_string = " | ".join(CUIsList)                    
+                        entityData['snomed'] = codes_string
     
     return jsonEntities
    

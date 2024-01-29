@@ -278,8 +278,6 @@ def get_codes_from_lexicon(entity,label,LexiconData):
 
 def complete_norm_data(List,UMLSDataDict):
     
-    CUIList = []
-    
     '''
     Given a list of CUIs (List), return the data of preferred term and semantic type in the UMLS.
     Data is a file with a dictionary in pickle format.
@@ -288,7 +286,9 @@ def complete_norm_data(List,UMLSDataDict):
     Return:
         ["C0000726; Abdomen; Body Location or Region", "C1281594; Entire abdomen; Body Part, Organ, or Organ Component"]
     '''
-
+        
+    CUIList = []
+    
     for cui in List:
         # Default value
         data = cui
@@ -298,7 +298,27 @@ def complete_norm_data(List,UMLSDataDict):
         CUIList.append(data)
     
     return CUIList
+
+
+def complete_snomed_code(List,SCTSPADict):
     
+    '''
+    Given a list of CUIs (List), return the code data of SNOMED-CT Spanish version.
+    Data is a file with a dictionary in pickle format.
+    E.g. "hipertensión"
+        [C0020538]
+    Return:
+        ["hipertensión arterial", "38341003"]
+    '''
+        
+    CUIList = []
+    
+    for cui in List:
+        if cui in SCTSPADict.keys():
+            data = SCTSPADict[cui]['term'] + "; " + SCTSPADict[cui]['code']
+            CUIList.append(data)
+    
+    return CUIList
     
 
 def add_label_to_token(EntitiesDict,TokensDict):

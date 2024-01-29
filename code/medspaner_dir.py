@@ -47,7 +47,7 @@ parser.add_argument('-misc', required=False, default=False, action='store_true',
 parser.add_argument('-neu', required=False, default=True, action='store_true', help='specify to annotate UMLS entities with neural model (used by default)')
 parser.add_argument('-neg', required=False, default=False, action='store_true', help='annotate entities expressing negation and uncertainty (not annotated by default)')
 parser.add_argument('-nest', required=False, default=False, action='store_true', help='annotate inner or nested entities inside wider entities (not annotated by default)')
-parser.add_argument('-norm', required=False, default=False, action='store_true', help='normalize entities and output terminology codes from UMLS (optional)')
+parser.add_argument('-norm', required=False, default=False, help='normalize entities and output terminology codes (optional); indicate "UMLS" (default) or "SNOMED"')
 parser.add_argument('-out', required=False, default="ann", help='specify output to JSON format ("json") or BRAT ann format ("ann", default value)')
 parser.add_argument('-temp', required=False, default=False, action='store_true', help='annotate temporal expressions (not annotated by default)')
 
@@ -77,9 +77,12 @@ def main(arguments):
         sys.exit()
     
     # If normalization data is needed, load file
-    if (arguments.norm):
+    if (arguments.norm == "umls"):
         DataFile = open("lexicon/umls_data.pickle", 'rb')
         UMLSData = pickle.load(DataFile)
+    elif (arguments.norm == "snomed"):
+        DataFile = open("lexicon/sctspa_norm.pickle", 'rb')
+        SCTSPAData = pickle.load(DataFile)
 
     # If use of an exception list to remove specific entities 
     if (arguments.exc):
@@ -336,7 +339,10 @@ def main(arguments):
                         FinalHash = codeAttribute(AllFinalEntities)
 
                         if (arguments.norm):
-                            convert2brat(FinalHash,outFile,LexiconData,UMLSData)
+                            if (arguments.norm=="umls"):
+                                convert2brat(FinalHash,outFile,LexiconData,UMLSData,arguments.norm)
+                            elif (arguments.norm=="snomed"):
+                                convert2brat(FinalHash,outFile,LexiconData,SCTSPAData,arguments.norm)
                         else:
                             convert2brat(FinalHash,outFile,None,None)
 
@@ -350,9 +356,12 @@ def main(arguments):
                     FinalHash = codeAttribute(AllFinalEntities)
         
                     if (arguments.norm):
-                        jsonEntities = convert2json(FinalHash,LexiconData,UMLSData)
+                        if (arguments.norm=="umls"):
+                            jsonEntities = convert2json(FinalHash,LexiconData,UMLSData,arguments.norm)
+                        elif (arguments.norm=="snomed"):
+                            jsonEntities = convert2json(FinalHash,LexiconData,SCTSPAData,arguments.norm)
                     else:
-                        jsonEntities = convert2json(FinalHash,None,None)
+                        jsonEntities = convert2json(FinalHash,None,None,None)
   
                     print(json.dumps(jsonEntities, indent=4))
 
