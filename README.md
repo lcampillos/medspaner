@@ -162,7 +162,7 @@ Edit the fields in the configuration file (config.conf) to adapt it to your purp
 * **neg** - Select ```True``` to annotate entities expressing negation and uncertainty; select ```False``` otherwise
 * **nest** - Select ```True``` to output inner or nested entities inside wider entities (e.g. *pecho* in *cáncer de pecho*); select ```False``` to output only the entities with the wider scope (*flat entities*)
 * **neu** - Select ```True``` (default value) to annotate UMLS entities with the trained neural model; select ```False``` otherwise
-* **norm** - Select ```True``` if the output needs to be normalized to UMLS CUIs (only output in BRAT ```ann``` format); select ```False``` otherwise
+* **norm** - Indicate ```UMLS``` if the output needs to be normalized to UMLS CUIs or select ```SNOMED``` to normalize to SNOMED CT
 * **out** - Indicate ```ann``` ([BRAT](https://brat.nlplab.org/) format) or ```json``` (standard JSON data format)
 * **temp** - Select ```True``` to annotate temporal expressions according to the HeidelTime scheme (Date, Duration, Frequency, Time) and Age; select ```False``` otherwise
 
@@ -209,7 +209,7 @@ License
 The code is distributed under the General Public License 3 (AGPL-3.0) by default.
 If you wish to use it under a different license, feel free to get in touch.
 
-Copyright (c) 2019-2023 ANONYMIZED
+Copyright (c) 2019-2024 ANONYMIZED
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
