@@ -72,14 +72,12 @@ def normalize_back(Hash):
     normalized_oC = re.search(r"\doC\b", word)
     if normalized_oC:
         word = re.sub("(\d)oC", r"\1ºC", word)
-        print("word después:",word)
         Hash['word'] = word
 
     # ºc (lowercase)
     normalized_oC = re.search(r"\doc\b", word)
     if normalized_oC:
         word = re.sub("(\d)oc", r"\1ºc", word)
-        print("word después:",word)
         Hash['word'] = word
         
     # m² 
