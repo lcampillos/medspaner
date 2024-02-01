@@ -344,7 +344,7 @@ def main(arguments):
                             elif (arguments.norm=="snomed"):
                                 convert2brat(FinalHash,outFile,LexiconData,SCTSPAData,arguments.norm)
                         else:
-                            convert2brat(FinalHash,outFile,None,None)
+                            convert2brat(FinalHash,outFile,None,None,None)
 
                 elif (arguments.out == "json"):
 
