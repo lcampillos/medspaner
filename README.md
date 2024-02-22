@@ -178,9 +178,9 @@ Leonardo Campillos-Llanos ...
 
 The Medical Lexicon for Spanish (MedLexSp) is described here:
 
-[**MedLexSp – A Medical Lexicon for Spanish Medical Natural Language Processing**](https://github.com/medspaner/MedLexSp)  
+[**MedLexSp – A Medical Lexicon for Spanish Medical Natural Language Processing**](https://jbiomedsem.biomedcentral.com/articles/10.1186/s13326-022-00281-5)  
 Leonardo Campillos-Llanos  
-*Journal of Biomedical Semantics*
+*Journal of Biomedical Semantics*, 23
 
 [**First Steps towards Building a Medical Lexicon for Spanish with Linguistic and Semantic Information**](https://aclanthology.org/W19-5017/)  
 Leonardo Campillos-Llanos.
