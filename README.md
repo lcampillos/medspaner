@@ -25,8 +25,6 @@ The lexicon is a computational vocabulary with lemmas and variant forms mapped t
 
 Rules were developed iteratively during the annotation of the CT-EBM-ES corpus. Standard algorithms were implemented, such as [NegEx](https://github.com/PlanTL-GOB-ES/NegEx-MES) and [HeidelTime](https://github.com/HeidelTime/heideltime) adapted to the Spanish language.
 
-The guideline with the criteria for annotating the CT-EBM-ES corpus is available in this repository.
-
 
 Installation and requirements
 -------------------------
