@@ -221,8 +221,5 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 Funding
 ---------------------------
 
-CLARA-MeD Project (PID2020-116001RA-C33), 2021-24
-
-Funded by MCIN/AEI/10.13039/501100011033/, in project call: "Proyectos I+D+i Retos Investigación"
-
+This tool was developed in the NLPMedTerm project, funded by InterTalentum UAM, Marie Skłodowska-Curie COFUND grant (2019-2021) (H2020 program, contract number 713366), and in the CLARA-MeD project (reference: PID2020-116001RA-C33), funded by MCIN/AEI/10.13039/501100011033/, in project call: "Proyectos I+D+i Retos Investigación".
 
