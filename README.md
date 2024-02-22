@@ -174,7 +174,7 @@ References
 
 **Hybrid tool for semantic annotation of clinical trial texts**  
 Leonardo Campillos-Llanos ...  
-*In Proceedings of ...*
+*In Proceedings of ...*--->
 
 The Medical Lexicon for Spanish (MedLexSp) is described here:
 
@@ -191,7 +191,7 @@ The Clinical Trials for Evidence-based Medicine in Spanish (CT-EBM-SP) corpus is
 [**A clinical trials corpus annotated with UMLS entities to enhance the access to evidence-based medicine**](https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/s12911-021-01395-z)  
 Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión and Antonio Moreno-Sandoval
 *BMC Med Inform Decis Mak* (2021) 21:69
---->
+
 
 Intended uses & limitations
 ---------------------------
@@ -209,7 +209,9 @@ License
 The code is distributed under the General Public License 3 (AGPL-3.0) by default.
 If you wish to use it under a different license, feel free to get in touch.
 
-Copyright (c) 2019-2024 ANONYMIZED
+Copyright (c) 2019-2024 Leonardo Campillos-Llanos, CSIC (Spanish National Research Council)
+
+```leonardo.campillos AT csic.es```
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -219,4 +221,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 Funding
 ---------------------------
 
-ANONYMIZED
+CLARA-MeD Project (PID2020-116001RA-C33), 2021-24
+
+Funded by MCIN/AEI/10.13039/501100011033/, in project call: "Proyectos I+D+i Retos Investigación"
+
+
