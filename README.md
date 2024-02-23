@@ -172,7 +172,7 @@ References
 
 The annotation tool is described here:
 
-**Hybrid natural language processing tool for semantic annotation of clinical trial texts**  
+**Hybrid natural language processing tool for semantic annotation of medical texts in Spanish**  
 Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión  
 *(Under review)*
 
