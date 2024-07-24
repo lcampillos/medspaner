@@ -15,15 +15,15 @@ The tool can annotate the following type of information:
 
 The lexicon is [MedLexSp](https://github.com/lcampillos/MedLexSp), a computational vocabulary with lemmas and variant forms mapped to UMLS CUIs. It can be obtained via an usage license at: [https://digital.csic.es/handle/10261/270429](https://digital.csic.es/handle/10261/270429)
 
-Rules were developed iteratively during the annotation of the [CT-EBM-ES corpus](https://zenodo.org/record/6059737#.YtPYTMHP1H0). Standard algorithms were implemented, such as [NegEx](https://github.com/PlanTL-GOB-ES/NegEx-MES), [ConText](https://claritynlp.readthedocs.io/en/stable/developer_guide/algorithms/context.html) and [HeidelTime](https://github.com/HeidelTime/heideltime) adapted to the [Spanish language](https://github.com/PlanTL-GOB-ES/EHR-TTS).
+Rules were developed iteratively during the annotation of the [CT-EBM-SP corpus](https://zenodo.org/record/6059737#.YtPYTMHP1H0). Standard algorithms were implemented, such as [NegEx](https://github.com/PlanTL-GOB-ES/NegEx-MES), [ConText](https://claritynlp.readthedocs.io/en/stable/developer_guide/algorithms/context.html) and [HeidelTime](https://github.com/HeidelTime/heideltime) adapted to the [Spanish language](https://github.com/PlanTL-GOB-ES/EHR-TTS).
 
-The [guideline](https://github.com/lcampillos/ct-ebm-sp-v2) with the criteria for annotating the [CT-EBM-ES corpus](https://zenodo.org/record/6059737#.YtPYTMHP1H0) is [available in this repository](https://github.com/lcampillos/medspaner/blob/main/annot_guideline_2022_anonyn.pdf).
+The [guideline](https://github.com/lcampillos/ct-ebm-sp-v2) with the criteria for annotating the [CT-EBM-SP corpus](https://zenodo.org/record/6059737#.YtPYTMHP1H0) is [available in this repository](https://github.com/lcampillos/medspaner/blob/main/annot_guideline_2022_anonyn.pdf).
 
 The neural model is [RoBERTA model trained on clinical and EHR data](https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es), trained by the Barcelona Supercomputing Center, and fine-tuned in clinical trials annotated for different tasks: medical named entity recognition, temporal annotation, annotation of medication drug attributes, and annotation of negation and uncertainty/speculation.
 
 The lexicon is a computational vocabulary with lemmas and variant forms mapped to UMLS CUIs. It can be obtained via an usage license.
 
-Rules were developed iteratively during the annotation of the CT-EBM-ES corpus. Standard algorithms were implemented, such as [NegEx](https://github.com/PlanTL-GOB-ES/NegEx-MES) and [HeidelTime](https://github.com/HeidelTime/heideltime) adapted to the Spanish language.
+Rules were developed iteratively during the annotation of the CT-EBM-SP corpus. Standard algorithms were implemented, such as [NegEx](https://github.com/PlanTL-GOB-ES/NegEx-MES) and [HeidelTime](https://github.com/HeidelTime/heideltime) adapted to the Spanish language.
 
 
 Installation and requirements
