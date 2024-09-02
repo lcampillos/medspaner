@@ -1,0 +1,208 @@
+<!doctype html>
+<!--<link rel="stylesheet" href="static/style.css">-->
+<link rel="stylesheet" href="../static/style.css">
+<head>
+  <title>MedSpaNER</title>
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<nav>
+  <table border="0" align="center">
+    <tr>
+      <td><img src="static/logo.jpg" style="max-width:250px; height:auto" alt="Logo"/></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><h1 class="center">Herramienta de anotación semántica médica</h1></td>
+    </tr>
+  </table>
+</nav>
+<body>
+ <div class="wrapper">
+  <div class="sidebar">
+        <ul>
+            <li><a href="#como_usar">&#128640; Cómo usar</a></li>
+            <li><a href="#opciones">&#128269; Opciones de anotación</a></li>
+            <li><a href="#lexico">&#128214; Usar léxico</a></li>
+            <li><a href="#anidadas">&#128203; Entidades anidadas</a></li>
+            <li><a href="#normalizar">&#127919; Normalizar</a></li>
+            <li><a href="#metodos">&#128295; Cómo funciona</a></li>
+            <li><a href="{{ url_for('gui') }}">&#128421; Anotar</a></li>
+        </ul> 
+  </div>
+ <div class="main_content">
+  <table border="0" align="center">
+  <tr>
+    <td><h4 class="color" id="como_usar">Cómo usar</h3>
+    <p class="paragraph">MedSpaNER puede utilizarse de dos maneras:</p>
+    <ul>
+    <li><p class="paragraph">Mediante el código ejecutable en línea de comandos; las instrucciones se incluyen en este  <a class="link" href="https://github.com/lcampillos/medspaner" target="_blank">repositorio</a>.</p></li>
+    <li><p class="paragraph">Con la interfaz gráfica de usuario (ver imagen):
+    <img src="../static/gui.png" alt="gui" width="60%" style="display: block; margin: auto;" />
+    <p class="paragraph">Se copia un texto en la caja de texto (A) y se pueden seleccionar varias opciones para la anotación (B). <br /><br />Las entidades anotadas se muestran con distintos colores (C). <br /><br /> Al pasar el ratón por encima de una entidad se muestra información sobre su tipo semántico, y los conceptos (identificadores únicos de conceptos del UMLS) (D). <br /><br /> Los resultados pueden descargarse en formato BRAT, pulsando el botón <i>Descargar</i> (E).</p>
+    </li>
+    </ul>
+    </td>
+  </tr>
+  <tr>
+    <td><h4 class="color" id="opciones">Opciones de anotación</h3>
+    <p class="paragraph">Seleccionando la casilla correspondiente, el sistema permite anotar el siguiente tipo de información:</p>
+    <table class="center">
+    <tr>
+    <td bgcolor="#d3faf1"><p class="paragraph">&nbsp;&nbsp; Entidades del UMLS&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="ANAT">ANAT</mark>: anatomía o partes del cuerpo: p. ej., <i>brazo</i></p></li>
+    <li><p class="paragraph"><mark class="CHEM">CHEM</mark>: sustancias farmacológicas o bioquímicas: p. ej., <i>aspirina</i></p></li>
+    <li><p class="paragraph"><mark class="DISO">DISO</mark>: estados patológicos: p. ej., <i>diabetes</i></p></li>
+    <li><p class="paragraph"><mark class="DEVI">DEVI</mark>: dispositivos e instrumentos médicos: p. ej., <i>muletas</i></p></li>
+    <li><p class="paragraph"><mark class="LIVB">LIVB</mark>: seres vivos, incluido el ser humano: p. ej., <i>ratón</i></p></li>
+    <li><p class="paragraph"><mark class="PHYS">PHYS</mark>: procesos fisiológicos: p. ej., <i>digestión</i></p></li>
+    <li><p class="paragraph"><mark class="PROC">PROC</mark>: procedimientos terapéuticos o diagnósticos y análisis de laboratorio: p. ej., <i>endoscopia</i></p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#eed9f7"><p class="paragraph">&nbsp;&nbsp; Posología de medicamentos&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="Contraindicated">Contraindicated</mark>: medicamento o tratamiento contraindicado: p. ej., <i>contraindicación a <u>aspirina</u></i></p></li>
+    <li><p class="paragraph"><mark class="Dose">Dose</mark>: dosis o concentración: p. ej., <i>1 mg</i></p></li>
+    <li><p class="paragraph"><mark class="Form">Form</mark>: forma de presentación: p. ej., <i>pastillas</i></p></li>
+    <li><p class="paragraph"><mark class="Route">Route</mark>: modo o vía de administración: p. ej., <i>vía oral</i></p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#e0f4fc"><p class="paragraph">&nbsp;&nbsp; Expresiones temporales&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="Age">Age</mark>: edad o periodos vitales: p. ej., <i>18 años</i></p></li>
+    <li><p class="paragraph"><mark class="Date">Date</mark>: fechas: p. ej., <i>2020</i></p></li>
+    <li><p class="paragraph"><mark class="Duration">Duration</mark>: duración: p. ej., <i>2 horas</i></p></li>
+    <li><p class="paragraph"><mark class="Frequency">Frequency</mark>: frecuencia: p. ej., <i>mensualmente</i></p></li>
+    <li><p class="paragraph"><mark class="Time">Time</mark>: horas o partes del día: p. ej., <i>por la noche</i></p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#d8fcdd"><p class="paragraph">&nbsp;&nbsp; Entidades médicas misceláneas&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="CONC">Concept</mark>: conceptos abstractos, tests estadísticos o escalas de medición: p. ej., <i>ANOVA</i></p></li>
+    <li><p class="paragraph"><mark class="Food">Food</mark>: alimentos o bebidas: p. ej., alcohol </p></li>
+    <li><p class="paragraph"><mark class="Observation">Observation</mark>: observación médica o hallazgo clínico: p. ej., <i>normotenso</i></p></li>
+    <li><p class="paragraph"><mark class="Quantifier_or_Qualifier">Quantifier_or_Qualifier</mark>: adjetivo cuantificador o calificador: p. ej., <i>grave</i></p></li>
+    <li><p class="paragraph"><mark class="Result_or_Value">Result_or_Value</mark>: resultado o valor de una medición: p. ej., <i>>90 mmHg</i></p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#eef4f3"><p class="paragraph">&nbsp;&nbsp; Negación/especulación&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="Neg_cue">Neg_cue</mark>: marca de negación: p. ej., <i>no, sin</i></p></li>
+    <li><p class="paragraph"><mark class="Negated">Negated</mark>: evento negado: p. ej., <i>sin <u>fiebre</u></i></p></li>
+    <li><p class="paragraph"><mark class="Spec_cue">Spec_cue</mark>: marca de incertidumbre: p. ej., <i>sospecha de</i></p></li>
+    <li><p class="paragraph"><mark class="Speculated">Speculated</mark>: evento incierto o especulado: p. ej., <i>posible <u>infección</u></i></p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#f9f8ed"><p class="paragraph">&nbsp;&nbsp; Atributos&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph">Temporalidad:</p></li>
+    <ul>
+    <li><p class="paragraph"><mark class="History_of">History_of</mark>: evento pasado: p. ej., <i>antecedentes de <u>migraña</u></i></p></li>
+    <li><p class="paragraph"><mark class="Future">Future</mark>: evento futuro: p. ej., <i><u>cirugía</u> pendiente</i></p></li>
+    </ul>
+    <li><p class="paragraph">Experimentante:</p></li>
+    <ul>
+    <li><p class="paragraph"><mark class="Patient">Patient</mark>: paciente o participante en ensayo clínico: p. ej., <i>mujer embarazada</i></p></li>
+    <li><p class="paragraph"><mark class="Family_member">Family_member</mark>: miembro de la familia: p. ej., <i>padre</i></p></li>
+    <li><p class="paragraph"><mark class="Other">Other</mark>: otra persona distinta de paciente o familiar: p. ej., <i>cirujano</i></p></li>
+    </ul>
+    </ul>
+    </td>
+    </tr>
+    </table>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="lexico">Usar léxico</h4>
+    <p class="paragraph">Al seleccionar esta opción, la herramienta utiliza el léxico para el procesamiento del lenguaje médico en español <a class="link" href="https://github.com/lcampillos/MedLexSp" target="_blank">MedLexSp</a>.
+    <p class="paragraph">La versión actual de <a class="link" href="https://github.com/lcampillos/MedLexSp" target="_blank">MedLexSp</a> contiene 100887 lemas y 302543 formas variantes, alineadas a 42958 códigos identificadores de conceptos (CUIs) del <a class="link" href="https://www.nlm.nih.gov/research/umls/index.html" target="_blank">Unified Medical Language System (UMLS)</a> de la National Library of Medicine (EE.UU.).
+    <p class="paragraph">Puede obtener el léxico MedLexSp firmando una licencia disponible en <a class="link" href="https://digital.csic.es/handle/10261/270429" target="_blank">Digital CSIC</a>.
+    <br /><br />
+    La cobertura (<i>recall</i>) del léxico suele ser mayor, pero su precisión (<i>precision</i>) es más baja que los modelos neuronales. <br /><br /> &#128161; Se recomienda utilizarlo en tareas de preanotación de textos en las que haya profesionales dedicados a la revisión de datos previamente a su uso.</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="anidadas">Entidades anidadas</h4>
+    <p class="paragraph">Si se selecciona esta opción, la herramienta anota las entidades que pueden aparecer dentro de otras con un alcance más amplio.</p>
+    <p class="paragraph">Por ejemplo, <mark class="Date">postoperatorio</mark> (Date) en <mark class="DISO">dolor <mark id="inner" class="Date">postoperatorio</mark></mark> (DISO).</p>
+    <p class="paragraph">Las entidades anidadas solo se muestran si pertenecen a distintos tipos.</p>
+    <p class="paragraph">Por ejemplo, en la entidad <i>dedo del pie</i>, la herramienta solo anota la expresión completa y no anota también <i>dedo</i>, pues ambas pertenecen al grupo ANAT.</p>
+    <p class="paragraph">Por defecto, la herramienta recupera solo las entidades con un alcance más amplio.</p>
+    <p class="paragraph">Las entidades anidadas solo pueden anotarse si se usan distintos modelos correspondientes a un grupo de entidades (esto es, cada opción seleccionada). Por ejemplo, si se selecciona la opción Entidades UMLS y la opción Expresiones temporales. La entidad externa corresponde a una opción seleccionada, y la entidad interna, a la otra opción.</p>
+    <p class="paragraph">La opción Usar léxico sí permite anotar un mayor rango de entidades anidadas.</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="normalizar">Normalizar</h4>
+    <p class="paragraph">Con esta opción, la herramienta obtiene para las entidades anotadas los identificadores únicos de concepto (CUIs por las siglas en inglés) del <a class="link" href="https://www.nlm.nih.gov/research/umls/index.html" target="_blank">Unified Medical Language System (UMLS)</a>, desarrollado por la National Library of Medicine (EE.UU.).</p>
+     <p class="paragraph">Por ejemplo, la entidad <i>cáncer de pulmón no microcítico</i> tiene el identificador C0007131 en el UMLS (ver imagen previa).</p>
+     <p class="paragraph">Una entidad puede tener uno o más identificadores únicos de concepto, o no tener ninguno.</p>
+     <p class="paragraph">La versión en línea de comandos de MedSpaNER también permite la normalización según el estándar <a class="link" href="https://www.snomed.org/">Systematized Nomenclature of Medicine – Clinical Terms (SNOMED-CT)</a>.</p>
+     <p class="paragraph">⚠️ Tenga en cuenta que, actualmente, la normalización de conceptos no está evaluada y necesita revisión posterior por profesionales.</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="metodos">Cómo funciona</h4>
+    <p class="paragraph">La herramienta ha sido desarrollada a partir de la anotación de textos sobre ensayos clínicos, y el entrenamiento de modelos neuronales para el reconocimiento de entidades.
+    <p class="paragraph">La anotación de textos siguió unos criterios registrados en la <a class="link" href="https://github.com/lcampillos/ct-ebm-sp-v2/blob/main/annot_guideline_2024.pdf" target="_blank">guía de anotación</a> disponible para la consulta. 
+    <p class="paragraph">Los textos anotados (corpus CT-EBM-SP vs 2) están disponibles para su uso en este <a class="link" href="https://github.com/lcampillos/ct-ebm-sp-v2" target="_blank">repositorio</a>.</p>
+    <p class="paragraph">Los modelos neuronales empleados por defecto parten del modelo RoBERTA <a class="link" href="https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es" target="_blank" style="font-family: Courier;"> 
+bsc-bio-ehr-es</a> entrenado por el Barcelona Supercomputing Center en datos clínicos e informes médicos. El modelo fue ajustado (<i>fine-tuned</i>) con textos anotados de ensayos clínicos para diferentes tareas:</p>
+    <ul>
+     <li><p class="paragraph">reconocimiento de entidades de grupos del UMLS</p></li> 
+     <li><p class="paragraph">anotación temporal</p></li> 
+     <li><p class="paragraph">atributos de posología de medicamentos</p></li> 
+     <li><p class="paragraph">negación/especulación</p></li> 
+     <li><p class="paragraph">atributos relacionados con la temporalidad del evento o el experimentante</p></li> 
+     <li><p class="paragraph">entidades médicas misceláneas</p></li> 
+    </ul>
+    <p class="paragraph">Todos los modelos entrenados están disponibles para la descarga en el repositorio <a class="link" href="https://huggingface.co/medspaner" target="_blank">Hugging Face</a>.</p>
+    </td>
+  </tr>
+  </table>
+  <table class="advert">
+  <tr>
+      <td><p>&nbsp;&nbsp;<b>Descargo de responsabilidad</b>:</p>
+      
+      <ul>
+      <li><p class="paragraph">Esta herramienta se encuentra en desarrollo y no debe ser empleada para la toma de decisiones médicas de manera automática.</p></li>
+      <li><p class="paragraph">La herramienta utiliza recursos léxicos que proceden de fuentes externas, y modelos de lenguaje preentrenados por otros equipos de investigación. Los autores de la herramienta no reclaman la propiedad intelectual ni los derechos de autor de estos recursos, que siguen perteneciendo a sus correspondientes autores.</p></li>
+      <li><p class="paragraph">Las anotaciones proporcionadas por la herramienta son automáticas y deben ser validadas por un profesional sanitario antes de ser empleadas. Los autores no declaran que los resultados sean completamente correctos.</p></li>
+      <li><p class="paragraph">Las terceras partes que desplieguen o proporcionen sistemas y/o servicios que utilicen esta herramienta (o que utilicen sistemas basados en estos modelos) deben tener en cuenta que es su responsabilidad mitigar los riesgos derivados de su uso. Las terceras partes, en cualquier caso, deben cumplir la normativa aplicable, incluida la relativa al uso de la inteligencia artificial.</p></li>
+      <li><p class="paragraph">Los desarrolladores de la herramienta no pueden ser responsables del uso incorrecto de la información proporcionada. Aunque se han realizado todos los esfuerzos posibles para asegurar que los resultados de anotación son de alta calidad, no se puede ofrecer una garantía (expresa o implícita) respecto a su corrección o integridad. El uso de la herramienta se permite con el compromiso de aceptar que los desarrolladores no tendrán ninguna responsabilidad en cualquier daño o resultado negativo directo o indirecto.</p></li>
+      </ul>
+  </tr>
+  </table>
+  <table class="center">
+  <tr>
+  <td>
+  <img src="https://ik.imagekit.io/plfzubavxr/Iconos_financ_aei.png" style="display: block; margin-left: auto; margin-right: auto; width: 25%;">    
+  </td>
+  </tr>
+  </table>
+ </div>
+ </div>
+</body>  
+
+  

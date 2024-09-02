@@ -1,0 +1,690 @@
+<!doctype html>
+<link rel="stylesheet" href="static/style.css">
+<style>
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3, h4 {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h2.fa, h3.color, h4.color {
+    text-align: center;
+    /* offset-x | offset-y | blur-radius | color
+    text-shadow: 0px 2px 1px rgba(179, 210, 211, 0.5); */
+    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    font-family: Arial, Helvetica, sans-serif;
+    color:#36454F;
+}
+
+
+table.advert {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #FFDAB9;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 12px;
+    width: 100%;
+}
+
+img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Highlight colors of results */
+/* Inner entities are shorter and less transparent */
+
+form div#text_input mark.ANAT[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.ANAT, mark.ANAT {
+  background: rgba(255,228,181);
+  padding: 0.4em 0.4em; 
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.CHEM[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.CHEM, mark.CHEM {
+  background: rgba(176, 171, 229);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.DEVI[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.DEVI, mark.DEVI {
+  background: rgba(166, 226, 45, 0.7);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.DISO[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.DISO, mark.DISO {
+  background: rgba(213, 172, 172);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.LIVB[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.LIVB, mark.LIVB {
+  background: rgba(234, 248, 201, 0.6);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.PHYS[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.PHYS, mark.PHYS {
+  background: rgba(253,151,32, 0.5);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.PROC[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.PROC, mark.PROC {
+  background: rgba(172, 221, 221);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Age[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Age, mark.Age {
+  background: rgba(216, 235, 255, 0.7); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Date[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Date, mark.Date {
+  background: rgba(173,216,230, 0.5);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Duration[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Duration, mark.Duration {
+  background: rgba(181,205,225);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Frequency[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Frequency, mark.Frequency {
+  background: rgba(0,191,255, 0.3); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Time[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Time, mark.Time {
+  background: rgba(100,149,237, 0.3);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Contraindicated[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Contraindicated, mark.Contraindicated {
+  background: rgba(190, 203, 204); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Dose[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Dose, mark.Dose {
+  background: rgba(238,213,210, 0.5);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Form[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Form, mark.Form {
+  background: rgba(201,186,218, 0.5);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Route[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Route, mark.Route { 
+  background: rgba(193,205,205, 0.5);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Neg_cue[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Neg_cue, mark.Neg_cue {
+  background: rgba(202, 202, 202); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Negated[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Negated, mark.Negated {
+  background: rgba(211, 211, 211); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Spec_cue[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Spec_cue, mark.Spec_cue {
+  background: rgba(174,182,191);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Speculated[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Speculated, mark.Speculated {
+  background: rgba(228,228,228); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.History_of[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.History_of, mark.History_of {
+  background: rgba(246,245,240, 0.7); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Future[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Future, mark.Future {
+  background: rgba(246,245,240); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Patient[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Patient, mark.Patient {
+  background: rgba(252,254,250); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Other[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Other, mark.Other {
+  background: rgba(252,254,250); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Family_member[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Family_member, mark.Family_member {
+  background: rgba(252,254,250); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.CONC[id^="inner"] {
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.CONC, mark.CONC {
+  background: rgba(221,231,230);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Food[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Food, mark.Food {
+  background: rgba(211,191,178); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Observation[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Observation, mark.Observation {
+  background: rgba(246,221,204); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Quantifier_or_Qualifier[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Quantifier_or_Qualifier, mark.Quantifier_or_Qualifier {
+  background: rgba(238,238,238); 
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+form div#text_input mark.Result_or_Value[id^="inner"]{
+  padding: 0.2em 0.2em;
+}
+
+form div#text_input mark.Result_or_Value, mark.Result_or_Value {
+  background: rgba(221,233,252, 0.7);
+  padding: 0.4em 0.4em;
+  margin: 0 0.25em; line-height: 1;
+  border-radius: 0.35em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* Style of link */
+.link {
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  color:#0a837d;
+}
+
+.link:hover {
+  text-decoration: none;
+  color:#4054b2;
+  cursor: pointer;
+}
+
+p.paragraph {
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align:left;
+  color:#000000a8;
+}
+
+p.ref {
+  font-size: 11px;
+  font-family: Arial, Helvetica, sans-serif;
+  color:#708090;
+  text-indent:2em;
+}
+
+/* Navigation side bar */
+
+.wrapper{
+  display: flex;
+  position: relative;
+}
+
+.wrapper .sidebar{
+  width: 170px;
+  height: 100%;
+  /*background: #45818e; Verde mar */
+  background: #FFF;
+  padding: 10px 0px;
+  position: fixed;
+}
+
+.wrapper .sidebar ul li{
+  padding: 15px;
+  border-bottom: 1px solid #b4ccd1;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  list-style-type: none; /* Remove bullets */
+}    
+
+.wrapper .sidebar ul li a{
+  /*color: #b4ccd1; Verde mar ligero; #45818e; */
+  color:#0a837d;
+  display: block;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+}
+
+.wrapper .sidebar ul li:hover{
+  background:#fbfbfb; /* #45818e; Verde mar; #b4ccd1; Verde mar ligero; #e0e8e1; Verde gris claro; #f7f7f1; Verde gris aún más claro */
+}
+    
+.wrapper .sidebar ul li:hover a{
+  color: #4054b2;
+}
+
+.wrapper .main_content{
+  width: 100%;
+  margin-left: 200px;
+}
+</style>
+<head>
+  <title>MedSpaNER</title>
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<nav>
+  <table border="0" align="center">
+    <tr>
+      <td><img src="/static/logo.jpg" style="max-width:250px; height:auto" onerror="this.onerror=null; this.src='https://ik.imagekit.io/plfzubavxr/logo.jpg'" alt="Google Drive Image"/></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><h1 class="center">Medical semantics annotation tool</h1></td>
+    </tr>
+  </table>
+</nav>
+<body>
+ <div class="wrapper">
+  <div class="sidebar">
+        <ul>
+            <li><a href="#how_to_use">How to use</a></li>
+            <li><a href="#options">Annotation options</a></li>
+            <li><a href="#lexicon">Use lexicon</a></li>
+            <li><a href="#nested">Nested entities</a></li>
+            <li><a href="#normalize">Normalize</a></li>
+            <li><a href="#methods">How it works</a></li>
+            <li><a href="/gui_en">Annotate</a></li>
+        </ul> 
+  </div>
+ <div class="main_content">
+  <table border="0" align="center">
+  <tr>
+    <td><h4 class="color" id="how_to_use">How to use</h3>
+    <p class="paragraph">You can use MedSpaNER in two ways:</p>
+    <ul>
+    <li><p class="paragraph">Via command-line executable code; instructions are included in this <a class="link" href="https://github.com/lcampillos/medspaner" target="_blank">repository</a>.</p></li>
+    <li><p class="paragraph">Via the graphical user interface (see image):
+    <img src="https://ik.imagekit.io/plfzubavxr/gui.png" alt="gui" width="60%" style="display: block; margin: auto;" />
+    <p class="paragraph">A text is copied on the text box (A) and several annotation options can be selected (B). <br /><br /> The annotated entities are shown with different colors (C). <br /><br /> Hovering over an entity shows information about its type and normalization (e.g. UMLS concept unique identifiers), if available (D). <br /><br /> Results can be downloaded in BRAT format (E), by clicking on the <i>Download</i> button (E).</p>
+    </li>
+    </ul>
+    </td>
+  </tr>
+  <tr>
+    <td><h4 class="color" id="options">Annotation options</h3>
+    <p class="paragraph">By selecting the corresponding box, the system allows you to identify the following type of information:</p>
+    <table class="center">
+    <tr>
+    <td bgcolor="#d3faf1"><p class="paragraph">&nbsp;&nbsp; UMLS entities&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="ANAT">ANAT</mark>: anatomy or body parts: e.g., <i>brazo</i> ('arm')</p></li>
+    <li><p class="paragraph"><mark class="CHEM">CHEM</mark>: chemical or pharmacological sustances: e.g., <i>aspirina</i> ('aspirin')</p></li>
+    <li><p class="paragraph"><mark class="DISO">DISO</mark>: pathologic conditions: e.g., <i>diabetes</i></p></li>
+    <li><p class="paragraph"><mark class="DEVI">DEVI</mark>: medical devices: e.g., <i>muletas</i> ('crutches')</p></li>
+    <li><p class="paragraph"><mark class="LIVB">LIVB</mark>: living beings, included the human being: e.g., <i>mouse</i> ('ratón')</p></li>
+    <li><p class="paragraph"><mark class="PHYS">PHYS</mark>: procesos fisiológicos: e.g., <i>digestión</i> ('digestion')</p></li>
+    <li><p class="paragraph"><mark class="PROC">PROC</mark>: therapeutic or diagnostic procedures and laboratory analysis: e.g., <i>endoscopy</i> ('endoscopia')</p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#eed9f7"><p class="paragraph">&nbsp;&nbsp; Medical drug information&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="Contraindicated">Contraindicated</mark>: a contraindicated drug or treatment: e.g., <i>contraindicación a <u>aspirina</u></i> ('aspirin')</p></li>
+    <li><p class="paragraph"><mark class="Dose">Dose</mark>: dose or strength: e.g., <i>1 mg</i></p></li>
+    <li><p class="paragraph"><mark class="Form">Form</mark>: dosage form: e.g., <i>pastillas</i> ('pills')</p></li>
+    <li><p class="paragraph"><mark class="Route">Route</mark>: modo o vía de administración: e.g., <i>vía oral</i> ('oral route')</p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#e0f4fc"><p class="paragraph">&nbsp;&nbsp; Temporal expressions&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="Age">Age</mark>: age or life periods: e.g., <i>18 años</i> ('18 years old')</p></li>
+    <li><p class="paragraph"><mark class="Date">Date</mark>: e.g., <i>2020</i></p></li>
+    <li><p class="paragraph"><mark class="Duration">Duration</mark>: e.g., <i>2 horas</i> ('2 hours')</p></li>
+    <li><p class="paragraph"><mark class="Frequency">Frequency</mark>: e.g., <i>mensualmente</i> ('monthly')</p></li>
+    <li><p class="paragraph"><mark class="Time">Time</mark>: hours or parts of the day: e.g., <i>por la noche</i> ('at night')</p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#d8fcdd"><p class="paragraph">&nbsp;&nbsp; Miscellaneous medical entities &nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="CONC">Concept</mark>: abstract concepts, statistical tests or measurement scales: e.g., <i>ANOVA</i></p></li>
+    <li><p class="paragraph"><mark class="Food">Food</mark>: foods or drinks: e.g., <i>alcohol</i></p></li>
+    <li><p class="paragraph"><mark class="Observation">Observation</mark>: medical observations or clinical findings: e.g., <i>normotenso</i> ('normal blood pressure')</p></li>
+    <li><p class="paragraph"><mark class="Quantifier_or_Qualifier">Quantifier_or_Qualifier</mark>: quantifier or qualifier adjective: e.g., <i>grave</i> ('severe')</p></li>
+    <li><p class="paragraph"><mark class="Result_or_Value">Result_or_Value</mark>: result or value of a measurement, laboratory analysis or procedure: e.g., <i>>90 mmHg</i></p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#eef4f3"><p class="paragraph">&nbsp;&nbsp; Negation/Speculation&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph"><mark class="Neg_cue">Neg_cue</mark>: negation cue: e.g., <i>no, sin</i> ('no', 'without')</p></li>
+    <li><p class="paragraph"><mark class="Negated">Negated</mark>: negated event: e.g., <i>sin <u>fiebre</u></i> ('no fever')</p></li>
+    <li><p class="paragraph"><mark class="Spec_cue">Spec_cue</mark>: speculation cue: e.g., <i>sospecha de</i> ('suspicion of')</p></li>
+    <li><p class="paragraph"><mark class="Speculated">Speculated</mark>: speculated or uncertain event: e.g., <i>posible <u>infección</u></i> ('possible infection')</p></li>
+    </ul>
+    </td>
+    </tr>
+    <tr>
+    <td bgcolor="#f9f8ed"><p class="paragraph">&nbsp;&nbsp; Attributes&nbsp;&nbsp;</p></td>
+    <td>
+    <ul>
+    <li><p class="paragraph">Temporality:</p></li>
+    <ul>
+    <li><p class="paragraph"><mark class="History_of">History_of</mark>: past event: e.g., <i>antecedentes de <u>migraña</u></i> ('history of migraine')</p></li>
+    <li><p class="paragraph"><mark class="Future">Future</mark>: future event: e.g., <i><u>cirugía</u> pendiente</i> ('pending surgery')</p></li>
+    </ul>
+    <li><p class="paragraph">Experiencer:</p></li>
+    <ul>
+    <li><p class="paragraph"><mark class="Patient">Patient</mark>: patient or participant on a clinical trial: e.g., <i>mujer embarazada</i> ('pregnant woman')</p></li>
+    <li><p class="paragraph"><mark class="Family_member">Family_member</mark>: e.g., <i>padre</i> ('father')</p></li>
+    <li><p class="paragraph"><mark class="Other">Other</mark>: other person different from the patient or the family member: e.g., <i>cirujano</i> ('surgeon')</p></li>
+    </ul>
+    </ul>
+    </td>
+    </tr>
+    </table>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="lexicon">Use lexicon</h4>
+    <p class="paragraph">If you select this option, the tool will annotate the text using the <a class="link" href="https://github.com/lcampillos/MedLexSp" target="_blank">MedLexSp</a> medical lexicon for natural language processing in Spanish.
+    <p class="paragraph">The current version of <a class="link" href="https://github.com/lcampillos/MedLexSp" target="_blank">MedLexSp</a> contains 100887 lemmas and 302543 variant forms, which have been mapped to 42958 concept unique identifiers (CUIs) from the <a class="link" href="https://www.nlm.nih.gov/research/umls/index.html" target="_blank">Unified Medical Language System (UMLS)</a> of the National Library of Medicine (USA).
+    <p class="paragraph">You can obtain the MedLexSp lexicon by signing the usage license available at <a class="link" href="https://digital.csic.es/handle/10261/270429" target="_blank">Digital CSIC</a>.
+    <br /><br />
+    The <i>recall</i> (or <i>sensibility</i>) obtained with the lexicon is often higher, but its precision (<i>positive predictive value</i>) is lower than that obtained with the neural models. <br /><br /> &#128161; We recommend using the lexicon in pre-annotation tasks in which professionals can review the annotated data prior to use.</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="nested">Nested entities</h4>
+    <p class="paragraph">If this option is selected, the tool annotates entities that may appear within other entities with a wider scope.</p>
+    <p class="paragraph">For example, <mark class="Date">postoperatorio</mark> ('post-operatory', Date) in <mark class="DISO">dolor <mark class="Date">postoperatorio</mark></mark> ('post-operatory pain', DISO).</p>
+    <p class="paragraph">Nested entities are only shown if they belong to different types.</p>
+    <p class="paragraph">For example, in the entity <i>dedo del pie</i> ('toe'), the tool only annotates the full mention and not <i>dedo</i>, since they both have the same semantic class (ANAT).</p>
+    <p class="paragraph">By default, the tool retrieves only entities with a wider scope.</p>
+    <p class="paragraph">Nested entities can only be annotated if you use different models corresponding each to a group of entities (i.e. each selected option). For example, if both the UMLS entities and the Temporal Expressions options are selected. The external entity corresponds to one selected option and the internal entity corresponds to the other option.</p>
+    <p class="paragraph">Option Use lexicon does allow to annotate a wider range of nested entities.</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="normalize">Normalize</h4>
+    <p class="paragraph">If you check this option, the system will map the annotated medical entities to the concept unique identifiers (CUIs) from the <a class="link" href="https://www.nlm.nih.gov/research/umls/index.html" target="_blank">Unified Medical Language System (UMLS)</a>, which is maintained by the National Library of Medicine (USA).</p>
+     <p class="paragraph">For example, the entity <i>cáncer de pulmón no microcítico</i> ('non-small-cell lung cancer') has the CUI code C0007131 in the UMLS (see previous image).</p>
+     <p class="paragraph">An entity may have one or more unique concept identifiers, or none at all.</p>
+     <p class="paragraph">The command-line version of MedSpaNER also allows normalizing entities according to the <a class="link" href="https://www.snomed.org/">Systematized Nomenclature of Medicine – Clinical Terms (SNOMED-CT)</a> standard.</p>
+     <p class="paragraph">⚠️ Please note that the normalization of concepts has still not been evaluated and needs further review by professionals.</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="methods">How it works</h4>
+    <p class="paragraph">The tool has been developed using manually annotated texts about clinical trials, which were revised by experts. The texts were used to train neural models for medical entity recognition.</p>
+    <p class="paragraph">Texts were annotated according to the annotation criteria recorded in the <a class="link" href="https://github.com/lcampillos/ct-ebm-sp-v2/blob/main/annot_guideline_2024.pdf" target="_blank">annotation guidelines</a> available.</p>
+    <p class="paragraph">The annotated texts (CT-EBM-SP vs 2 corpus) are available in this <a class="link" href="https://github.com/lcampillos/ct-ebm-sp-v2" target="_blank">repository</a>.</p>
+    <p class="paragraph">The default neural models used in this tool were fine-tuned using the RoBERTA <a class="link" href="https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es" target="_blank" style="font-family: Courier;"> 
+bsc-bio-ehr-es</a> base model; this model was trained by the Barcelona Supercomputing Center using clinical data and medical reports. The model was fine-tuned with annotated texts of clinical trials for different tasks:</p>
+    <ul>
+     <li><p class="paragraph">recognition of medical entities from the UMLS semantic groups</p></li> 
+     <li><p class="paragraph">annotation of temporal expressions</p></li> 
+     <li><p class="paragraph">medical drug information</p></li> 
+     <li><p class="paragraph">negation/speculation</p></li> 
+     <li><p class="paragraph">attributes related to the temporality of the event or the experiencer</p></li> 
+     <li><p class="paragraph">miscellaneous medical entities</p></li> 
+    </ul>
+    <p class="paragraph">All trained models are available for download at the <a  class="link" href="https://huggingface.co/medspaner" target="_blank">Hugging Face</a> repository.</p>
+    </td>
+  </tr>
+  </table>
+  <table class="advert">
+  <tr>
+      <td><p>&nbsp;&nbsp;<b>Disclosure</b>:</p>
+      
+      <ul>
+      <li><p class="paragraph">This tool is under development and should not be used for automatic medical decision-making.</p></li>
+      <li><p class="paragraph">The tool uses lexical resources from external sources, and language models pre-trained by other research teams. The authors of the tool do not claim intellectual property or copyright of these resources, which remain the property of their respective authors.</p></li>
+      <li><p class="paragraph">The annotations provided by the tool are automatically obtained and must be validated by a health professional before use. The authors do not claim that the results are completely correct.</p></li>
+      <li><p class="paragraph">Third parties deploying or providing systems and/or services using this tool (or using systems based on these models) must take into account that it is their responsibility to mitigate the risks arising from its use. Third parties must in any case comply with applicable regulations, including those relating to the use of artificial intelligence.</p></li>
+      <li><p class="paragraph">The developers of the tool cannot be held responsible for the incorrect use of the information provided. Although every effort has been made to ensure that the annotation results are of high quality, no warranty (express or implied) can be given as to their correctness or completeness. The use of the tool is permitted with the commitment to accept that the developers shall have no liability for any direct or indirect damage or negative results.</p></li>
+      </ul>
+  </tr>
+  </table>
+  <table class="center">
+  <tr>
+  <td></td>
+  </tr>
+  <tr>
+  <td>
+  <img src="https://ik.imagekit.io/plfzubavxr/MC-logo.png" style="display: block; margin-left: auto; margin-right: auto; width: 60%;">
+  </td>
+  <td>
+  <img src="https://ik.imagekit.io/plfzubavxr/claramed-logo.png" style="display: block; margin-left: auto; margin-right: auto; width: 30%;">
+  </td>
+  <td>
+  <img src="https://ik.imagekit.io/plfzubavxr/Iconos_financ_aei.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">    
+  </td>
+  </tr>
+  </table>
+ </div>
+ </div>
+</body>  
+
+  

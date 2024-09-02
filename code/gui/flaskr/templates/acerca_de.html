@@ -1,0 +1,124 @@
+<!doctype html>
+<link rel="stylesheet" href="static/style.css">
+<head>
+  <title>MedSpaNER</title>
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<nav>
+  <table border="0" align="center">
+    <tr>
+      <td><img src="static/logo.jpg" style="max-width:250px; height:auto" alt="Logo"/></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <!--<td><h1 class="center">Medical Information Annotation tool</h1></td>-->
+      <td><h1 class="center">Herramienta de anotación semántica médica</h1></td>
+    </tr>
+  </table>
+</nav>
+<body>
+<div class="wrapper">
+  <div class="sidebar">
+        <ul>
+            <li><a href="#citar">&#128215; Cómo citar</a></li>
+            <li><a href="#codigo">&#128296; Código</a></li>
+            <li><a href="#evaluacion">&#128200; Evaluación</a></li>
+            <li><a href="#licencia">&#128278; Licencia</a></li>
+            <li><a href="#contacto">&#128233; Contacto</a></li>
+            <li><a href="#agradecimientos">&#x1F4C1; Financiación</a></li>
+            <li><a href="{{ url_for('gui') }}">&#128421; Anotar</a></li>
+        </ul> 
+  </div>
+  <div class="main_content">
+  <table border="0" align="center">
+  <tr>
+    <td><!--<h3 class="color">Acerca de</h3>-->
+    <p class="paragraph">MedSpaNER es una herramienta para la anotación de textos médicos en español basada en <b>métodos híbridos</b> (redes neuronales, reglas y un léxico).<br /><br /> Está desarrollada a partir de textos de <b>ensayos clínicos</b>. Pero se puede aplicar a otros tipos de documentos médicos, y ha sido <b>probada con casos clínicos anonimizados</b>.</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="citar">Cómo citar</h4>
+    <p class="paragraph">Si utiliza esta herramienta, puede citarla de esta manera:</p>
+
+    <p class="ref">Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión. Hybrid natural language processing tool for semantic annotation of medical texts in Spanish (Under review)</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="codigo">Código</h4>
+    <p class="paragraph">El código para la instalación local se encuentra en el repositorio <a  class="link" href="https://github.com/lcampillos/medspaner/" target="_blank">GitHub</a>.
+    <br /><br />
+    Todos los modelos entrenados están disponibles para la descarga en el repositorio <a  class="link" href="https://huggingface.co/medspaner" target="_blank">Hugging Face</a></p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="evaluacion">Evaluación</h4>
+    <p class="paragraph">Los modelos entrenados han sido evaluados doblemente:</p>
+    <ul>
+    <li><p class="paragraph"><b>Evaluación interna</b>: se evaluaron los modelos con un conjunto de test de 120 textos. <br /><br />Los modelos RoBERTa integrados en esta herramienta obtuvieron los siguientes resultados (promedio de 5 rondas experimentales):</p></li>
+    <ul>
+    <li><p class="paragraph"><b>Entidades UMLS</b>: F1 = 0.886 (&plusmn;0.002)</p></li>
+    <li><p class="paragraph"><b>Posología de medicamentos</b>: F1 = 0.872 (&plusmn;0.004)</p></li>
+    <li><p class="paragraph"><b>Expresiones temporales</b>: F1 = 0.900 (&plusmn;0.001)</p></li>
+    <li><p class="paragraph"><b>Entidades médicas misceláneas</b>: F1 = 0.677 (&plusmn;0.003)</p></li>
+    <li><p class="paragraph"><b>Negación/especulación</b>: F1 = 0.859 (&plusmn;0.006)</p></li>
+    <li><p class="paragraph"><b>Atributos (temporalidad/experimentante)</b>: F1 = 0.856 (&plusmn;0.006)</p></li>
+    </ul>
+    </ul>
+    <ul>
+    <li><p class="paragraph"><b>Evaluación externa</b>: 8 profesionales sanitarios evaluaron la anotación de <b>200 nuevos textos</b>. <br /><br />Los modelos obtuvieron los siguientes resultados promedio:</p>
+    <ul>
+    <li><p class="paragraph"><b>100 textos de ensayos clínicos</b>: F1 = 0.858 (&plusmn;0.032)</p></li>
+    <li><p class="paragraph"><b>100 casos clínicos anonimizados</b>: F1 = 0.910 (&plusmn;0.019)</p></li>
+    </ul>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="licencia">Licencia</h4>
+    <p class="paragraph">General Public License 3 (AGPL-3.0). Si quiere utilizarlo con otra licencia, por favor, póngase en contacto.
+    <br /><br />
+    Copyright (c) 2019-2024 Leonardo Campillos-Llanos, CSIC (Consejo Superior de Investigaciones Científicas)</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="contacto">Contacto</h4>
+    <p class="paragraph">Para cualquier duda, problema o uso no contemplado de esta herramienta, por favor, contacte al correo:</p>
+    <p class="ref">&#128233; leonardo.campillos@csic.es</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="agradecimientos">Agradecimientos y financiación</h4>
+    <p class="paragraph">Este trabajo ha sido desarrollado en el proyecto NLPMedTerm, financiado por el programa InterTalentum UAM, beca Marie Skłodowska-Curie COFUND (2019-2020) <br />(programa H2020, contrato nº 713366), y en el proyecto <a href="https://clara-nlp.uned.es/home/med/" target="_blank" class="link">CLARA-MeD</a> (2021-2024, referencia: PID2020-116001RA-C33), financiado por MICIU/AEI/10.13039/501100011033/,<br /> en la convocatoria: "Proyectos I+D+i Retos Investigación".
+    <br /><br />
+    Agradecemos sinceramente la ayuda de todos los profesionales médicos y sanitarios que han contribuido a revisar los datos anotados con la herramienta.</p>
+    <br />
+    <img src="https://ik.imagekit.io/plfzubavxr/Iconos_financ_aei.png" style="display: block; margin-left: auto; margin-right: auto; width: 15%;">
+    <br />
+    </td>
+  </tr>
+  <tr>
+    
+  </tr>
+  </table>
+  <table class="advert">
+  <tr>
+      <td><p>&nbsp;&nbsp;<b>Descargo de responsabilidad</b>:</p>
+      
+      <ul>
+      <li><p class="paragraph">Esta herramienta se encuentra en desarrollo y no debe ser empleada para la toma de decisiones médicas de manera automática.</p></li>
+      <li><p class="paragraph">La herramienta utiliza recursos léxicos que proceden de fuentes externas, y modelos de lenguaje preentrenados por otros equipos de investigación. Los autores de la herramienta no reclaman la propiedad intelectual ni los derechos de autor de estos recursos, que siguen perteneciendo a sus correspondientes autores.</p></li>
+      <li><p class="paragraph">Las anotaciones proporcionadas por la herramienta son automáticas y deben ser validadas por un profesional sanitario antes de ser empleadas. Los autores no declaran que los resultados sean completamente correctos.</p></li>
+      <li><p class="paragraph">Las terceras partes que desplieguen o proporcionen sistemas y/o servicios que utilicen esta herramienta (o que utilicen sistemas basados en estos modelos) deben tener en cuenta que es su responsabilidad mitigar los riesgos derivados de su uso. Las terceras partes, en cualquier caso, deben cumplir la normativa aplicable, incluida la relativa al uso de la inteligencia artificial.</p></li>
+      <li><p class="paragraph">Los desarrolladores de la herramienta no pueden ser responsables del uso incorrecto de la información proporcionada. Aunque se han realizado todos los esfuerzos posibles para asegurar que los resultados de anotación son de alta calidad, no se puede ofrecer una garantía (expresa o implícita) respecto a su corrección o integridad. El uso de la herramienta se permite con el compromiso de aceptar que los desarrolladores no tendrán ninguna responsabilidad en cualquier daño o resultado negativo directo o indirecto.</p></li>
+      </ul>
+  </tr>
+  </table>
+</body>  
+
+  

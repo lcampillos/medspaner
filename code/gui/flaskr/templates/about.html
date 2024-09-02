@@ -1,0 +1,245 @@
+<!doctype html>
+<link rel="stylesheet" href="static/style.css">
+<style>
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3, h4 {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h2.fa, h3.color, h4.color {
+    text-align: center;
+    /* offset-x | offset-y | blur-radius | color
+    text-shadow: 0px 2px 1px rgba(179, 210, 211, 0.5); */
+    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    font-family: Arial, Helvetica, sans-serif;
+    color:#36454F;
+}
+
+
+table.advert {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #FFDAB9;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 12px;
+    width: 100%;
+}
+
+img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Style of link */
+.link {
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  color:#0a837d;
+}
+
+.link:hover {
+  text-decoration: none;
+  color:#4054b2;
+  cursor: pointer;
+}
+
+p.paragraph {
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align:left;
+  color:#000000a8;
+}
+
+p.ref {
+  font-size: 11px;
+  font-family: Arial, Helvetica, sans-serif;
+  color:#708090;
+  text-indent:2em;
+}
+
+/* Navigation side bar */
+
+.wrapper{
+  display: flex;
+  position: relative;
+}
+
+.wrapper .sidebar{
+  width: 170px;
+  height: 100%;
+  /*background: #45818e; Verde mar */
+  background: #FFF;
+  padding: 10px 0px;
+  position: fixed;
+}
+
+.wrapper .sidebar ul li{
+  padding: 15px;
+  border-bottom: 1px solid #b4ccd1;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  list-style-type: none; /* Remove bullets */
+}    
+
+.wrapper .sidebar ul li a{
+  /*color: #b4ccd1; Verde mar ligero; #45818e; */
+  color:#0a837d;
+  display: block;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+}
+
+.wrapper .sidebar ul li:hover{
+  background:#fbfbfb; /* #45818e; Verde mar; #b4ccd1; Verde mar ligero; #e0e8e1; Verde gris claro; #f7f7f1; Verde gris aún más claro */
+}
+    
+.wrapper .sidebar ul li:hover a{
+  color: #4054b2;
+}
+
+.wrapper .main_content{
+  width: 100%;
+  margin-left: 200px;
+}
+</style>
+<head>
+  <title>MedSpaNER</title>
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<nav>
+  <table border="0" align="center">
+    <tr>
+      <td><img src="/static/logo.jpg" style="max-width:250px; height:auto" onerror="this.onerror=null; this.src='https://ik.imagekit.io/plfzubavxr/logo.jpg'" alt="Google Drive Image"/></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><h1 class="center">Medical Information Annotation tool</h1></td>
+    </tr>
+  </table>
+</nav>
+<body>
+<div class="wrapper">
+  <div class="sidebar">
+        <ul>
+            <li><a href="#cite">How to cite</a></li>
+            <li><a href="#code">Code</a></li>
+            <li><a href="#evaluation">Evaluation</a></li>
+            <li><a href="#license">License</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#acknowledgements">Funding</a></li>
+            <li><a href="/gui_en">Annotate</a></li>
+        </ul> 
+  </div>
+  <div class="main_content">
+  <table border="0" align="center">
+  <tr>
+    <td><!--<h3 class="color">Acerca de</h3>-->
+    <p class="paragraph">MedSpaNER is a medical text annotation tool for the Spanish language, which is based in <b>hybrid methods</b> (neural networks, rules and a lexicon).<br /><br /> It has been developed using texts about <b>clinical trials</b>. However, it can be applied to other medical text types, and it has been <b>tested with anonymised clinical cases</b>.</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="cite">How to cite</h4>
+    <p class="paragraph">If you use this tool, you can cite it in the following way:</p>
+
+    <p class="ref">Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión. Hybrid natural language processing tool for semantic annotation of medical texts in Spanish (Under review)</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="code">Code</h4>
+    <p class="paragraph">The code for the local installation is in the following <a  class="link" href="https://github.com/lcampillos/medspaner/" target="_blank">GitHub</a> repository.
+    <br /><br />
+    All trained models are available for download at the <a  class="link" href="https://huggingface.co/medspaner" target="_blank">Hugging Face</a> repository.</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="evaluation">Evaluation</h4>
+    <p class="paragraph">The trained models have been evaluated twice:</p>
+    <ul>
+    <li><p class="paragraph"><b>Internal evaluation</b>: models were evaluated with a held-out test of 120 texts. <br /><br />The RoBERTa models used for the tool obtained the following results (average of 5 experimental rounds):</p></li>
+    <ul>
+    <li><p class="paragraph"><b>UMLS entities</b>: F1 = 0.886 (&plusmn;0.002)</p></li>
+    <li><p class="paragraph"><b>Medical drug information</b>: F1 = 0.872 (&plusmn;0.004)</p></li>
+    <li><p class="paragraph"><b>Temporal expressions</b>: F1 = 0.900 (&plusmn;0.001)</p></li>
+    <li><p class="paragraph"><b>Miscellaneous medical entities</b>: F1 = 0.677 (&plusmn;0.003)</p></li>
+    <li><p class="paragraph"><b>Negation/speculation</b>: F1 = 0.859 (&plusmn;0.006)</p></li>
+    <li><p class="paragraph"><b>Attributes (temporality/experiencer)</b>: F1 = 0.856 (&plusmn;0.006)</p></li>
+    </ul>
+    </ul>
+    <ul>
+    <li><p class="paragraph"><b>External evaluation</b>: 8 health professionals assessed the annotation of <b>200 new texts</b>. <br /><br />The models obtained the following average results:</p>
+    <ul>
+    <li><p class="paragraph"><b>100 texts about clinical trials</b>: F1 = 0.858 (&plusmn;0.032)</p></li>
+    <li><p class="paragraph"><b>100 anonymized cases clinical</b>: F1 = 0.910 (&plusmn;0.019)</p></li>
+    </ul>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="license">License</h4>
+    <p class="paragraph">General Public License 3 (AGPL-3.0). If you want to use the tool with another licence, please contact us.
+    <br /><br />
+    Copyright (c) 2019-2024 Leonardo Campillos-Llanos, CSIC (Consejo Superior de Investigaciones Científicas)</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="contact">Contact</h4>
+    <p class="paragraph">For any questions about this tool, please contact us at:</p>
+    <p class="ref">&#128233; leonardo.campillos AT csic.es</p>
+    </td>
+  </tr>
+  <tr>  
+    <td>
+    <h4 class="color" id="acknowledgements">Acknowledgements and funding</h4>
+    <p class="paragraph">This work has been developed in NLPMedTerm project, funded by the InterTalentum UAM program, Marie Skłodowska-Curie COFUND scholarship (2019-2020) <br />(H2020 work program, contract nº 713366), and in the <a href="https://clara-nlp.uned.es/home/med/" target="_blank" class="link">CLARA-MeD</a> project (2021-2024, reference: PID2020-116001RA-C33), funded by MICIU/AEI/10.13039/501100011033/,<br /> in project call: "Proyectos I+D+i Retos Investigación".
+    <br /><br />
+    We are sincerely grateful for the help of all the medical and health professionals who have contributed to the review of the data annotated with the tool.</p>
+    </td>
+  </tr>
+  </table>
+  <table class="center">
+  <tr>
+    <!--<td>
+    <img src="https://ik.imagekit.io/plfzubavxr/logoNLPMedTerm.png" style="display: block; margin-left: auto; margin-right: auto; width: 10%;">
+    </td>-->
+    <td>
+    <img src="https://ik.imagekit.io/plfzubavxr/MC-logo.png" style="display: block; margin-left: auto; margin-right: auto; width: 60%;">
+    </td>
+    <td>
+    <img src="https://ik.imagekit.io/plfzubavxr/claramed-logo.png" style="display: block; margin-left: auto; margin-right: auto; width: 30%;">
+    </td>
+    <td>
+    <img src="https://ik.imagekit.io/plfzubavxr/Iconos_financ_aei.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+    </td>    
+  </tr>
+  <tr>
+  <td><br /></td>
+  </tr>
+  </table>
+  <table class="advert">
+  <tr>
+      <td><p>&nbsp;&nbsp;<b>Disclosure</b>:</p>
+      
+      <ul>
+      <li><p class="paragraph">This tool is under development and should not be used for automatic medical decision-making.</p></li>
+      <li><p class="paragraph">The tool uses lexical resources from external sources, and language models pre-trained by other research teams. The authors of the tool do not claim intellectual property or copyright of these resources, which remain the property of their respective authors.</p></li>
+      <li><p class="paragraph">The annotations provided by the tool are automatically obtained and must be validated by a health professional before use. The authors do not claim that the results are completely correct.</p></li>
+      <li><p class="paragraph">Third parties deploying or providing systems and/or services using this tool (or using systems based on these models) must take into account that it is their responsibility to mitigate the risks arising from its use. Third parties must in any case comply with applicable regulations, including those relating to the use of artificial intelligence.</p></li>
+      <li><p class="paragraph">The developers of the tool cannot be held responsible for the incorrect use of the information provided. Although every effort has been made to ensure that the annotation results are of high quality, no warranty (express or implied) can be given as to their correctness or completeness. The use of the tool is permitted with the commitment to accept that the developers shall have no liability for any direct or indirect damage or negative results.</p></li>
+      </ul>
+  </tr>
+  </table>
+</body>  
