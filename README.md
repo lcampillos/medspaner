@@ -25,7 +25,7 @@ The lexicon is [MedLexSp](https://github.com/lcampillos/MedLexSp), a computation
 
 Rules were developed iteratively during the annotation of the [CT-EBM-SP corpus](https://zenodo.org/record/6059737#.YtPYTMHP1H0). Standard algorithms were implemented, such as [NegEx](https://github.com/PlanTL-GOB-ES/NegEx-MES), [ConText](https://claritynlp.readthedocs.io/en/stable/developer_guide/algorithms/context.html) and [HeidelTime](https://github.com/HeidelTime/heideltime) adapted to the [Spanish language](https://github.com/PlanTL-GOB-ES/EHR-TTS).
 
-The [guideline](https://github.com/lcampillos/ct-ebm-sp-v2) with the criteria for annotating the [CT-EBM-SP corpus](https://zenodo.org/record/6059737#.YtPYTMHP1H0) is [available in this repository](https://github.com/lcampillos/medspaner/blob/main/annot_guideline_2022_anonyn.pdf).
+The [guideline]([https://github.com/lcampillos/ct-ebm-sp-v2](https://github.com/lcampillos/ct-ebm-sp-v2/blob/main/annot_guideline_2024.pdf)) with the criteria for annotating the [CT-EBM-SP corpus](https://zenodo.org/record/6059737#.YtPYTMHP1H0) is [available in this repository](https://github.com/lcampillos/ct-ebm-sp-v2/blob/main/annot_guideline_2024.pdf).
 
 The neural model is [RoBERTA model trained on clinical and EHR data](https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es), trained by the Barcelona Supercomputing Center, and fine-tuned in clinical trials annotated for different tasks: medical named entity recognition, temporal annotation, annotation of medication drug attributes, and annotation of negation and uncertainty/speculation.
 
@@ -178,13 +178,13 @@ The annotation tool is described here:
 
 **Hybrid natural language processing tool for semantic annotation of medical texts in Spanish**  
 Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión  
-*(Under review)*
+*BMC Bioinformatics* (2024)
 
 The Medical Lexicon for Spanish (MedLexSp) is described here:
 
 [**MedLexSp – A Medical Lexicon for Spanish Medical Natural Language Processing**](https://jbiomedsem.biomedcentral.com/articles/10.1186/s13326-022-00281-5)  
 Leonardo Campillos-Llanos  
-*Journal of Biomedical Semantics*, 23
+*Journal of Biomedical Semantics* (2024), 23
 
 [**First Steps towards Building a Medical Lexicon for Spanish with Linguistic and Semantic Information**](https://aclanthology.org/W19-5017/)  
 Leonardo Campillos-Llanos.
