@@ -29,6 +29,8 @@ The [guideline]([https://github.com/lcampillos/ct-ebm-sp-v2](https://github.com/
 
 The neural model is [RoBERTA model trained on clinical and EHR data](https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es), trained by the Barcelona Supercomputing Center, and fine-tuned in clinical trials annotated for different tasks: medical named entity recognition, temporal annotation, annotation of medication drug attributes, and annotation of negation and uncertainty/speculation.
 
+All trained models for the MedSpaNER tool are available at the [Hugging Face hub](https://huggingface.co/medspaner): [https://huggingface.co/medspaner](https://huggingface.co/medspaner).
+
 
 Installation and requirements
 -------------------------
@@ -58,7 +60,7 @@ You can install the packages (except GIT LFS) by using the ```requirements.txt``
 Usage
 -------------------------
 
-Download the pre-trained models from the HuggingFace hub.
+Download the pre-trained models from the [HuggingFace hub](https://huggingface.co/medspaner).
 
 Make sure you have ```git-lfs``` installed before downloading the models (```git-lfs``` is needed to download large files):\
 - In Mac OS:
