@@ -1,7 +1,7 @@
 
 ![Graphical User Interface](gui.png)
 
-## Medical Semantic python-based Named Entity Recognizer
+## Medical Semantic Python-Assisted Named Entity Recognizer
 
 This is a hybrid (neural-network-based, lexicon-based and rule-based) sequence labeling tool for Spanish medical texts. It was originally developed for clinical trial texts, but it can be applied to other medical text genres.
 
@@ -29,7 +29,7 @@ The [guideline]([https://github.com/lcampillos/ct-ebm-sp-v2](https://github.com/
 
 The neural model is [RoBERTA model trained on clinical and EHR data](https://huggingface.co/PlanTL-GOB-ES/bsc-bio-ehr-es), trained by the Barcelona Supercomputing Center, and fine-tuned in clinical trials annotated for different tasks: medical named entity recognition, temporal annotation, annotation of medication drug attributes, and annotation of negation and uncertainty/speculation.
 
-All trained models for the MedSpaNER tool are available at the [Hugging Face hub](https://huggingface.co/medspaner): [https://huggingface.co/medspaner](https://huggingface.co/medspaner).
+All trained models for the MEDSPANER tool are available at the [Hugging Face hub](https://huggingface.co/medspaner): [https://huggingface.co/medspaner](https://huggingface.co/medspaner).
 
 
 Installation and requirements
