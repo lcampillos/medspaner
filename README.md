@@ -180,7 +180,20 @@ The annotation tool is described here:
 
 **Hybrid natural language processing tool for semantic annotation of medical texts in Spanish**  
 Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión  
-*BMC Bioinformatics* (2024)
+*BMC Bioinformatics* (2024) []()
+
+If you use this tool, please, cite as follows:
+
+```
+@article{2024medspaner,
+  title={{Hybrid natural language processing tool for semantic annotation of medical texts in Spanish}},
+  author={Campillos-Llanos, Leonardo and Valverde-Mateos, Ana and Capllonch-Carri{\'o}n, Adri{\'a}n},
+  title={BMC Bioinformatics},
+  year={2024},
+  doi={https://doi.org/10.1186/s12859-024-05949-6},
+  publisher={Springer (BioMed Central)}
+}
+```
 
 The Medical Lexicon for Spanish (MedLexSp) is described here:
 
