@@ -172,7 +172,7 @@ Edit the fields in the configuration file (config.conf) to adapt it to your purp
 * **neg** - Select ```True``` to annotate entities expressing negation and uncertainty; select ```False``` otherwise
 * **nest** - Select ```True``` to output inner or nested entities inside wider entities (e.g. *pecho* in *cáncer de pecho*); select ```False``` to output only the entities with the wider scope (*flat entities*)
 * **neu** - Select ```True``` (default value) to annotate UMLS entities with the trained neural model; select ```False``` otherwise
-* **norm** - Indicate ```UMLS``` if the output needs to be normalized to UMLS CUIs or select ```SNOMED``` to normalize to SNOMED CT
+* **norm** - Indicate ```UMLS``` if the output needs to be normalized to UMLS CUIs; ```SNOMED```, to normalize to SNOMED CT; and ```OMOP```, to map to ODHSI vocabularies of the OMOP Common Data Model.
 * **out** - Indicate ```ann``` ([BRAT](https://brat.nlplab.org/) format) or ```json``` (standard JSON data format)
 * **temp** - Select ```True``` to annotate temporal expressions according to the HeidelTime scheme (Date, Duration, Frequency, Time) and Age; select ```False``` otherwise
 
