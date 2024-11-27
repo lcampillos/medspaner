@@ -589,6 +589,13 @@ def convert2brat(Hash,FileName,LexiconData,SourceData,Source):
                         n_comm += 1
                         codes_string = " | ".join(CUIsList)
                         print("#{}	AnnotatorNotes T{}	{}".format(n_comm,i,codes_string),file=FileName)
+                elif (Source == "omop"):
+                    # Complete normalization data of OMOP
+                    CUIsList = complete_omop_code(CUIsList,SourceData)
+                    if len(CUIsList)>0:
+                        n_comm += 1
+                        codes_string = " | ".join(CUIsList)
+                        print("#{}	AnnotatorNotes T{}	{}".format(n_comm,i,codes_string),file=FileName)                
 
 
 def convert2json(EntityHash, LexiconData, SourceData, Source):
@@ -632,6 +639,12 @@ def convert2json(EntityHash, LexiconData, SourceData, Source):
                     if len(CUIsList)>0:
                         codes_string = " | ".join(CUIsList)                    
                         entityData['snomed'] = codes_string
+                elif (Source == "omop"):
+                    # Complete normalization data of OMOP
+                    CUIsList = complete_omop_code(CUIsList,SourceData)
+                    if len(CUIsList)>0:
+                        codes_string = " | ".join(CUIsList)
+                        entityData['omop'] = codes_string
     
     return jsonEntities
    

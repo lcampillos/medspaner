@@ -13,6 +13,12 @@ The tool can annotate the following type of information:
 - miscellaneous medical entities: Concept, Observation\_or\_Finding, Food\_or\_Drink, Quantifier\_or\_Qualifier and Result\_or\_Value
 - experiencer (Patient, Family\_member, Other) and event temporality attributes (History_of, Future)
 
+MEDSPANER supports medical concept normalization (*entity linking*) to standard resources such as the [Unified Medical Language System (UMLS)](https://www.nlm.nih.gov/research/umls/index.html) and the [Systematized Nomenclature of Medicine – Clinical Terms](https://www.snomed.org/). 
+Note that the normalization feature is still under development and any processing will require professional validation by coding experts.
+
+:star: **Update (November 2024)** MEDSPANER has been enhanced to support normalization to the OHDSI Vocabulary codes used in the [OMOP Common Data Model](https://www.ohdsi.org/data-standardization/).
+
+
 ## Development workflow and system scheme
 
 The figure below explains how the tool was developed.

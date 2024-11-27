@@ -47,7 +47,7 @@ parser.add_argument('-misc', required=False, default=False, action='store_true',
 parser.add_argument('-neu', required=False, default=True, action='store_true', help='specify to annotate UMLS entities with neural model (used by default)')
 parser.add_argument('-neg', required=False, default=False, action='store_true', help='annotate entities expressing negation and uncertainty (not annotated by default)')
 parser.add_argument('-nest', required=False, default=False, action='store_true', help='annotate inner or nested entities inside wider entities (not annotated by default)')
-parser.add_argument('-norm', required=False, default=False, help='normalize entities and output terminology codes (optional); indicate \"UMLS\" (default) or \"SNOMED\"')
+parser.add_argument('-norm', required=False, default=False, help='normalize entities and output terminology codes (optional); indicate \"umls\" (default), \"omop\" or \"snomed\"')
 parser.add_argument('-out', required=False, default="ann", help='specify output to JSON format ("json") or BRAT ann format ("ann", default value)')
 parser.add_argument('-temp', required=False, default=False, action='store_true', help='annotate temporal expressions (not annotated by default)')
 
@@ -79,8 +79,8 @@ def main(arguments):
     # If normalization data is needed, load file
     if (arguments.norm): 
         arguments.norm = arguments.norm.lower()
-        if ((arguments.norm) != "umls") and ((arguments.norm) != "snomed"):
-            print('Please, provide the normalization source: "umls" or "snomed"')
+        if ((arguments.norm) != "umls") and ((arguments.norm) != "snomed") and ((arguments.norm) != "omop"):
+            print('Please, provide the normalization source: "umls", "omop" or "snomed"')
             parser.print_help()
             sys.exit()
        
@@ -90,6 +90,9 @@ def main(arguments):
         elif (arguments.norm == "snomed"):
             DataFile = open("lexicon/sctspa_norm.pickle", 'rb')
             SCTSPAData = pickle.load(DataFile)
+        elif (arguments.norm == "omop"):
+            DataFile = open("lexicon/omop_norm.pickle", 'rb')
+            OMOPData = pickle.load(DataFile)
 
     # If use of an exception list to remove specific entities 
     if (arguments.exc):
@@ -319,6 +322,8 @@ def main(arguments):
                     convert2brat(FinalHash,outFile,LexiconData,UMLSData,arguments.norm)
                 elif (arguments.norm=="snomed"):
                     convert2brat(FinalHash,outFile,LexiconData,SCTSPAData,arguments.norm)
+                elif (arguments.norm=="omop"):
+                    convert2brat(FinalHash,outFile,LexiconData,OMOPData,arguments.norm)
             else:
                 convert2brat(FinalHash,outFile,None,None,None)
 
@@ -336,6 +341,8 @@ def main(arguments):
                 jsonEntities = convert2json(FinalHash,LexiconData,UMLSData,arguments.norm)
             elif (arguments.norm=="snomed"):
                 jsonEntities = convert2json(FinalHash,LexiconData,SCTSPAData,arguments.norm)
+            elif (arguments.norm=="omop"):
+                jsonEntities = convert2json(FinalHash,LexiconData,OMOPData,arguments.norm)
         else:
             jsonEntities = convert2json(FinalHash,None,None,None)
             

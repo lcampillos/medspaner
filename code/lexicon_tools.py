@@ -319,7 +319,43 @@ def complete_snomed_code(List,SCTSPADict):
             CUIList.append(data)
     
     return CUIList
+
+
+def complete_omop_code(List,OMOPDict):
     
+    '''
+    Given a list of CUIs (List), return the code data of OMOP.
+    Data is a file with a dictionary in pickle format.
+    
+    List = [C0072980]
+    
+    OMOPDict = { C0072980: {'codes': ['19034726', '4348083'], 'terms': ['sirolimus', 'Sirolimus']}, ... }
+    
+    E.g. "sirolimus"
+        C0072980
+    Return:
+        ["sirolimus; 19034726" | Sirolimus; 4348083"]
+    '''
+
+    OMOPCodesList = []
+    
+    for cui in List:
+        if cui in OMOPDict.keys():
+            # Convert codes list to string
+            TermList = OMOPDict[cui]['terms']
+            CodesList = OMOPDict[cui]['codes']
+            # Map each term with the corresponding code
+            Mappings = zip(TermList,CodesList)
+            data = ""
+            for i,item in enumerate(Mappings):
+                if i == 0:
+                    data = item[0] + "; " + item[1]
+                else:
+                    data = data + " | " + item[0] + "; " + item[1]
+            OMOPCodesList.append(data)
+    
+    return OMOPCodesList
+
 
 def add_label_to_token(EntitiesDict,TokensDict):
     
