@@ -184,9 +184,9 @@ References
 
 The annotation tool is described here:
 
-**Hybrid natural language processing tool for semantic annotation of medical texts in Spanish**  
+[**Hybrid natural language processing tool for semantic annotation of medical texts in Spanish**](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-024-05949-6)  
 Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión  
-*BMC Bioinformatics* (2024) []()
+*BMC Bioinformatics* 26(7) (2025)
 
 If you use this tool, please, cite as follows:
 
