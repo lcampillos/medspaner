@@ -186,7 +186,7 @@ The annotation tool is described here:
 
 [**Hybrid natural language processing tool for semantic annotation of medical texts in Spanish**](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-024-05949-6)  
 Leonardo Campillos-Llanos, Ana Valverde-Mateos, Adrián Capllonch-Carrión  
-*BMC Bioinformatics* 26(7) (2025)
+*BMC Bioinformatics* 26(7) (2025) 
 
 If you use this tool, please, cite as follows:
 
@@ -208,7 +208,7 @@ The Medical Lexicon for Spanish (MedLexSp) is described here:
 
 [**MedLexSp – A Medical Lexicon for Spanish Medical Natural Language Processing**](https://jbiomedsem.biomedcentral.com/articles/10.1186/s13326-022-00281-5)  
 Leonardo Campillos-Llanos  
-*Journal of Biomedical Semantics* (2024), 23
+*Journal of Biomedical Semantics*, 23 (2023)
 
 [**First Steps towards Building a Medical Lexicon for Spanish with Linguistic and Semantic Information**](https://aclanthology.org/W19-5017/)  
 Leonardo Campillos-Llanos.
