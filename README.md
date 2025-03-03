@@ -194,7 +194,7 @@ If you use this tool, please, cite as follows:
 @article{2025medspaner,
   title={{Hybrid natural language processing tool for semantic annotation of medical texts in Spanish}},
   author={Campillos-Llanos, Leonardo and Valverde-Mateos, Ana and Capllonch-Carri{\'o}n, Adri{\'a}n},
-  title={BMC Bioinformatics},
+  journal={BMC Bioinformatics},
   year={2025},
   volume={26},
   number={7},
